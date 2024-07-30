@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+      "baseUrl": ".",
+      "paths": {
+        "@packages/*": ["packages/*"]
+      },
+      "composite": true,
+      "declaration": true,
+      "declarationMap": true,
+      "skipLibCheck": true,
+      "outDir": "dist",
+      "rootDir": ".",
+      "module": "commonjs",
+      "target": "es6",
+      "moduleResolution": "node"
+    },
+    "include": ["packages/**/*", "apps/**/*"]
+  }
+  
