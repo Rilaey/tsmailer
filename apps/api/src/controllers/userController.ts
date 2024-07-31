@@ -20,10 +20,30 @@ export const createUser = async (req: Request, res: Response) => {
       userId: user._id
     });
 
-    await user.save();
+    res.status(200).json(user);
+  } catch (err: any) {
+    res.status(500).json(err.message);
+  }
+};
+
+export const loginUser = async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email: email });
+
+    if (!user) {
+      throw new Error("Unable to locate user with provided email or password.");
+    }
+
+    const comparedPassword = bcrypt.compareSync(password, user.password);
+
+    if (!comparedPassword) {
+      throw new Error("Unable to locate user with provided email or password.");
+    }
 
     res.status(200).json(user);
-  } catch (err) {
-    res.status(500).json(err);
+  } catch (err: any) {
+    res.status(500).json(err.message);
   }
 };
