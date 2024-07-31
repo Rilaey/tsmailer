@@ -1,8 +1,8 @@
-type User = {
+type IUser = {
   firstName: string;
   lastName: string;
   email: string;
   password: string;
 };
 
-export default User;
+export { IUser };

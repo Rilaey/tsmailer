@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
-import { User } from "@packages/types";
+import { IUser } from "@packages/types";
 
-const userSchema = new Schema<User>({
+const userSchema = new Schema<IUser>({
   firstName: {
     required: true,
     type: String
@@ -23,7 +23,7 @@ const userSchema = new Schema<User>({
     required: true,
     type: String,
     minlength: 8,
-    maxlength: 32
+    maxlength: 64
   }
 });
 

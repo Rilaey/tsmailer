@@ -1,3 +1,4 @@
 import * as userController from "./userController";
+import * as emailAccountsController from "./emailAccountsController";
 
-export { userController };
+export { userController, emailAccountsController };

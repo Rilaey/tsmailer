@@ -1,3 +1,4 @@
-import User from "./User";
+import { IUser } from "./IUser";
+import { IEmailAccounts } from "./IEmailAccounts";
 
-export { User };
+export { IUser, IEmailAccounts };
