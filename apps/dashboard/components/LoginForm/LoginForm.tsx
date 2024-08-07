@@ -1,7 +1,6 @@
-import { Button, Paper, Text, TextInput } from "@mantine/core";
+import { Button, Paper, Text, TextInput, Loader } from "@mantine/core";
 import styles from "../../styles/loginForm.module.css";
 import { useLogin } from "../../hooks/useLogin";
-import { useEffect } from "react";
 
 const LoginForm = () => {
   const { error, isLoading, loginFormState, setLoginFormState, login } =
@@ -38,6 +37,7 @@ const LoginForm = () => {
       </Text>
       <br />
       <TextInput
+        type="text"
         label="Email"
         placeholder="Email"
         classNames={{ label: styles.label }}
@@ -47,6 +47,7 @@ const LoginForm = () => {
         onChange={(e) => handleFormChange(e)}
       />
       <TextInput
+        type="password"
         label="Password"
         placeholder="Password"
         classNames={{ label: styles.label }}
@@ -85,7 +86,7 @@ const LoginForm = () => {
         disabled={isLoading}
         type="submit"
       >
-        Sign in
+        {isLoading ? <Loader color="#b2f35f" size="sm" /> : "Sign in"}
       </Button>
     </Paper>
   );

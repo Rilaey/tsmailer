@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
+import { UserContext } from "../context/userContext";
 
 interface loginFormStateProps {
   email: string;
@@ -13,11 +14,14 @@ export const useLogin = () => {
     password: ""
   });
 
+  const userContext = useContext(UserContext);
+
   const login = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
     setError(null);
     setIsLoading(true);
+
     try {
       if (!loginFormState.email || !loginFormState.password) {
         throw new Error("Please enter email and password");
@@ -38,18 +42,27 @@ export const useLogin = () => {
         throw new Error("Error logging user in.");
       }
 
+      const data = await response.json();
+
+      userContext.setUser(data);
+
       setIsLoading(false);
-      console.log(loginFormState);
+
+      window.location.href = "/";
+
       setLoginFormState({
         email: "",
         password: ""
       });
     } catch (err: any) {
-      console.log(err.message);
       setIsLoading(false);
       setError(err.message);
     }
   };
+
+  useEffect(() => {
+    sessionStorage.setItem("user", JSON.stringify(userContext?.user));
+  }, [userContext]);
 
   return {
     error,
