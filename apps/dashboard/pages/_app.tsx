@@ -5,7 +5,7 @@ import { MantineProvider } from "@mantine/core";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <MantineProvider>
+    <MantineProvider defaultColorScheme="dark">
       <Component {...pageProps} />
     </MantineProvider>
   );
