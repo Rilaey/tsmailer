@@ -1,4 +1,4 @@
-import { Button, Paper, Text, TextInput, Loader } from "@mantine/core";
+import { Button, Paper, Text, TextInput, Loader, Box } from "@mantine/core";
 import styles from "../../styles/loginForm.module.css";
 import { useLogin } from "../../hooks/useLogin";
 
@@ -21,7 +21,7 @@ const LoginForm = () => {
   return (
     <Paper
       w={500}
-      h={400}
+      h={500}
       style={{
         padding: "3%",
         borderRadius: "25px",
@@ -32,7 +32,11 @@ const LoginForm = () => {
       component="form"
       onSubmit={login}
     >
-      <Text c="#fcfcfc" fw={600} p={5}>
+      <Text c="#fcfcfc" fw={600} p={5} size="24px">
+        Welcome back.
+      </Text>
+      <br />
+      <Text c="#fcfcfc" fw={600} p={5} size="18px">
         Please enter your account details.
       </Text>
       <br />
@@ -56,15 +60,11 @@ const LoginForm = () => {
         value={loginFormState.password}
         onChange={(e) => handleFormChange(e)}
       />
-      <Text
-        p={5}
-        m={5}
-        style={{
-          textAlign: "right"
-        }}
-      >
-        Forgot Password
-      </Text>
+      <Box p={5} m={5} style={{ textAlign: "right" }}>
+        <Text p={5} m={5} component="a" href="/signup" className={styles.link}>
+          Forgot Password?
+        </Text>
+      </Box>
       {error && (
         <Text
           p={5}
@@ -88,6 +88,11 @@ const LoginForm = () => {
       >
         {isLoading ? <Loader color="#b2f35f" size="sm" /> : "Sign in"}
       </Button>
+      <Box p={5} m={5} style={{ textAlign: "right" }}>
+        <Text p={5} m={5} component="a" href="/signup" className={styles.link}>
+          Create an account.
+        </Text>
+      </Box>
     </Paper>
   );
 };

@@ -2,3 +2,8 @@
   color: #fefefe;
   font-size: 18px;
 }
+
+.link:hover {
+  color: #b2f35f;
+  text-decoration: underline;
+}
