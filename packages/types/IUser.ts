@@ -7,4 +7,4 @@ type IUser = {
   __v: number;
 };
 
-export { IUser };
+export type { IUser };
