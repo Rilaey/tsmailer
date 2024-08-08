@@ -11,4 +11,4 @@ type IEmailAccounts = {
   yahoo: IYahoo;
 };
 
-export { IEmailAccounts };
+export type { IEmailAccounts };
