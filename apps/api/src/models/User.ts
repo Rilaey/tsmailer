@@ -20,10 +20,30 @@ const userSchema = new Schema<IUser>({
     unique: true
   },
   password: {
-    required: true,
     type: String,
     minlength: 8,
-    maxlength: 64
+    maxlength: 64,
+    required: false // Make the password field optional
+  },
+  provider: {
+    type: String, // e.g., 'google', 'github'
+    required: false
+  },
+  providerId: {
+    type: String,
+    required: false
+  },
+  accessToken: {
+    type: String,
+    required: false
+  },
+  refreshToken: {
+    type: String,
+    required: false
+  },
+  tokenExpiry: {
+    type: Date,
+    required: false
   }
 });
 
