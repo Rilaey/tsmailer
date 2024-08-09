@@ -1,6 +1,9 @@
 import { Button, Paper, Text, TextInput, Loader, Box } from "@mantine/core";
 import styles from "../../styles/loginForm.module.css";
 import { useLogin } from "../../hooks/useLogin";
+import { signIn } from "next-auth/react";
+import signInOptions from "../../public/data/signinOptions.json";
+import Image from "next/image";
 
 const LoginForm = () => {
   const { error, isLoading, loginFormState, setLoginFormState, login } =
@@ -20,8 +23,8 @@ const LoginForm = () => {
   };
   return (
     <Paper
-      w={500}
-      h={500}
+      w={550}
+      h={550}
       style={{
         padding: "3%",
         borderRadius: "25px",
@@ -88,6 +91,31 @@ const LoginForm = () => {
       >
         {isLoading ? <Loader color="#b2f35f" size="sm" /> : "Sign in"}
       </Button>
+      <Box
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center"
+        }}
+      >
+        {signInOptions.map((option) => {
+          return (
+            <Image
+              src={option.logo}
+              alt={option.altText}
+              key={option.id}
+              height={50}
+              width={55}
+              onClick={() => signIn(option.service)}
+              style={{
+                margin: "3%",
+                cursor: "pointer"
+              }}
+            />
+          );
+        })}
+      </Box>
+
       <Box p={5} m={5} style={{ textAlign: "right" }}>
         <Text p={5} m={5} component="a" href="/signup" className={styles.link}>
           Create an account.

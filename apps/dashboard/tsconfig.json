@@ -18,9 +18,9 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "module": "commonjs"
+    "module": "commonjs",
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "public/data/**/*.json"],
   "exclude": [
     "node_modules"
   ]
