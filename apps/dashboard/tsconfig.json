@@ -20,7 +20,7 @@
     "incremental": true,
     "module": "commonjs",
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "public/data/**/*.json"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "public/data/**/*.json", "pages/api/auth/[...nextauth].js"],
   "exclude": [
     "node_modules"
   ]

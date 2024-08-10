@@ -4,6 +4,11 @@ type IUser = {
   lastName: string;
   email: string;
   password: string;
+  provider: string;
+  providerId: string;
+  accessToken: string;
+  refreshToken: string;
+  tokenExpiry: Date;
   __v: number;
 };
 

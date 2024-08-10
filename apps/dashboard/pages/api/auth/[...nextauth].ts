@@ -1,8 +1,11 @@
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
+import { client } from "./lib/db";
+import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 
-export const authOptions = {
+export const authOptions: NextAuthOptions = {
+  adapter: MongoDBAdapter(client as any),
   secret: process.env.AUTH_SECRET,
   providers: [
     GithubProvider({
