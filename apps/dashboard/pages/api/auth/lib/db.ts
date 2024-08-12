@@ -1,7 +1,7 @@
 import { MongoDBAdapter as DefaultMongoDBAdapter } from "@next-auth/mongodb-adapter";
-import { IUser } from "@packages/types";
+import { IUser } from "@repo/types";
 import { MongoClient, ObjectId } from "mongodb";
-// import User from ""
+import { User } from "@repo/models";
 
 const clientPromise = MongoClient.connect(process.env.MONGODB_URI as string);
 
@@ -15,7 +15,7 @@ const CustomMongoDBAdapter = {
       _id: new ObjectId()
     };
 
-    // const matchedUser = await User
+    // const matchedUser = await User;
 
     await db.collection("users").insertOne(newUser);
 

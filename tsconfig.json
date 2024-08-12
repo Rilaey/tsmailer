@@ -12,7 +12,7 @@
       "rootDir": ".",
       "module": "commonjs",
       "target": "es6",
-      "moduleResolution": "node"
+      "moduleResolution": "NodeNext"
     },
     "include": ["packages/**/*", "apps/**/*"]
   }

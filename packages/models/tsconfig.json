@@ -1,0 +1,11 @@
+{
+    "name": "models",
+    "extends": "@repo/typescript-config/react-library.json",
+    "compilerOptions": {
+      "target": "ES6",
+      "strict": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true
+    }
+  }
+  

@@ -1,4 +1,4 @@
-import { User, EmailAccounts } from "../models";
+import { EmailAccounts, User } from "@repo/models";
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 

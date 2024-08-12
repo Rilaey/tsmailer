@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import { Request, Response } from "express";
-import { EmailAccounts, User } from "../models";
+import { EmailAccounts, User } from "@repo/models";
 
 const saltRounds = 10;
 

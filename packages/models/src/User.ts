@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { IUser } from "@packages/types";
+import { IUser } from "@repo/types";
 
 const userSchema = new Schema<IUser>({
   name: {
@@ -23,6 +23,6 @@ const userSchema = new Schema<IUser>({
   }
 });
 
-const User = model("User", userSchema);
+export const User = model("User", userSchema);
 
 export default User;

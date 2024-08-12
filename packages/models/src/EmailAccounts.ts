@@ -1,4 +1,4 @@
-import { IEmailAccounts } from "@packages/types";
+import { IEmailAccounts } from "@repo/types";
 import { Schema, model } from "mongoose";
 
 const emailAccountsSchema = new Schema<IEmailAccounts>({
@@ -29,6 +29,6 @@ const emailAccountsSchema = new Schema<IEmailAccounts>({
   ]
 });
 
-const EmailAccounts = model("EmailAccounts", emailAccountsSchema);
+export const EmailAccounts = model("EmailAccounts", emailAccountsSchema);
 
 export default EmailAccounts;

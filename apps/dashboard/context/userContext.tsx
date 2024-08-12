@@ -1,4 +1,4 @@
-import { IUser } from "@packages/types";
+import { IUser } from "@repo/types";
 import React from "react";
 import { createContext, ReactNode, useState } from "react";
 

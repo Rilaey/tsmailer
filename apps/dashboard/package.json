@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@repo/models": "*",
+    "@repo/types": "*",
     "@auth/mongodb-adapter": "^3.4.2",
     "@mantine/core": "^7.11.2",
     "@mantine/hooks": "^7.11.2",
@@ -20,6 +22,7 @@
     "react-dom": "18.3.1"
   },
   "devDependencies": {
+    "@repo/models": "*",
     "@types/node": "22.0.1",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
