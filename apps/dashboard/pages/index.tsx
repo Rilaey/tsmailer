@@ -1,14 +1,21 @@
 import type { NextPage } from "next";
 import { Button } from "@mantine/core";
 import { useSession, signOut } from "next-auth/react";
-import { useEffect } from "react";
+import { useGetUserById } from "../hooks/useGetUserById";
+import { useContext, useEffect } from "react";
+import { UserContext } from "../context/userContext";
 
 const Home: NextPage = () => {
   const { data } = useSession();
 
+  const { getUserById } = useGetUserById();
+
+  const userContext = useContext(UserContext);
+
   useEffect(() => {
-    console.log(data);
-  }, [data]);
+    getUserById();
+    console.log(userContext);
+  }, [data, userContext]);
   return (
     <>
       {data ? (

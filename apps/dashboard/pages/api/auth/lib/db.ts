@@ -1,36 +1,36 @@
-import { MongoClient, ServerApiVersion } from "mongodb";
+import { MongoDBAdapter as DefaultMongoDBAdapter } from "@next-auth/mongodb-adapter";
+import { IUser } from "@packages/types";
+import { MongoClient, ObjectId } from "mongodb";
+// import User from ""
 
-if (!process.env.MONGODB_URI) {
-  throw new Error('Invalid/Missing environment variable: "MONGODB_URI"');
-}
+const clientPromise = MongoClient.connect(process.env.MONGODB_URI as string);
 
-const uri = process.env.MONGODB_URI;
-const options = {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true
+const CustomMongoDBAdapter = {
+  ...DefaultMongoDBAdapter(clientPromise),
+
+  async createUser(user: IUser) {
+    const db = (await clientPromise).db();
+    const newUser = {
+      ...user,
+      _id: new ObjectId()
+    };
+
+    // const matchedUser = await User
+
+    await db.collection("users").insertOne(newUser);
+
+    const newEmailAccountObject = {
+      _id: new ObjectId(),
+      userId: newUser._id
+    };
+
+    await db.collection("emailaccounts").insertOne(newEmailAccountObject);
+
+    // Return the user with the custom field included
+    return { ...newUser, id: newUser._id.toString() };
   }
+
+  // Optionally override other methods if needed
 };
 
-let client: MongoClient;
-
-if (process.env.NODE_ENV === "development") {
-  // In development mode, use a global variable so that the value
-  // is preserved across module reloads caused by HMR (Hot Module Replacement).
-  let globalWithMongo = global as typeof globalThis & {
-    _mongoClient?: MongoClient;
-  };
-
-  if (!globalWithMongo._mongoClient) {
-    globalWithMongo._mongoClient = new MongoClient(uri, options);
-  }
-  client = globalWithMongo._mongoClient;
-} else {
-  // In production mode, it's best to not use a global variable.
-  client = new MongoClient(uri, options);
-}
-
-// Export a module-scoped MongoClient. By doing this in a
-// separate module, the client can be shared across functions.
-export { client };
+export default CustomMongoDBAdapter;

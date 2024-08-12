@@ -1,15 +1,11 @@
 type IUser = {
   _id: string;
-  firstName: string;
-  lastName: string;
+  name: string;
   email: string;
-  password: string;
-  provider: string;
-  providerId: string;
-  accessToken: string;
-  refreshToken: string;
-  tokenExpiry: Date;
-  __v: number;
+  password: string | undefined | null;
+  image: string | undefined | null;
+  expires: string | undefined | null;
+  // __v: number;
 };
 
 export type { IUser };
