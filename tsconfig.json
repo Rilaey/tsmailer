@@ -10,7 +10,7 @@
       "skipLibCheck": true,
       "outDir": "dist",
       "rootDir": ".",
-      "module": "commonjs",
+      "module": "NodeNext",
       "target": "es6",
       "moduleResolution": "NodeNext"
     },
