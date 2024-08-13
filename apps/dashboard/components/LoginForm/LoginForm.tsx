@@ -1,11 +1,24 @@
 import { Button, Paper, Text, TextInput, Loader, Box } from "@mantine/core";
 import styles from "../../styles/loginForm.module.css";
 import { useLogin } from "../../hooks/useLogin";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import signInOptions from "../../public/data/signinOptions.json";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 const LoginForm = () => {
+  const { data } = useSession();
+
+  console.log("data", data);
+
+  const router = useRouter();
+  let { error: routeError } = router.query;
+
+  // error handling for trying to sign in with an email that already exist for providers
+  if (routeError == "OAuthAccountNotLinked") {
+    routeError = "User already exist with provided email address.";
+  }
+
   const { error, isLoading, loginFormState, setLoginFormState, login } =
     useLogin();
 
@@ -24,7 +37,6 @@ const LoginForm = () => {
   return (
     <Paper
       w={550}
-      h={550}
       style={{
         padding: "3%",
         borderRadius: "25px",
@@ -42,6 +54,12 @@ const LoginForm = () => {
       <Text c="#fcfcfc" fw={600} p={5} size="18px">
         Please enter your account details.
       </Text>
+      <br />
+      {routeError && (
+        <Text c="crimson" ta="center" fw={600} size="16px">
+          {routeError}
+        </Text>
+      )}
       <br />
       <TextInput
         type="text"

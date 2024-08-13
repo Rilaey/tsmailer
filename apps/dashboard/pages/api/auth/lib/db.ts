@@ -1,7 +1,6 @@
 import { MongoDBAdapter as DefaultMongoDBAdapter } from "@next-auth/mongodb-adapter";
 import { IUser } from "@repo/types";
 import { MongoClient, ObjectId } from "mongodb";
-import { User } from "@repo/models";
 
 const clientPromise = MongoClient.connect(process.env.MONGODB_URI as string);
 
@@ -10,12 +9,8 @@ const CustomMongoDBAdapter = {
 
   async createUser(user: IUser) {
     const db = (await clientPromise).db();
-    const newUser = {
-      ...user,
-      _id: new ObjectId()
-    };
 
-    // const matchedUser = await User;
+    const newUser = { ...user, _id: new ObjectId() };
 
     await db.collection("users").insertOne(newUser);
 
@@ -26,11 +21,10 @@ const CustomMongoDBAdapter = {
 
     await db.collection("emailaccounts").insertOne(newEmailAccountObject);
 
-    // Return the user with the custom field included
     return { ...newUser, id: newUser._id.toString() };
   }
 
   // Optionally override other methods if needed
 };
 
-export default CustomMongoDBAdapter;
+export { clientPromise, CustomMongoDBAdapter };
