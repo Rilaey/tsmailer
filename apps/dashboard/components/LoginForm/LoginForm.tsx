@@ -51,10 +51,21 @@ const LoginForm = () => {
         Welcome back.
       </Text>
       <br />
-      <Text c="#fcfcfc" fw={600} p={5} size="18px">
-        Please enter your account details.
-      </Text>
-      <br />
+
+      {/* message after create user redirect */}
+      {router.query.isCreateUserRedirect ? (
+        <>
+          <Text c="green" size="18px" ta="center" fw={600}>
+            Please sign in with new user credentials.
+          </Text>
+        </>
+      ) : (
+        <>
+          <Text c="#fcfcfc" fw={600} p={5} size="18px">
+            Please enter your account details.
+          </Text>
+        </>
+      )}
       {routeError && (
         <Text c="crimson" ta="center" fw={600} size="16px">
           {routeError}

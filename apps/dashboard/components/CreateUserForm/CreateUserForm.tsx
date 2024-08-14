@@ -51,7 +51,9 @@ const CreateUserForm = () => {
         justifyContent: "center"
       }}
       component="form"
-      onSubmit={signUpUser}
+      onSubmit={(e) => {
+        signUpUser(e);
+      }}
     >
       <Text c="#fcfcfc" fw={600} p={5} size="24px">
         Welcome to TSMailer.
@@ -145,7 +147,7 @@ const CreateUserForm = () => {
         disabled={isLoading}
         type="submit"
       >
-        {isLoading ? <Loader color="#b2f35f" size="sm" /> : "Sign in"}
+        {isLoading ? <Loader color="#b2f35f" size="sm" /> : "Sign Up"}
       </Button>
 
       <Box p={5} m={5} style={{ textAlign: "right" }}>

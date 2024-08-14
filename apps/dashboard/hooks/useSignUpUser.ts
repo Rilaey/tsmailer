@@ -1,3 +1,4 @@
+import router from "next/router";
 import { useState } from "react";
 
 interface ISignUpFormState {
@@ -54,9 +55,10 @@ export const useSignUpUser = () => {
         );
       }
 
-      const data = await response.json();
-
-      console.log(data);
+      router.push({
+        pathname: "/login",
+        query: { isCreateUserRedirect: true }
+      });
 
       setSignUpFormState({
         email: "",
