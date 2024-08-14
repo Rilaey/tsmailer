@@ -1,5 +1,5 @@
 import { Button, Paper, Text, TextInput, Loader, Box } from "@mantine/core";
-import styles from "../../styles/loginForm.module.css";
+import styles from "../../styles/loginAndCreateAccount.module.css";
 import { useLogin } from "../../hooks/useLogin";
 import { signIn, useSession } from "next-auth/react";
 import signInOptions from "../../public/data/signinOptions.json";
@@ -82,7 +82,8 @@ const LoginForm = () => {
         onChange={(e) => handleFormChange(e)}
       />
       <Box p={5} m={5} style={{ textAlign: "right" }}>
-        <Text p={5} m={5} component="a" href="/signup" className={styles.link}>
+        {/* TODO: Create forgot password logic */}
+        <Text p={5} m={5} component="a" href="/" className={styles.link}>
           Forgot Password?
         </Text>
       </Box>
