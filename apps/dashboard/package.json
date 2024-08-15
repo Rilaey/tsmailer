@@ -9,15 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@repo/models": "*",
-    "@repo/types": "*",
     "@auth/mongodb-adapter": "^3.4.2",
     "@mantine/core": "^7.11.2",
     "@mantine/hooks": "^7.11.2",
     "@next-auth/mongodb-adapter": "^1.1.3",
+    "@repo/models": "*",
+    "@repo/types": "*",
     "mongodb": "^4.8.0",
     "next": "14.2.5",
-    "next-auth": "^4.24.7",
     "react": "18.3.1",
     "react-dom": "18.3.1"
   },

@@ -1,26 +1,28 @@
 import { Button, Paper, Text, TextInput, Loader, Box } from "@mantine/core";
 import styles from "../../styles/loginAndCreateAccount.module.css";
 import { useLogin } from "../../hooks/useLogin";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import signInOptions from "../../public/data/signinOptions.json";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import jwt from "jsonwebtoken";
+import { useVerifyUserEmail } from "../../hooks/useVerifyUserEmail";
+import { useEffect } from "react";
 
 const LoginForm = () => {
-  const { data } = useSession();
-
-  console.log("data", data);
-
   const router = useRouter();
-  let { error: routeError } = router.query;
+  let { error: routeError, token } = router.query;
 
-  // error handling for trying to sign in with an email that already exist for providers
-  if (routeError == "OAuthAccountNotLinked") {
-    routeError = "User already exist with provided email address.";
-  }
+  const { successfulVerification, verifyUserEmail } = useVerifyUserEmail();
 
   const { error, isLoading, loginFormState, setLoginFormState, login } =
     useLogin();
+
+  // error handling for trying to sign in with an email that already exist for providers
+  if (routeError == "OAuthAccountNotLinked") {
+    routeError =
+      "User already exist with provided email address. Please sign in with the correct provider or credentials.";
+  }
 
   const handleFormChange = (e: { target: { name: any; value: any } }) => {
     setLoginFormState((prev) => {
@@ -34,6 +36,24 @@ const LoginForm = () => {
       return prev;
     });
   };
+
+  useEffect(() => {
+    if (token) {
+      const decodedToken = jwt.decode(
+        token as string,
+        process.env.AUTH_SECRET as any
+      );
+
+      if (decodedToken) {
+        //@ts-ignore
+        //email is not of type JWT, but its getting sent as part of the token.
+        verifyUserEmail(decodedToken.email);
+      }
+
+      console.log("token");
+    }
+    console.log("no token");
+  }, [token]);
   return (
     <Paper
       w={550}
@@ -53,9 +73,9 @@ const LoginForm = () => {
       <br />
 
       {/* message after create user redirect */}
-      {router.query.isCreateUserRedirect ? (
+      {successfulVerification ? (
         <>
-          <Text c="green" size="18px" ta="center" fw={600}>
+          <Text c="green" size="18px" p={5} fw={600}>
             Please sign in with new user credentials.
           </Text>
         </>
@@ -66,6 +86,7 @@ const LoginForm = () => {
           </Text>
         </>
       )}
+      <br />
       {routeError && (
         <Text c="crimson" ta="center" fw={600} size="16px">
           {routeError}

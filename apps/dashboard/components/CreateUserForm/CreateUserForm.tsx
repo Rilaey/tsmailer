@@ -1,6 +1,5 @@
 import { Button, Paper, Text, TextInput, Loader, Box } from "@mantine/core";
 import styles from "../../styles/loginAndCreateAccount.module.css";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useSignUpUser } from "../../hooks/useSignUpUser";
@@ -23,8 +22,6 @@ const CreateUserForm = () => {
       return prev;
     });
   };
-
-  const { data } = useSession();
 
   const router = useRouter();
   let { error: routeError } = router.query;
@@ -127,8 +124,6 @@ const CreateUserForm = () => {
       )}
       {!isPasswordMatch && (
         <Text
-          p={5}
-          m={5}
           style={{
             textAlign: "center"
           }}
@@ -144,7 +139,7 @@ const CreateUserForm = () => {
         m={5}
         color="#b2f35f"
         c="var(--mantine-color-body)"
-        disabled={isLoading}
+        disabled={isLoading || !isPasswordMatch}
         type="submit"
       >
         {isLoading ? <Loader color="#b2f35f" size="sm" /> : "Sign Up"}

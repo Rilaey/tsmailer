@@ -5,7 +5,7 @@ type IUser = {
   password: string | undefined | null;
   image: string | undefined | null;
   expires: string | undefined | null;
-  // __v: number;
+  isEmailVerified: boolean;
 };
 
 export type { IUser };

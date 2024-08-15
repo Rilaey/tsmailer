@@ -1,4 +1,3 @@
-import router from "next/router";
 import { useState } from "react";
 
 interface ISignUpFormState {
@@ -50,15 +49,8 @@ export const useSignUpUser = () => {
       });
 
       if (!response.ok) {
-        throw new Error(
-          "Errors attempting to create user. Please try again. hook"
-        );
+        throw new Error("Errors attempting to create user. Please try again.");
       }
-
-      router.push({
-        pathname: "/login",
-        query: { isCreateUserRedirect: true }
-      });
 
       setSignUpFormState({
         email: "",

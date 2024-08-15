@@ -19,7 +19,11 @@ const userSchema = new Schema<IUser>({
     type: String,
     minlength: 8,
     maxlength: 64,
-    required: false // Make the password field optional
+    required: false
+  },
+  isEmailVerified: {
+    type: Boolean,
+    default: false
   }
 });
 

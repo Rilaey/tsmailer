@@ -1,23 +1,26 @@
 import "dotenv/config";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function login(req: NextApiRequest, res: NextApiResponse) {
-  const { email, password } = req.body;
+export default async function verifyUserEmail(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  const { email } = req.body;
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_DEV_ROUTE}/api/user/loginUser`,
+      `${process.env.NEXT_PUBLIC_DEV_ROUTE}/api/user/verifyUserEmail`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email })
       }
     );
 
     if (!response.ok) {
-      throw new Error("Error logging user in.");
+      throw new Error("Unable to locate user to verify email address.");
     }
 
     const data = await response.json();

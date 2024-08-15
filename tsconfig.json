@@ -2,7 +2,9 @@
     "compilerOptions": {
       "baseUrl": ".",
       "paths": {
-        "@packages/*": ["packages/*"]
+        "@packages/*": ["packages/*"],
+        "@models/*": ["packages/models/src/*"],
+        "@types/*": ["packages/types/src/*"]
       },
       "composite": true,
       "declaration": true,
@@ -14,6 +16,10 @@
       "target": "es6",
       "moduleResolution": "NodeNext"
     },
+    "references": [
+      { "path": "./packages/models" },
+      { "path": "./packages/types" }
+    ],
     "include": ["packages/**/*", "apps/**/*"]
   }
   

@@ -28,7 +28,8 @@ export const authOptions: NextAuthOptions = {
           label: "Password",
           type: "password",
           placeholder: "Password"
-        }
+        },
+        isEmailVerified: {}
       },
       async authorize(credentials) {
         const credentialDetails = {
@@ -38,9 +39,9 @@ export const authOptions: NextAuthOptions = {
 
         const db = (await clientPromise).db();
 
-        const credUser = await db
-          .collection("users")
-          .findOne({ email: credentialDetails.email });
+        const credUser = await db.collection("users").findOne({
+          email: credentialDetails.email
+        });
 
         if (!credUser) {
           throw new Error("No user found with provided email.");
@@ -52,7 +53,13 @@ export const authOptions: NextAuthOptions = {
         );
 
         if (!isValidPassword) {
-          throw new Error("Invalid password.");
+          throw new Error("Invalid email or password.");
+        }
+
+        if (!credUser.isEmailVerified) {
+          throw new Error(
+            "Please verify your email address before signing in."
+          );
         }
 
         const user = {
