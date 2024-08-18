@@ -1,4 +1,12 @@
-import { Button, Paper, Text, TextInput, Loader, Box } from "@mantine/core";
+import {
+  Button,
+  Paper,
+  Text,
+  TextInput,
+  Loader,
+  Box,
+  PasswordInput
+} from "@mantine/core";
 import styles from "../../styles/loginAndCreateAccount.module.css";
 import { useLogin } from "../../hooks/useLogin";
 import { signIn } from "next-auth/react";
@@ -8,8 +16,11 @@ import { useRouter } from "next/router";
 import jwt from "jsonwebtoken";
 import { useVerifyUserEmail } from "../../hooks/useVerifyUserEmail";
 import { useEffect } from "react";
+import { useDisclosure } from "@mantine/hooks";
 
 const LoginForm = () => {
+  const [visible, { toggle }] = useDisclosure(false);
+
   const router = useRouter();
   let { error: routeError, token } = router.query;
 
@@ -100,9 +111,10 @@ const LoginForm = () => {
         value={loginFormState.email}
         onChange={(e) => handleFormChange(e)}
       />
-      <TextInput
-        type="password"
+      <PasswordInput
         label="Password"
+        visible={visible}
+        onVisibilityChange={toggle}
         placeholder="Password"
         classNames={{ label: styles.label }}
         p={5}

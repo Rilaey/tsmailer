@@ -30,7 +30,7 @@ export const useResendEmailVerification = () => {
 
       const data = await response.json();
 
-      // setIsLoading(false);
+      setIsLoading(false);
 
       return data;
     } catch (err: any) {

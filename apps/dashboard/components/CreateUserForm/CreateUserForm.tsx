@@ -1,11 +1,22 @@
-import { Button, Paper, Text, TextInput, Loader, Box } from "@mantine/core";
+import {
+  Button,
+  Paper,
+  Text,
+  TextInput,
+  Loader,
+  Box,
+  PasswordInput
+} from "@mantine/core";
 import styles from "../../styles/loginAndCreateAccount.module.css";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useSignUpUser } from "../../hooks/useSignUpUser";
+import { useDisclosure } from "@mantine/hooks";
 
 const CreateUserForm = () => {
   const [isPasswordMatch, setIsPasswordMatch] = useState<boolean>(false);
+
+  const [visible, { toggle }] = useDisclosure(false);
 
   const { error, isLoading, signUpFormState, setSignUpFormState, signUpUser } =
     useSignUpUser();
@@ -87,10 +98,11 @@ const CreateUserForm = () => {
         value={signUpFormState.email}
         onChange={(e) => handleFormChange(e)}
       />
-      <TextInput
+      <PasswordInput
         withAsterisk
-        type="password"
         label="Password"
+        visible={visible}
+        onVisibilityChange={toggle}
         placeholder="Password"
         classNames={{ label: styles.label }}
         p={5}
@@ -98,10 +110,11 @@ const CreateUserForm = () => {
         value={signUpFormState.password}
         onChange={(e) => handleFormChange(e)}
       />
-      <TextInput
+      <PasswordInput
         withAsterisk
-        type="password"
         label="Confirm Password"
+        visible={visible}
+        onVisibilityChange={toggle}
         placeholder="Confirm Password"
         classNames={{ label: styles.label }}
         p={5}

@@ -17,7 +17,7 @@ export const authOptions: NextAuthOptions = {
   },
   jwt: {
     secret: process.env.AUTH_SECRET,
-    maxAge: parseInt(process.env.jwtMaxAge ?? "0")
+    maxAge: parseInt(process.env.jwtMaxAge ?? "2592000")
   },
   providers: [
     CredentialsProvider({
@@ -92,7 +92,7 @@ export const authOptions: NextAuthOptions = {
     async redirect({ url, baseUrl }) {
       return baseUrl;
     },
-    session({ session, token, user }) {
+    async session({ session, token, user }) {
       return { ...session, ...token, ...user };
     },
     async signIn({ user, profile, account }) {
