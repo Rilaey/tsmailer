@@ -17,7 +17,7 @@ export const authOptions: NextAuthOptions = {
   },
   jwt: {
     secret: process.env.AUTH_SECRET,
-    maxAge: 60 * 60 * 24 * 30
+    maxAge: parseInt(process.env.jwtMaxAge ?? "0")
   },
   providers: [
     CredentialsProvider({
@@ -68,7 +68,6 @@ export const authOptions: NextAuthOptions = {
           name: credUser.name
         };
 
-        // Return the user object
         return user;
       }
     }),
@@ -82,15 +81,19 @@ export const authOptions: NextAuthOptions = {
     })
   ],
   callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.email = user.email;
+        token.name = user.name;
+      }
+      return token;
+    },
     async redirect({ url, baseUrl }) {
       return baseUrl;
     },
     session({ session, token, user }) {
-      return { ...session, token, user };
-    },
-    async jwt({ token, account, user }) {
-      token.accessToken = account?.access_token;
-      return { ...token, ...user, ...account };
+      return { ...session, ...token, ...user };
     },
     async signIn({ user, profile, account }) {
       console.log("user", user);

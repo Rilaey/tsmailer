@@ -4,7 +4,8 @@
       "paths": {
         "@packages/*": ["packages/*"],
         "@models/*": ["packages/models/src/*"],
-        "@types/*": ["packages/types/src/*"]
+        "@types/*": ["packages/types/src/*"],
+        "@utility/*": ["packages/utility/src/*"]
       },
       "composite": true,
       "declaration": true,

@@ -1,3 +1,5 @@
+import { Types } from "mongoose";
+
 type IUser = {
   _id: string;
   name: string;
@@ -6,6 +8,9 @@ type IUser = {
   image: string | undefined | null;
   expires: string | undefined | null;
   isEmailVerified: boolean;
+  emailAccountsId: Types.ObjectId;
+  logsId: Types.ObjectId;
+  jti: string | null;
 };
 
 export type { IUser };

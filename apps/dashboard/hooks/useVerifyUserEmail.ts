@@ -7,17 +7,17 @@ export const useVerifyUserEmail = () => {
   const [successfulVerification, setSuccessfulVerification] =
     useState<boolean>(false);
 
-  const verifyUserEmail = async (email: string) => {
+  const verifyUserEmail = async (email: string, jti: string) => {
     setErrorVerifyingUserEmail(null);
     setSuccessfulVerification(false);
 
     try {
-      const response = await fetch("/api/verifyUserEmail", {
+      const response = await fetch("/api/auth/verifyUserEmail", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ email, jti })
       });
 
       if (!response.ok) {

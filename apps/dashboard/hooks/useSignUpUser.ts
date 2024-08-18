@@ -1,4 +1,6 @@
+import { emailValidation } from "@repo/utility";
 import { useState } from "react";
+import { useRouter } from "next/router";
 
 interface ISignUpFormState {
   email: string;
@@ -17,11 +19,13 @@ export const useSignUpUser = () => {
     confirmedPassword: ""
   });
 
+  const router = useRouter();
+
   const signUpUser = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
     setError(null);
-    setIsLoading(false);
+    setIsLoading(true);
 
     try {
       if (!signUpFormState.name) {
@@ -32,11 +36,15 @@ export const useSignUpUser = () => {
         throw new Error("Email field is required");
       }
 
+      if (!signUpFormState.email.match(emailValidation)) {
+        throw new Error("Email is not of valid format");
+      }
+
       if (!signUpFormState.password) {
         throw new Error("Password field is required");
       }
 
-      const response = await fetch("/api/signup", {
+      const response = await fetch("/api/auth/userRegistration", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -51,6 +59,15 @@ export const useSignUpUser = () => {
       if (!response.ok) {
         throw new Error("Errors attempting to create user. Please try again.");
       }
+
+      setIsLoading(false);
+
+      router.push({
+        pathname: "/verify-email",
+        query: {
+          email: signUpFormState.email
+        }
+      });
 
       setSignUpFormState({
         email: "",

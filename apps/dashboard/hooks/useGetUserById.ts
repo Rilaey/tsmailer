@@ -1,6 +1,6 @@
 import { UserContext } from "./../context/userContext";
 import { useState, useContext } from "react";
-import { useAuthToken } from "./useAuthToken";
+import { useSession } from "next-auth/react";
 
 export const useGetUserById = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -8,42 +8,48 @@ export const useGetUserById = () => {
 
   const userContext = useContext(UserContext);
 
-  const { token } = useAuthToken();
+  const { data: session } = useSession();
 
   const getUserById = async () => {
     setIsLoading(true);
     setError(null);
 
     try {
-      if (token?.id) {
+      //@ts-ignore
+      // id is in the session, but not a part of the interface.
+      if (session?.id) {
         const response = await fetch(`/api/getUserById`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({ _id: token.id })
+          //@ts-ignore
+          // id is in the session, but not a part of the interface.
+          body: JSON.stringify({ _id: session.id })
         });
 
         if (!response.ok) {
           throw new Error("Issues with response.");
         }
 
-        const json = await response.json();
+        const data = await response.json();
 
-        if (json) {
-          //@ts-ignore
-          //wants the password field
+        if (data) {
           userContext.setUser((prev) => {
             if (!prev) {
               return {
-                _id: json._id,
-                name: json.name,
-                email: json.email,
-                image: json.image ?? "",
-                expires: token?.exp
+                _id: data._id,
+                name: data.name,
+                email: data.email,
+                image: data.image ?? "",
+                expires: session?.expires,
+                password: data.password,
+                isEmailVerified: data.isEmailVerified,
+                logsId: data.logsId,
+                emailAccountsId: data.emailAccountsId,
+                jti: null
               };
             }
-
             return prev;
           });
         }

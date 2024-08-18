@@ -1,9 +1,9 @@
 import React from "react";
 import type { NextPage } from "next";
 import { Box, Container, Text } from "@mantine/core";
-import LoginForm from "../components/LoginForm/LoginForm";
+import LoginForm from "../../components/LoginForm/LoginForm";
 
-const login: NextPage = () => {
+const index: NextPage = () => {
   return (
     <Container
       style={{
@@ -24,7 +24,7 @@ const login: NextPage = () => {
       >
         <span
           style={{
-            color: "#b2f35f"
+            color: "#9c6fe4"
           }}
         >
           TS
@@ -36,4 +36,4 @@ const login: NextPage = () => {
   );
 };
 
-export default login;
+export default index;

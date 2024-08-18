@@ -3,9 +3,13 @@ import { EmailAccounts, User, Logs } from "@repo/models";
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import moment from "moment";
-import { emailValidation } from "../utility/emailValidation";
+import { emailValidation } from "@repo/utility";
 import { userVerificationTransporter } from "../utility/transporters";
 import jwt from "jsonwebtoken";
+import { pushLogs } from "../utility/logs/pushLogs";
+import { v4 as uuidv4 } from "uuid";
+
+const secret = process.env.AUTH_SECRET;
 
 export const createUser = async (req: Request, res: Response) => {
   const { name, email, password } = req.body;
@@ -40,7 +44,7 @@ export const createUser = async (req: Request, res: Response) => {
       password: hashedPassword
     });
 
-    await Logs.create({
+    const logs = await Logs.create({
       userId: user._id,
       entries: [
         {
@@ -52,18 +56,27 @@ export const createUser = async (req: Request, res: Response) => {
       ]
     });
 
-    await EmailAccounts.create({
+    const emailAccounts = await EmailAccounts.create({
       userId: user._id
     });
 
-    const secret = process.env.AUTH_SECRET;
-
-    const jwtPayload = { id: user.id, email: user.email, name: user.name };
+    const jwtPayload = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      jwtid: uuidv4()
+    };
 
     // Generate the JWT
     const token = jwt.sign(jwtPayload, secret as string, {
-      expiresIn: "1h"
+      expiresIn: process.env.jwtTokenExpiration
     });
+
+    user.emailAccountsId = emailAccounts._id;
+    user.logsId = logs._id;
+    user.jti = jwtPayload.jwtid;
+
+    await user.save();
 
     const verificationLink = `http://localhost:8082/login?token=${token}`;
 
@@ -113,22 +126,7 @@ export const loginUser = async (req: Request, res: Response) => {
       throw new Error("Unable to locate user with provided email or password.");
     }
 
-    await Logs.findOneAndUpdate(
-      { userId: user._id },
-      {
-        $push: {
-          entries: {
-            message: "User login.",
-            state: "Success",
-            variation: "Account",
-            date: moment().format("dddd, MMMM Do YYYY, h:mm:ss a")
-          }
-        }
-      },
-      {
-        new: true
-      }
-    );
+    await pushLogs(user._id, "User login.", "Success", "Account");
 
     res.status(200).json(user);
   } catch (err: any) {
@@ -140,10 +138,13 @@ export const getUserById = async (req: Request, res: Response) => {
   const { _id } = req.body;
 
   try {
-    const user = await User.findById(_id);
+    const user = await User.findById(_id)
+      .populate("emailAccountsId")
+      .populate("logsId")
+      .exec();
 
     if (!user) {
-      throw new Error("Unable to find user with the provided.");
+      throw new Error("Unable to find user with the provided id.");
     }
 
     res.status(200).json(user);
@@ -153,23 +154,73 @@ export const getUserById = async (req: Request, res: Response) => {
 };
 
 export const verifyUserEmail = async (req: Request, res: Response) => {
-  const { email } = req.body;
+  const { email, jti } = req.body;
   try {
-    const user = await User.findOneAndUpdate(
-      { email: email },
-      {
-        $set: {
-          isEmailVerified: true
-        }
-      },
-      {
-        new: true
-      }
-    );
+    const user = await User.findOne({ email: email });
 
     if (!user) {
       throw new Error("Unable to locate user to verify email address.");
     }
+
+    if (user.jti != jti) {
+      await pushLogs(user._id, "Failed user verification", "Error", "Account");
+
+      throw new Error("Unable to verify jti. Please try again.");
+    }
+
+    user.jti = null;
+    user.isEmailVerified = true;
+
+    await user.save();
+
+    await pushLogs(user._id, "Account verified", "Success", "Account");
+
+    res.status(200).json(user);
+  } catch (err: any) {
+    res.status(500).json(err.message);
+  }
+};
+
+export const resendEmailVerification = async (req: Request, res: Response) => {
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email: email });
+
+    if (!user) {
+      throw new Error("Unable to locate user with the provided email.");
+    }
+
+    const jwtPayload = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      jwtid: uuidv4()
+    };
+
+    const token = jwt.sign(jwtPayload, secret as string, {
+      expiresIn: process.env.jwtTokenExpiration
+    });
+
+    user.jti = jwtPayload.jwtid;
+
+    await user.save();
+
+    await pushLogs(user._id, "Resent email verification", "Success", "Account");
+
+    const verificationLink = `http://localhost:8082/login?token=${token}`;
+
+    await userVerificationTransporter.sendMail({
+      from: process.env.CREATE_ACCOUNT_AUTH_TSMAILER_EMAIL,
+      to: user.email,
+      subject: "Please authenticate your TSMailer account.",
+      text: "Plaintext version of the message",
+      html: `
+      <div> 
+        <p>Hello, ${user.name}! Please click <a href=${verificationLink}>here</a> to authenticate your new TSMailer account.</p>
+      </div>
+      `
+    });
 
     res.status(200).json(user);
   } catch (err: any) {

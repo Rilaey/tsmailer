@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import { Request, Response } from "express";
 import { EmailAccounts, Logs } from "@repo/models";
-import { emailValidation } from "../utility/emailValidation";
+import { emailValidation } from "@repo/utility";
 import moment from "moment";
 
 const saltRounds = 10;

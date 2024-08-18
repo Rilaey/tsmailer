@@ -11,4 +11,9 @@ userRouter.post("/getUserById", userController.getUserById);
 
 userRouter.post("/verifyUserEmail", userController.verifyUserEmail);
 
+userRouter.post(
+  "/resendEmailVerification",
+  userController.resendEmailVerification
+);
+
 export default userRouter;

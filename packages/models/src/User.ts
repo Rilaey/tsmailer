@@ -24,9 +24,21 @@ const userSchema = new Schema<IUser>({
   isEmailVerified: {
     type: Boolean,
     default: false
+  },
+  emailAccountsId: {
+    type: Schema.Types.ObjectId,
+    ref: "EmailAccounts"
+  },
+  logsId: {
+    type: Schema.Types.ObjectId,
+    ref: "Logs"
+  },
+  jti: {
+    type: String,
+    default: null
   }
 });
 
-export const User = model("User", userSchema);
+export const User = model<IUser>("User", userSchema);
 
 export default User;

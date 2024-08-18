@@ -137,12 +137,12 @@ const CreateUserForm = () => {
         fullWidth
         p={5}
         m={5}
-        color="#b2f35f"
+        color="#9c6fe4"
         c="var(--mantine-color-body)"
         disabled={isLoading || !isPasswordMatch}
         type="submit"
       >
-        {isLoading ? <Loader color="#b2f35f" size="sm" /> : "Sign Up"}
+        {isLoading ? <Loader color="#9c6fe4" size="sm" /> : "Sign Up"}
       </Button>
 
       <Box p={5} m={5} style={{ textAlign: "right" }}>

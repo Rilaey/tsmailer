@@ -1,7 +1,6 @@
-import "dotenv/config";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function verifyUserEmail(
+export default async function resendEmailVerification(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -9,7 +8,7 @@ export default async function verifyUserEmail(
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_DEV_ROUTE}/api/user/verifyUserEmail`,
+      `${process.env.NEXT_PUBLIC_DEV_ROUTE}/api/user/resendEmailVerification`,
       {
         method: "POST",
         headers: {
@@ -20,7 +19,7 @@ export default async function verifyUserEmail(
     );
 
     if (!response.ok) {
-      throw new Error("Unable to locate user to verify email address.");
+      throw new Error("Error resending verification email. Please try again.");
     }
 
     const data = await response.json();

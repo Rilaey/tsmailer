@@ -29,6 +29,6 @@ const logSchema = new Schema<ILogs>({
   ]
 });
 
-export const Logs = model("logs", logSchema);
+export const Logs = model<ILogs>("Logs", logSchema);
 
 export default Logs;

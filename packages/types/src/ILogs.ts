@@ -16,4 +16,4 @@ type ILogs = {
   entries: IEntries[];
 };
 
-export type { ILogs };
+export type { ILogs, IVariation, IState };

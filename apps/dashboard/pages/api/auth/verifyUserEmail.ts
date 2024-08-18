@@ -1,28 +1,26 @@
+import "dotenv/config";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function getUserById(
+export default async function verifyUserEmail(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { _id } = req.body;
-  try {
-    if (!_id) {
-      throw new Error("No ID provided to fetch user.");
-    }
+  const { email, jti } = req.body;
 
+  try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_DEV_ROUTE}/api/user/getUserById`,
+      `${process.env.NEXT_PUBLIC_DEV_ROUTE}/api/user/verifyUserEmail`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ _id })
+        body: JSON.stringify({ email, jti })
       }
     );
 
     if (!response.ok) {
-      throw new Error("Error fetching user by id!");
+      throw new Error("Unable to locate user to verify email address.");
     }
 
     const data = await response.json();

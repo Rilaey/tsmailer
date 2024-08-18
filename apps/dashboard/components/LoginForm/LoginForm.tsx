@@ -46,13 +46,10 @@ const LoginForm = () => {
 
       if (decodedToken) {
         //@ts-ignore
-        //email is not of type JWT, but its getting sent as part of the token.
-        verifyUserEmail(decodedToken.email);
+        //email + jwtid is not of type JWT, but its getting sent as part of the token.
+        verifyUserEmail(decodedToken.email, decodedToken.jwtid);
       }
-
-      console.log("token");
     }
-    console.log("no token");
   }, [token]);
   return (
     <Paper
@@ -135,12 +132,12 @@ const LoginForm = () => {
         fullWidth
         p={5}
         m={5}
-        color="#b2f35f"
+        color="#9c6fe4"
         c="var(--mantine-color-body)"
         disabled={isLoading}
         type="submit"
       >
-        {isLoading ? <Loader color="#b2f35f" size="sm" /> : "Sign in"}
+        {isLoading ? <Loader color="#9c6fe4" size="sm" /> : "Sign in"}
       </Button>
       <Box
         style={{
