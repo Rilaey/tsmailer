@@ -15,27 +15,16 @@ const userSchema = new Schema<IUser>({
     ],
     unique: true
   },
-  password: {
-    type: String,
-    minlength: 8,
-    maxlength: 64,
-    required: false
+  image: {
+    type: String
   },
-  isEmailVerified: {
-    type: Boolean,
-    default: false
+  createdDate: {
+    type: Number,
+    default: Date.now()
   },
-  emailAccountsId: {
-    type: Schema.Types.ObjectId,
-    ref: "EmailAccounts"
-  },
-  logsId: {
-    type: Schema.Types.ObjectId,
-    ref: "Logs"
-  },
-  jti: {
-    type: String,
-    default: null
+  lastModifiedDate: {
+    type: Number,
+    default: Date.now()
   }
 });
 

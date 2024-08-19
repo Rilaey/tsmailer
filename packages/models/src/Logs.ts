@@ -7,26 +7,23 @@ const logSchema = new Schema<ILogs>({
     required: true,
     ref: "User"
   },
-  entries: [
-    {
-      message: {
-        type: String,
-        required: true
-      },
-      state: {
-        type: String,
-        required: true
-      },
-      date: {
-        type: String,
-        required: true
-      },
-      variation: {
-        type: String,
-        required: true
-      }
-    }
-  ]
+  message: {
+    type: String,
+    required: true
+  },
+  state: {
+    type: String,
+    required: true
+  },
+  date: {
+    type: Number,
+    required: true,
+    default: Date.now()
+  },
+  variation: {
+    type: String,
+    required: true
+  }
 });
 
 export const Logs = model<ILogs>("Logs", logSchema);

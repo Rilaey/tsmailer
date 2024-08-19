@@ -1,6 +1,5 @@
 import { Logs } from "@repo/models";
 import { IVariation, IState } from "@repo/types";
-import moment from "moment";
 
 export const pushLogs = async (
   userId: string,
@@ -16,8 +15,7 @@ export const pushLogs = async (
           entries: {
             message: message,
             state: state,
-            variation: variation,
-            date: moment().format("dddd, MMMM Do YYYY, h:mm:ss a")
+            variation: variation
           }
         }
       },
