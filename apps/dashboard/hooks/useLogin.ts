@@ -1,5 +1,5 @@
-import { useState, useContext, useEffect } from "react";
-import { UserContext } from "../context/userContext";
+import { useState } from "react";
+import { signIn } from "next-auth/react";
 
 interface loginFormStateProps {
   email: string;
@@ -14,8 +14,6 @@ export const useLogin = () => {
     password: ""
   });
 
-  const userContext = useContext(UserContext);
-
   const login = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
@@ -27,28 +25,18 @@ export const useLogin = () => {
         throw new Error("Please enter email and password");
       }
 
-      const response = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          email: loginFormState.email,
-          password: loginFormState.password
-        })
+      const result = await signIn("credentials", {
+        redirect: true,
+        email: loginFormState.email,
+        password: loginFormState.password
       });
 
-      if (!response.ok) {
-        throw new Error("Error logging user in.");
+      if (result?.error) {
+        setError(result.error);
+        setIsLoading(false);
       }
 
-      const data = await response.json();
-
-      userContext.setUser(data);
-
       setIsLoading(false);
-
-      window.location.href = "/";
 
       setLoginFormState({
         email: "",
@@ -59,11 +47,6 @@ export const useLogin = () => {
       setError(err.message);
     }
   };
-
-  useEffect(() => {
-    sessionStorage.setItem("user", JSON.stringify(userContext?.user));
-  }, [userContext]);
-
   return {
     error,
     isLoading,

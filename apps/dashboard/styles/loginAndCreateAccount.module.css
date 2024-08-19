@@ -1,0 +1,9 @@
+.label {
+  color: #fefefe;
+  font-size: 18px;
+}
+
+.link:hover {
+  color: #9c6fe4;
+  text-decoration: underline;
+}
