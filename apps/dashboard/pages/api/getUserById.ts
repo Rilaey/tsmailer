@@ -10,8 +10,10 @@ export default async function getUserById(
       throw new Error("No ID provided to fetch user.");
     }
 
+   
+
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_DEV_ROUTE}/api/user/getUserById`,
+      `${process.env.NEXT_PUBLIC_DEV_ROUTE}api/user/getUserById`,
       {
         method: "POST",
         headers: {
@@ -21,6 +23,7 @@ export default async function getUserById(
       }
     );
 
+
     if (!response.ok) {
       throw new Error("Error fetching user by id!");
     }
@@ -29,6 +32,6 @@ export default async function getUserById(
 
     res.status(200).json(data);
   } catch (err: any) {
-    res.status(500).json(err.message);
+    res.status(500).json(err);
   }
 }

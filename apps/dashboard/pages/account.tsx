@@ -5,15 +5,15 @@ import { UserContext } from 'context/userContext'
 import { withTabs } from 'hocs/withTabs'
 import { withAuth } from 'hocs/withAuth'
 
-const Home: NextPage = () => {
+const Account: NextPage = () => {
   const { user } = useContext(UserContext)
 
   return (
     <>
       <Text>Hey, {user?.data.email}</Text>
-      <Text>Welcome to the dashboard</Text>
+      <Text>Welcome to the accounts page</Text>
     </>
   )
 }
 
-export default withTabs(withAuth(Home))
+export default withTabs(withAuth(Account))
