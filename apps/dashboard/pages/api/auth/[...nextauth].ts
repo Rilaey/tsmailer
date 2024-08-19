@@ -5,7 +5,7 @@ import { CustomMongoDBAdapter } from "./lib/db";
 
 export const authOptions: NextAuthOptions = {
   adapter: CustomMongoDBAdapter as any,
-  secret: process.env.AUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt"
   },
@@ -14,13 +14,18 @@ export const authOptions: NextAuthOptions = {
     error: "/login"
   },
   jwt: {
-    secret: process.env.AUTH_SECRET,
+    secret: process.env.NEXTAUTH_SECRET,
     maxAge: parseInt(process.env.jwtMaxAge ?? "2592000")
   },
   providers: [
     GithubProvider({
       clientId: process.env.GITHUB_ID || "",
-      clientSecret: process.env.GITHUB_SECRET || ""
+      clientSecret: process.env.GITHUB_SECRET || "",
+      authorization: {
+        params: {
+          prompt: "login" // Forces GitHub to always show the login screen
+        }
+      }
     }),
     GoogleProvider({
       clientId: process.env.GOOGLE_ID || "",
