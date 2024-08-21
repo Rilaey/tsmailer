@@ -7,6 +7,10 @@ const emailAccountsSchema = new Schema<IEmailAccounts>({
     required: true,
     ref: "User"
   },
+  email: {
+    type: String,
+    required: true
+  },
   provider: {
     type: String,
     required: true
@@ -21,13 +25,11 @@ const emailAccountsSchema = new Schema<IEmailAccounts>({
   },
   createdDate: {
     type: Number,
-    required: true,
-    default: Date.now()
+    required: true
   },
   lastModifiedDate: {
     type: Number,
-    required: true,
-    default: Date.now()
+    required: true
   }
 });
 
