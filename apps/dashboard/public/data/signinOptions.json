@@ -1,0 +1,14 @@
+[
+  {
+    "id": 0,
+    "logo": "/images/GithubLogo.png",
+    "service": "github",
+    "altText": "github logo"
+  },
+  {
+    "id": 1,
+    "logo": "/images/Google.png",
+    "service": "google",
+    "altText": "google logo"
+  }
+]
