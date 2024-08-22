@@ -38,11 +38,11 @@ export default async function callback(
 
     const data = await response.json();
     const { access_token, refresh_token } = data;
-
+    console.log(data);
     // Save the tokens to the database
     // Example: await saveTokensToDB(userId, { access_token, refresh_token });
 
-    res.redirect("/dashboard"); // Redirect to the dashboard or any other page
+    res.redirect("/"); // Redirect to the dashboard or any other page
   } catch (error) {
     console.error("Error handling Yahoo callback:", error);
     res.status(500).send("Authentication failed");
