@@ -14,6 +14,7 @@ import styles from "./AddEmailProviderModal.module.css";
 import { useDisclosure } from "@mantine/hooks";
 import { IconInfoCircle } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 const AddEmailProviderModal = ({}) => {
   const [active, setActive] = useState(0);
@@ -21,13 +22,15 @@ const AddEmailProviderModal = ({}) => {
 
   const { data: session } = useSession();
 
+  const router = useRouter();
+
   // router . push ?
   const handleConnect = () => {
     if (session) {
       if (selectedProvider == "Gmail") {
-        window.location.href = "/api/google/connect";
+        router.push("/api/google/connect");
       } else if (selectedProvider == "Yahoo") {
-        window.location.href = "api/yahoo/connect";
+        router.push("api/yahoo/connect");
       }
     }
   };
