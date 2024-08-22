@@ -7,26 +7,30 @@ const emailAccountsSchema = new Schema<IEmailAccounts>({
     required: true,
     ref: "User"
   },
-  yahoo: [
-    {
-      email: {
-        required: true,
-        type: String,
-        validate: [
-          /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,5})+$/,
-          "Invalid email format."
-        ]
-      },
-      password: {
-        required: true,
-        type: String
-      },
-      nickName: {
-        required: true,
-        type: String
-      }
-    }
-  ]
+  email: {
+    type: String,
+    required: true
+  },
+  provider: {
+    type: String,
+    required: true
+  },
+  accessToken: {
+    type: String,
+    required: true
+  },
+  refreshToken: {
+    type: String,
+    required: true
+  },
+  createdDate: {
+    type: Number,
+    required: true
+  },
+  lastModifiedDate: {
+    type: Number,
+    required: true
+  }
 });
 
 export const EmailAccounts = model("EmailAccounts", emailAccountsSchema);

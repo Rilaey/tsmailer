@@ -1,9 +1,9 @@
 import React from "react";
 import type { NextPage } from "next";
 import { Container, Text } from "@mantine/core";
-import CreateUserForm from "../../components/CreateUserForm/CreateUserForm";
+import LoginForm from "../components/LoginForm/LoginForm";
 
-const index: NextPage = () => {
+const login: NextPage = () => {
   return (
     <Container
       style={{
@@ -31,9 +31,9 @@ const index: NextPage = () => {
         </span>
         Mailer
       </Text>
-      <CreateUserForm />
+      <LoginForm />
     </Container>
   );
 };
 
-export default index;
+export default login;

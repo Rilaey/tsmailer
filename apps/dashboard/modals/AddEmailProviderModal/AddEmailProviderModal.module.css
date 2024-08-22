@@ -1,0 +1,23 @@
+.steps {
+  display: none;
+}
+
+.content {
+  padding-top: 0px;
+  margin: 0px;
+}
+
+.title {
+  color: #fefefe;
+  font-weight: 500;
+  font-size: 18px;
+  width: 100%;
+  padding-bottom: 10px;
+  border-bottom: #1c1d21 2px solid;
+}
+
+.buttonGroup {
+  border-top: #1c1d21 2px solid;
+  margin-top: 20px;
+  padding: 20px 0;
+}

@@ -1,13 +1,11 @@
-import bcrypt from "bcrypt";
 import NextAuth, { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
-import { clientPromise, CustomMongoDBAdapter } from "./lib/db";
-import CredentialsProvider from "next-auth/providers/credentials";
+import { CustomMongoDBAdapter } from "./lib/db";
 
 export const authOptions: NextAuthOptions = {
   adapter: CustomMongoDBAdapter as any,
-  secret: process.env.AUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt"
   },
@@ -16,68 +14,22 @@ export const authOptions: NextAuthOptions = {
     error: "/login"
   },
   jwt: {
-    secret: process.env.AUTH_SECRET,
-    maxAge: parseInt(process.env.jwtMaxAge ?? "2592000")
+    secret: process.env.NEXTAUTH_SECRET,
+    maxAge: parseInt(process.env.JWT_MAX_AGE ?? "2592000")
   },
   providers: [
-    CredentialsProvider({
-      name: "Credentials",
-      credentials: {
-        email: { label: "Email", type: "text", placeholder: "Email" },
-        password: {
-          label: "Password",
-          type: "password",
-          placeholder: "Password"
-        },
-        isEmailVerified: {}
-      },
-      async authorize(credentials) {
-        const credentialDetails = {
-          email: credentials?.email,
-          password: credentials?.password
-        };
-
-        const db = (await clientPromise).db();
-
-        const credUser = await db.collection("users").findOne({
-          email: credentialDetails.email
-        });
-
-        if (!credUser) {
-          throw new Error("No user found with provided email.");
-        }
-
-        const isValidPassword = await bcrypt.compare(
-          credentialDetails.password ?? "",
-          credUser?.password ?? ""
-        );
-
-        if (!isValidPassword) {
-          throw new Error("Invalid email or password.");
-        }
-
-        if (!credUser.isEmailVerified) {
-          throw new Error(
-            "Please verify your email address before signing in."
-          );
-        }
-
-        const user = {
-          id: credUser._id.toString(),
-          email: credUser.email,
-          name: credUser.name
-        };
-
-        return user;
-      }
-    }),
     GithubProvider({
       clientId: process.env.GITHUB_ID || "",
-      clientSecret: process.env.GITHUB_SECRET || ""
+      clientSecret: process.env.GITHUB_SECRET || "",
+      authorization: {
+        params: {
+          prompt: "login" // Forces GitHub to always show the login screen
+        }
+      }
     }),
     GoogleProvider({
-      clientId: process.env.GOOGLE_ID || "",
-      clientSecret: process.env.GOOGLE_SECRET || ""
+      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || ""
     })
   ],
   callbacks: {
@@ -96,10 +48,6 @@ export const authOptions: NextAuthOptions = {
       return { ...session, ...token, ...user };
     },
     async signIn({ user, profile, account }) {
-      console.log("user", user);
-      console.log("profile", profile);
-      console.log("account", account);
-
       return true;
     }
   }
