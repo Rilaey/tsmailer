@@ -26,5 +26,5 @@ export default async function connect(
     ]
   });
 
-  res.redirect(authUrl).json(req);
+  res.redirect(authUrl);
 }
