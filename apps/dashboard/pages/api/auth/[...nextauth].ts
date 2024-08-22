@@ -15,7 +15,7 @@ export const authOptions: NextAuthOptions = {
   },
   jwt: {
     secret: process.env.NEXTAUTH_SECRET,
-    maxAge: parseInt(process.env.jwtMaxAge ?? "2592000")
+    maxAge: parseInt(process.env.JWT_MAX_AGE ?? "2592000")
   },
   providers: [
     GithubProvider({

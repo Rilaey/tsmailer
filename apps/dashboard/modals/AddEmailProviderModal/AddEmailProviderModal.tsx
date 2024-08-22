@@ -21,9 +21,14 @@ const AddEmailProviderModal = ({}) => {
 
   const { data: session } = useSession();
 
-  const handleConnect = async () => {
+  // router . push ?
+  const handleConnect = () => {
     if (session) {
-      window.location.href = "/api/google/connect";
+      if (selectedProvider == "Gmail") {
+        window.location.href = "/api/google/connect";
+      } else if (selectedProvider == "Yahoo") {
+        window.location.href = "api/yahoo/connect";
+      }
     }
   };
 
