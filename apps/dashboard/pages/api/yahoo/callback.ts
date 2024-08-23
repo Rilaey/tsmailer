@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { MongoClient } from "mongodb";
+import { getSession } from "next-auth/react";
 
 const YAHOO_CLIENT_ID = process.env.YAHOO_CLIENT_ID;
 const YAHOO_CLIENT_SECRET = process.env.YAHOO_CLIENT_SECRET;
@@ -9,7 +10,13 @@ export default async function callback(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const session = await getSession({ req });
+
   const { code } = req.query;
+
+  if (!session) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
 
   if (!code) {
     return res.status(400).send("Missing authorization code");
