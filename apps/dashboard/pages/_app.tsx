@@ -7,7 +7,10 @@ import { SessionProvider } from 'next-auth/react'
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
   return (
-    <MantineProvider defaultColorScheme="dark">
+    <MantineProvider
+      defaultColorScheme="dark"
+      theme={{ primaryColor: 'violet' }}
+    >
       <SessionProvider session={session}>
         <UserContextProvider>
           <Component {...pageProps} />

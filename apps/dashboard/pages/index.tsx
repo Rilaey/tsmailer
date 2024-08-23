@@ -11,7 +11,6 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <Text>Hey, {user?.data.email}</Text>
       <Text>Welcome to the dashboard</Text>
       <AddEmailProviderModal />
     </>

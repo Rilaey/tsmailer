@@ -10,7 +10,6 @@ const Account: NextPage = () => {
 
   return (
     <>
-      <Text>Hey, {user?.data.email}</Text>
       <Text>Welcome to the accounts page</Text>
     </>
   )
