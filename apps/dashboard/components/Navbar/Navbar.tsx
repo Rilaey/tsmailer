@@ -61,9 +61,7 @@ export function Navbar() {
           className={classes.link}
           onClick={(event) => event.preventDefault()}
         >
-          <IconLogout className={classes.linkIcon} stroke={1.5} />
-
-          <Button c="#fefefe" onClick={() => signOut()}>
+          <Button fullWidth c="#fefefe" onClick={() => signOut()}>
             Logout
           </Button>
         </a>
