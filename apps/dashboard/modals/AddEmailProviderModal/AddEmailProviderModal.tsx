@@ -30,7 +30,7 @@ const AddEmailProviderModal = ({}) => {
       if (selectedProvider == "Gmail") {
         router.push("/api/google/connect");
       } else if (selectedProvider == "Yahoo") {
-        router.push("api/yahoo/connect");
+        router.push("/api/yahoo/connect");
       }
     }
   };
