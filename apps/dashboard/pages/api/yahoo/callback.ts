@@ -49,6 +49,7 @@ export default async function callback(
     );
 
     const decodedTokenJson = await decodedTokenResponse.json();
+    console.log(decodedTokenJson);
 
     const clientPromise = MongoClient.connect(
       process.env.MONGODB_URI as string
