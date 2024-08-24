@@ -71,7 +71,7 @@ function AccordionLabel({
       <Box>
         <Flex align="center" justify="space-between">
           <Avatar
-            src="https://img.icons8.com/clouds/256/000000/email.png"
+            src="https://img.icons8.com/?size=100&id=48257&format=png&color=000000"
             radius="xl"
             size="lg"
             mr="xl"
