@@ -60,7 +60,7 @@ const ApiUsageCard = ({ used, limit }: { used: number; limit: number }) => {
         justify="space-between"
         h="100%"
       >
-        <Box>
+        <Box w="100%">
           <Text my="md" size="xl" fw={700}>
             API Usage
           </Text>
@@ -131,13 +131,44 @@ const ManageSubscriptionCard = ({
   </Card>
 )
 
+const ApiKeyCard = ({
+  apiKey,
+  onGenerateNewKey,
+}: {
+  apiKey: string
+  onGenerateNewKey: () => void
+}) => (
+  <Card w="100%" mb="md" h="100%">
+    <Flex direction="column" justify="space-between" h="100%" w="100%">
+      <Box>
+        <Text my="md" size="xl" fw={700}>
+          API Key Management
+        </Text>
+        <Text mb="md">Current API Key: {apiKey}</Text>
+      </Box>
+      <Box>
+        <Button fullWidth onClick={onGenerateNewKey}>
+          Generate New API Key
+        </Button>
+      </Box>
+    </Flex>
+  </Card>
+)
+
 export default function Subscriptions() {
   const [selectedPlan, setSelectedPlan] = useState('Free')
   const [apiUsage, setApiUsage] = useState({ limit: 500, used: 300 })
+  const [apiKey, setApiKey] = useState('your-current-api-key') // Example API key
 
   const handlePlanChange = (value: string) => {
     setSelectedPlan(value)
     // Add logic to handle plan change
+  }
+
+  const handleGenerateNewKey = () => {
+    // Add logic to generate a new API key
+    const newApiKey = 'new-generated-api-key'
+    setApiKey(newApiKey)
   }
 
   useEffect(() => {
@@ -170,7 +201,7 @@ export default function Subscriptions() {
         </Grid.Col>
 
         <Grid.Col span={{ base: 12, md: 6, lg: 4 }}>
-          <ApiUsageCard used={apiUsage.used} limit={apiUsage.limit} />
+          <ApiKeyCard apiKey={apiKey} onGenerateNewKey={handleGenerateNewKey} />
         </Grid.Col>
 
         <Grid.Col span={{ base: 12, md: 6, lg: 4 }}>
@@ -178,6 +209,9 @@ export default function Subscriptions() {
             selectedPlan={selectedPlan}
             onPlanChange={handlePlanChange}
           />
+        </Grid.Col>
+        <Grid.Col span={{ base: 12, md: 12, lg: 12 }}>
+          <ApiUsageCard used={apiUsage.used} limit={apiUsage.limit} />
         </Grid.Col>
       </Grid>
       <Flex direction="column" gap="md" mt="md">
