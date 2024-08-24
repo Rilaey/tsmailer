@@ -1,6 +1,4 @@
 import type { NextPage } from 'next'
-// import { useContext } from 'react'
-// import { UserContext } from 'context/userContext'
 import { withTabs } from 'hocs/withTabs'
 import { withAuth } from 'hocs/withAuth'
 import AddEmailProviderModal from 'modals/AddEmailProviderModal/AddEmailProviderModal'
@@ -9,7 +7,6 @@ import { Button, Flex, Text } from '@mantine/core'
 import { useState } from 'react'
 
 const Home: NextPage = () => {
-  // const { user } = useContext(UserContext)
   const [modals, setModals] = useState({
     addNewProvider: false,
   })
@@ -34,7 +31,15 @@ const Home: NextPage = () => {
 
       <Statistics />
 
-      {modals.addNewProvider && <AddEmailProviderModal />}
+      <AddEmailProviderModal
+        opened={modals.addNewProvider}
+        toggle={() =>
+          setModals((prev) => ({
+            ...prev,
+            addNewProvider: !prev.addNewProvider,
+          }))
+        }
+      />
     </>
   )
 }

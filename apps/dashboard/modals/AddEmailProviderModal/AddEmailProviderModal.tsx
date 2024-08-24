@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
   Modal,
+  Grid,
   Stepper,
   Button,
   Text,
@@ -10,98 +11,148 @@ import {
   Blockquote,
   Group,
   Flex,
+  Image,
+  Card,
 } from '@mantine/core'
 import styles from './AddEmailProviderModal.module.css'
-import { useDisclosure } from '@mantine/hooks'
 import { IconInfoCircle } from '@tabler/icons-react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 
-const AddEmailProviderModal = ({}) => {
+const providerIcons: Record<
+  'gmail' | 'yahoo' | 'iCloud' | 'outlook' | 'aol',
+  string
+> = {
+  gmail:
+    'https://img.icons8.com/?size=100&id=qyRpAggnV0zH&format=png&color=000000',
+  yahoo: 'https://img.icons8.com/color/256/yahoo.png',
+  iCloud:
+    'https://img.icons8.com/?size=100&id=VKsqR5pHg8u5&format=png&color=FFFFFF',
+  outlook: 'https://img.icons8.com/color/256/microsoft-outlook-2019.png',
+  aol:
+    'https://img.icons8.com/?size=100&id=BT3PNvFusxnD&format=png&color=000000',
+}
+
+const providerImages = {
+  gmail: providerIcons.gmail,
+  yahoo: providerIcons.yahoo,
+  iCloud: providerIcons.iCloud,
+  outlook: providerIcons.outlook,
+  aol: providerIcons.aol,
+}
+
+const AddEmailProviderModal = ({
+  opened,
+  toggle,
+}: {
+  opened: boolean
+  toggle: () => void
+}) => {
   const [active, setActive] = useState(0)
   const [selectedProvider, setSelectedProvider] = useState<string | null>(null)
 
   const { data: session } = useSession()
-
   const router = useRouter()
 
-  // router . push ?
   const handleConnect = () => {
     if (session) {
-      if (selectedProvider == 'Gmail') {
-        router.push('/api/google/connect')
-      } else if (selectedProvider == 'Yahoo') {
-        router.push('/api/yahoo/connect')
+      switch (selectedProvider?.toLowerCase()) {
+        case 'gmail':
+          router.push('/api/google/connect')
+          break
+        case 'yahoo':
+          router.push('/api/yahoo/connect')
+          break
+        case 'icloud':
+          router.push('/api/icloud/connect')
+          break
+        case 'outlook':
+          router.push('/api/outlook/connect')
+          break
+        case 'aol':
+          router.push('/api/aol/connect')
+          break
+        default:
+          break
       }
     }
   }
 
-  const [opened, { open, close }] = useDisclosure(true)
-
   const handleModalClose = () => {
-    // close modal
-    close()
-
-    // clear provider if selected
-    setSelectedProvider((prev) => (prev = null))
-
-    // so user doesn't see step reset
+    toggle()
+    setSelectedProvider(null)
     setTimeout(() => {
       setActive(0)
     }, 300)
   }
+
   return (
     <Flex justify="flex-end" align="center">
       <Modal
         opened={opened}
-        onClose={() => handleModalClose()}
-        title={active == 0 ? 'Select Email Service' : 'Configure Email Service'}
+        onClose={handleModalClose}
+        title={
+          active === 0 ? 'Select an email provider' : 'Configure Email Service'
+        }
         centered
-        overlayProps={{
-          backgroundOpacity: 0.55,
-          blur: 3,
-        }}
-        classNames={{
-          title: styles.title,
-        }}
+        overlayProps={{ backgroundOpacity: 0.55, blur: 3 }}
+        classNames={{ title: styles.title }}
       >
+        <Text mb="md">
+          Connect your email provider to TSMailer to easily manage and send
+          emails directly from your account.
+        </Text>
         <Stepper
           active={active}
           onStepClick={setActive}
           classNames={{ steps: styles.steps, content: styles.content }}
         >
-          <Stepper.Step description="Select Email Service">
-            <Stack>
-              <Button
-                c="#fefefe"
-                onClick={() => {
-                  setSelectedProvider('Gmail')
-                  setActive(1)
-                }}
-              >
-                Gmail
-              </Button>
-              <Button
-                c="#fefefe"
-                onClick={() => {
-                  setSelectedProvider('Yahoo')
-                  setActive(1)
-                }}
-              >
-                Yahoo
-              </Button>
-            </Stack>
+          <Stepper.Step description="Select an email provider">
+            <Grid>
+              {Object.keys(providerImages).map((provider) => (
+                <Grid.Col key={provider} span={3}>
+                  <Button
+                    p={0}
+                    m={0}
+                    variant="transparent"
+                    mih={120}
+                    onClick={() => {
+                      setSelectedProvider(provider)
+                      setActive(1)
+                    }}
+                  >
+                    <Card miw={100}>
+                      <Image
+                        src={
+                          providerImages[
+                            provider as keyof typeof providerImages
+                          ]
+                        }
+                        alt={provider}
+                        width={35}
+                        height={35}
+                        style={{ cursor: 'pointer', marginBottom: 10 }}
+                      />
+                      <Text ta="center">
+                        {provider.charAt(0).toUpperCase() + provider.slice(1)}
+                      </Text>
+                    </Card>
+                  </Button>
+                </Grid.Col>
+              ))}
+            </Grid>
           </Stepper.Step>
 
           <Stepper.Step description="Configure Email Service">
-            <Text c="#fefefe" fw={500} pb={5}>
+            <Text c="#fefefe" fw={500} pb={5} tt="capitalize">
               Selected Service: {selectedProvider}
             </Text>
-            <Stack>
+            <Stack p="md">
               <TextInput
                 name="nickName"
                 label="Nick Name"
-                defaultValue={selectedProvider as string}
+                defaultValue={selectedProvider || ''}
+                tt="capitalize"
                 pb={5}
                 pt={5}
                 m={5}
@@ -119,7 +170,6 @@ const AddEmailProviderModal = ({}) => {
               </Blockquote>
               <Checkbox
                 defaultChecked
-                color="#9c6fe4"
                 iconColor="#fefefe"
                 size="md"
                 label="Send test email to verify configuration"
@@ -127,19 +177,25 @@ const AddEmailProviderModal = ({}) => {
               />
             </Stack>
             <Group justify="right" className={styles.buttonGroup}>
+              <Button ta="start" tt="capitalize" onClick={handleConnect} fullWidth>
+                Connect {selectedProvider}
+              </Button>
               <Button
-                color="#9c6fe4"
-                c="#fefefe"
+                variant="subtle"
                 ta="start"
-                m={5}
-                onClick={handleConnect}
+                onClick={() => setActive(0)}
                 fullWidth
               >
-                Connect Account
+                Go back
               </Button>
             </Group>
           </Stepper.Step>
         </Stepper>
+        <Flex align="center" justify="flex-end">
+          <Button variant="default" onClick={handleModalClose}>
+            Cancel
+          </Button>
+        </Flex>
       </Modal>
     </Flex>
   )
