@@ -1,20 +1,42 @@
-import type { NextPage } from "next";
-import { Text } from "@mantine/core";
-import { useContext } from "react";
-import { UserContext } from "context/userContext";
-import { withTabs } from "hocs/withTabs";
-import { withAuth } from "hocs/withAuth";
-import AddEmailProviderModal from "modals/AddEmailProviderModal/AddEmailProviderModal";
+import type { NextPage } from 'next'
+// import { useContext } from 'react'
+// import { UserContext } from 'context/userContext'
+import { withTabs } from 'hocs/withTabs'
+import { withAuth } from 'hocs/withAuth'
+import AddEmailProviderModal from 'modals/AddEmailProviderModal/AddEmailProviderModal'
+import Statistics from 'components/Statistics/Statistics'
+import { Button, Flex, Text } from '@mantine/core'
+import { useState } from 'react'
 
 const Home: NextPage = () => {
-  const { user } = useContext(UserContext);
+  // const { user } = useContext(UserContext)
+  const [modals, setModals] = useState({
+    addNewProvider: false,
+  })
 
   return (
     <>
-      <Text>Welcome to the dashboard</Text>
-      <AddEmailProviderModal />
-    </>
-  );
-};
+      <Flex align="center" justify="space-between" mt="md">
+        <Text variant="text" size="xl">
+          Dashboard
+        </Text>
+        <Button
+          onClick={() =>
+            setModals((prev) => ({
+              ...prev,
+              addNewProvider: !prev.addNewProvider,
+            }))
+          }
+        >
+          Add New Service
+        </Button>
+      </Flex>
 
-export default withTabs(withAuth(Home));
+      <Statistics />
+
+      {modals.addNewProvider && <AddEmailProviderModal />}
+    </>
+  )
+}
+
+export default withTabs(withAuth(Home))
