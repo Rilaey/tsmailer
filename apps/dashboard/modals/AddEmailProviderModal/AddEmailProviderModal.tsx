@@ -15,19 +15,18 @@ import {
   Card,
 } from '@mantine/core'
 import styles from './AddEmailProviderModal.module.css'
-import { useDisclosure } from '@mantine/hooks'
 import { IconInfoCircle } from '@tabler/icons-react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 
 const providerIcons: Record<
-  'gmail' | 'yahoo' | 'icloud' | 'outlook' | 'aol',
+  'gmail' | 'yahoo' | 'iCloud' | 'outlook' | 'aol',
   string
 > = {
   gmail:
     'https://img.icons8.com/?size=100&id=qyRpAggnV0zH&format=png&color=000000',
   yahoo: 'https://img.icons8.com/color/256/yahoo.png',
-  icloud:
+  iCloud:
     'https://img.icons8.com/?size=100&id=VKsqR5pHg8u5&format=png&color=FFFFFF',
   outlook: 'https://img.icons8.com/color/256/microsoft-outlook-2019.png',
   aol:
@@ -37,7 +36,7 @@ const providerIcons: Record<
 const providerImages = {
   gmail: providerIcons.gmail,
   yahoo: providerIcons.yahoo,
-  icloud: providerIcons.icloud,
+  iCloud: providerIcons.iCloud,
   outlook: providerIcons.outlook,
   aol: providerIcons.aol,
 }
@@ -112,24 +111,33 @@ const AddEmailProviderModal = ({
             <Grid>
               {Object.keys(providerImages).map((provider) => (
                 <Grid.Col key={provider} span={3}>
-                  <Card>
-                    <Image
-                      src={
-                        providerImages[provider as keyof typeof providerImages]
-                      }
-                      alt={provider}
-                      width={35}
-                      height={35}
-                      style={{ cursor: 'pointer', marginBottom: 10 }}
-                      onClick={() => {
-                        setSelectedProvider(provider)
-                        setActive(1)
-                      }}
-                    />
-                    <Text ta="center">
-                      {provider.charAt(0).toUpperCase() + provider.slice(1)}
-                    </Text>
-                  </Card>
+                  <Button
+                    p={0}
+                    m={0}
+                    variant="transparent"
+                    mih={120}
+                    onClick={() => {
+                      setSelectedProvider(provider)
+                      setActive(1)
+                    }}
+                  >
+                    <Card miw={100}>
+                      <Image
+                        src={
+                          providerImages[
+                            provider as keyof typeof providerImages
+                          ]
+                        }
+                        alt={provider}
+                        width={35}
+                        height={35}
+                        style={{ cursor: 'pointer', marginBottom: 10 }}
+                      />
+                      <Text ta="center">
+                        {provider.charAt(0).toUpperCase() + provider.slice(1)}
+                      </Text>
+                    </Card>
+                  </Button>
                 </Grid.Col>
               ))}
             </Grid>
@@ -169,14 +177,16 @@ const AddEmailProviderModal = ({
               />
             </Stack>
             <Group justify="right" className={styles.buttonGroup}>
+              <Button ta="start" tt="capitalize" onClick={handleConnect} fullWidth>
+                Connect {selectedProvider}
+              </Button>
               <Button
-                c="#fefefe"
+                variant="subtle"
                 ta="start"
-                m={5}
-                onClick={handleConnect}
+                onClick={() => setActive(0)}
                 fullWidth
               >
-                Connect Account
+                Go back
               </Button>
             </Group>
           </Stepper.Step>
