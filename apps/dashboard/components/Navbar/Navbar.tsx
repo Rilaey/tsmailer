@@ -30,7 +30,7 @@ export function Navbar() {
   // Set the active link based on the current route
   useEffect(() => {
     const currentPath = router.asPath
-    const currentItem = data.find((item) => item.link === currentPath)
+    const currentItem = data.find((item) => currentPath.includes(item.link) && item.link !== '/')
     setActive(currentItem?.label || 'Dashboard')
   }, [router.asPath])
 

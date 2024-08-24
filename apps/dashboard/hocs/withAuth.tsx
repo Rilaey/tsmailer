@@ -5,13 +5,16 @@ import {
   Button,
   Center,
   Loader,
+  Avatar,
   Box,
   Flex,
+  rem,
 } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
 import Navbar from 'components/Navbar/Navbar'
 import { UserContext } from 'context/userContext'
 import { signOut } from 'next-auth/react'
+import { useRouter } from 'next/router'
 import React, { useContext } from 'react'
 
 /**
@@ -24,6 +27,7 @@ export const withAuth = (WrappedComponent: React.FC): React.FC => {
   return (props) => {
     const { user } = useContext(UserContext)
     const [opened, { toggle }] = useDisclosure()
+    const router = useRouter()
 
     return (
       <AppShell
@@ -60,8 +64,19 @@ export const withAuth = (WrappedComponent: React.FC): React.FC => {
                   </span>
                   Mailer
                 </Text>
-                <Flex align="center" gap="sm">
-                  <Text>{user.data.name}</Text>
+                <Flex align="center">
+                  <Text>Hi, {user.data.name.split(' ')[0]}</Text>
+
+                  <Button
+                    aria-label="Go to settings"
+                    onClick={() => router.push('/settings')}
+                    mih={40}
+                    variant="transparent"
+                    mr={rem(-16)}
+                  >
+                    <Avatar src={user.data.picture} />
+                  </Button>
+
                   <Burger
                     opened={opened}
                     onClick={toggle}
