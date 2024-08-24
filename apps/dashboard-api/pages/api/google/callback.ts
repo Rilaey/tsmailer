@@ -13,11 +13,11 @@ export default async function callback(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const session = await getSession({ req });
+  // const session = await getSession({ req });
 
-  if (!session) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
+  // if (!session) {
+  //   return res.status(401).json({ error: "Unauthorized" });
+  // }
 
   const { code } = req.query;
 

@@ -1,17 +1,17 @@
-import React from 'react'
-import '@mantine/charts/styles.css'
-import { Text, Flex } from '@mantine/core'
-import { LineChart, AreaChart, BarChart } from '@mantine/charts'
-import { useMediaQuery } from '@mantine/hooks'
-import { ChartPaper } from './ChartPaper/ChartPaper'
-import { useStatistics } from './useStatistics'
-import { StatsRing } from './StatsRing/StatsRing'
+import React from "react";
+import "@mantine/charts/styles.css";
+import { Text, Flex } from "@mantine/core";
+import { LineChart, AreaChart, BarChart } from "@mantine/charts";
+import { useMediaQuery } from "@mantine/hooks";
+import { ChartPaper } from "./ChartPaper/ChartPaper";
+import { useStatistics } from "./useStatistics";
+import { StatsRing } from "./StatsRing/StatsRing";
 
 export default function Statistics() {
-  const isTabletOrMobile = useMediaQuery('(max-width: 1200px)')
-  const graphWidth = isTabletOrMobile ? '100%' : '32.5%'
-  const graphHeight = 200
-  const graphMinWidth = 200
+  const isTabletOrMobile = useMediaQuery("(max-width: 1200px)");
+  const graphWidth = isTabletOrMobile ? "100%" : "32.5%";
+  const graphHeight = 200;
+  const graphMinWidth = 200;
 
   const {
     platformStats,
@@ -22,13 +22,13 @@ export default function Statistics() {
     emailEngagementData,
     performanceData,
     providerActivityData,
-    costData,
-  } = useStatistics()
+    costData
+  } = useStatistics();
 
   return (
     <>
       <StatsRing loading={platformStats.length === 0} stats={platformStats} />
-      <Text>This month's statistics</Text>
+      <Text>This months statistics</Text>
       <Flex justify="space-between" mt="md" wrap="wrap" gap="sm">
         <ChartPaper
           title="Emails"
@@ -42,9 +42,9 @@ export default function Statistics() {
             data={emailDeliveryData}
             dataKey="Month"
             series={[
-              { name: 'Sent', color: 'violet.6' },
-              { name: 'Delivered', color: 'blue.6' },
-              { name: 'Failed', color: 'red.6' },
+              { name: "Sent", color: "violet.6" },
+              { name: "Delivered", color: "blue.6" },
+              { name: "Failed", color: "red.6" }
             ]}
             tickLine="y"
           />
@@ -65,8 +65,8 @@ export default function Statistics() {
             yAxisLabel="Uv"
             rightYAxisLabel="Pv"
             series={[
-              { name: 'Uv', color: 'pink.6' },
-              { name: 'Pv', color: 'violet.6', yAxisId: 'right' },
+              { name: "Uv", color: "pink.6" },
+              { name: "Pv", color: "violet.6", yAxisId: "right" }
             ]}
           />
         </ChartPaper>
@@ -82,7 +82,7 @@ export default function Statistics() {
             w="100%"
             data={bounceRateData}
             dataKey="Date"
-            series={[{ name: 'BounceRate', color: 'indigo.6' }]}
+            series={[{ name: "BounceRate", color: "indigo.6" }]}
             curveType="linear"
             connectNulls
           />
@@ -100,8 +100,8 @@ export default function Statistics() {
             data={apiUsageData}
             dataKey="Period"
             series={[
-              { name: 'Requests', color: 'teal.6' },
-              { name: 'Errors', color: 'red.6' },
+              { name: "Requests", color: "teal.6" },
+              { name: "Errors", color: "red.6" }
             ]}
             tickLine="y"
           />
@@ -119,8 +119,8 @@ export default function Statistics() {
             data={emailEngagementData}
             dataKey="Date"
             series={[
-              { name: 'OpenRate', color: 'orange.6' },
-              { name: 'ClickRate', color: 'green.6' },
+              { name: "OpenRate", color: "orange.6" },
+              { name: "ClickRate", color: "green.6" }
             ]}
           />
         </ChartPaper>
@@ -137,8 +137,8 @@ export default function Statistics() {
             data={performanceData}
             dataKey="Time"
             series={[
-              { name: 'AvgResponseTime', color: 'blue.6' },
-              { name: 'ServerErrors', color: 'red.6' },
+              { name: "AvgResponseTime", color: "blue.6" },
+              { name: "ServerErrors", color: "red.6" }
             ]}
           />
         </ChartPaper>
@@ -154,7 +154,7 @@ export default function Statistics() {
             w="100%"
             data={providerActivityData}
             dataKey="ProviderId"
-            series={[{ name: 'ApiCalls', color: 'cyan.6' }]}
+            series={[{ name: "ApiCalls", color: "cyan.6" }]}
             tickLine="y"
           />
         </ChartPaper>
@@ -171,13 +171,13 @@ export default function Statistics() {
             data={costData}
             dataKey="Month"
             series={[
-              { name: 'Month', color: 'violet.6' },
-              { name: 'Cost', color: 'blue.6' },
+              { name: "Month", color: "violet.6" },
+              { name: "Cost", color: "blue.6" }
             ]}
             tickLine="y"
           />
         </ChartPaper>
       </Flex>
     </>
-  )
+  );
 }

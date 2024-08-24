@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   Stepper,
@@ -9,60 +9,62 @@ import {
   Checkbox,
   Blockquote,
   Group,
-  Flex,
-} from '@mantine/core'
-import styles from './AddEmailProviderModal.module.css'
-import { useDisclosure } from '@mantine/hooks'
-import { IconInfoCircle } from '@tabler/icons-react'
-import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/router'
+  Flex
+} from "@mantine/core";
+import styles from "./AddEmailProviderModal.module.css";
+import { useDisclosure } from "@mantine/hooks";
+import { IconInfoCircle } from "@tabler/icons-react";
+import { useHandleConnectProvider } from "../../hooks/useHandleConnectProvider";
+import { useSession } from "next-auth/react";
 
 const AddEmailProviderModal = ({}) => {
-  const [active, setActive] = useState(0)
-  const [selectedProvider, setSelectedProvider] = useState<string | null>(null)
+  const [active, setActive] = useState(0);
+  const [selectedProvider, setSelectedProvider] = useState<string | null>(null);
 
-  const { data: session } = useSession()
+  const { handleConnectProvider } = useHandleConnectProvider();
 
-  const router = useRouter()
+  const { data: session } = useSession();
+  console.log(session);
 
-  // router . push ?
   const handleConnect = () => {
     if (session) {
-      if (selectedProvider == 'Gmail') {
-        router.push('/api/google/connect')
-      } else if (selectedProvider == 'Yahoo') {
-        router.push('/api/yahoo/connect')
-      }
+      handleConnectProvider(selectedProvider as string, session);
+    } else {
+      console.log("no session!");
     }
-  }
+  };
 
-  const [opened, { open, close }] = useDisclosure(true)
+  const [opened, { open, close }] = useDisclosure(true);
 
   const handleModalClose = () => {
     // close modal
-    close()
+    close();
 
     // clear provider if selected
-    setSelectedProvider((prev) => (prev = null))
+    setSelectedProvider((prev) => (prev = null));
 
     // so user doesn't see step reset
     setTimeout(() => {
-      setActive(0)
-    }, 300)
-  }
+      setActive(0);
+    }, 300);
+  };
+
+  useEffect(() => {
+    console.log(process.env.DASHBOARD_API_URL);
+  }, [process.env.DASHBOARD_API_URL]);
   return (
     <Flex justify="flex-end" align="center">
       <Modal
         opened={opened}
         onClose={() => handleModalClose()}
-        title={active == 0 ? 'Select Email Service' : 'Configure Email Service'}
+        title={active == 0 ? "Select Email Service" : "Configure Email Service"}
         centered
         overlayProps={{
           backgroundOpacity: 0.55,
-          blur: 3,
+          blur: 3
         }}
         classNames={{
-          title: styles.title,
+          title: styles.title
         }}
       >
         <Stepper
@@ -75,8 +77,8 @@ const AddEmailProviderModal = ({}) => {
               <Button
                 c="#fefefe"
                 onClick={() => {
-                  setSelectedProvider('Gmail')
-                  setActive(1)
+                  setSelectedProvider("Gmail");
+                  setActive(1);
                 }}
               >
                 Gmail
@@ -84,8 +86,8 @@ const AddEmailProviderModal = ({}) => {
               <Button
                 c="#fefefe"
                 onClick={() => {
-                  setSelectedProvider('Yahoo')
-                  setActive(1)
+                  setSelectedProvider("Yahoo");
+                  setActive(1);
                 }}
               >
                 Yahoo
@@ -132,7 +134,7 @@ const AddEmailProviderModal = ({}) => {
                 c="#fefefe"
                 ta="start"
                 m={5}
-                onClick={handleConnect}
+                onClick={() => handleConnect()}
                 fullWidth
               >
                 Connect Account
@@ -142,7 +144,7 @@ const AddEmailProviderModal = ({}) => {
         </Stepper>
       </Modal>
     </Flex>
-  )
-}
+  );
+};
 
-export default AddEmailProviderModal
+export default AddEmailProviderModal;

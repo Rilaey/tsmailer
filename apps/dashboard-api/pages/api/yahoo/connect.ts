@@ -2,7 +2,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 import querystring from "querystring";
 
 const YAHOO_CLIENT_ID = process.env.YAHOO_CLIENT_ID;
-const YAHOO_CLIENT_SECRET = process.env.YAHOO_CLIENT_SECRET;
 const YAHOO_REDIRECT_URI = `${process.env.NEXTAUTH_URL}/api/yahoo/callback`;
 
 export default function connect(req: NextApiRequest, res: NextApiResponse) {

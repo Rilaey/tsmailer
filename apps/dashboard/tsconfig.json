@@ -1,6 +1,11 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "@repo/typescript-config/nextjs.json",
   "compilerOptions": {
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
     "target": "es6",
     "lib": [
       "dom",

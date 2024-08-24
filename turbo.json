@@ -5,7 +5,17 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "outputs": [".next/**", "!.next/cache/**"],
+      "env": [
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET",
+        "NEXTAUTH_URL",
+        "MONGODB_URI",
+        "OUTLOOK_CLIENT_ID",
+        "OUTLOOK_CLIENT_SECRET",
+        "YAHOO_CLIENT_ID",
+        "YAHOO_CLIENT_SECRET"
+      ]
     },
     "lint": {
       "dependsOn": ["^lint"]

@@ -12,11 +12,11 @@ export default async function connect(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const session = await getSession({ req });
+  // const session = await getSession({ req });
 
-  if (!session) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
+  // if (!session) {
+  //   return res.status(401).json({ error: "Unauthorized" });
+  // }
 
   const authUrl = oauth2Client.generateAuthUrl({
     access_type: "offline",
