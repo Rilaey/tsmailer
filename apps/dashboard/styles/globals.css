@@ -2,3 +2,24 @@ body {
   background: #1c1d21;
   /* font-family: "Lato"; */
 }
+.rdw-editor-toolbar {
+  background-color: transparent !important;
+  border-color: transparent !important;
+}
+.rdw-option-wrapper {
+  background: var(--mantine-color-violet-6) !important;
+  border-color: var(--mantine-color-violet-6) !important;
+}
+.rdw-dropdown-selectedtext {
+  background: var(--mantine-color-violet-6) !important;
+}
+.rdw-dropdown-wrapper {
+  border: none!important;
+}
+.rdw-dropdown-optionwrapper {
+  background: var(--mantine-color-violet-7)!important;
+}
+.rdw-dropdownoption-highlighted {
+  background: var(--mantine-color-violet-9)!important;
+
+}

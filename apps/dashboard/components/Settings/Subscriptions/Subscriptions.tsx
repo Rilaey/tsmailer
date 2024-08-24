@@ -8,7 +8,12 @@ import {
   Progress,
   Radio,
   RadioGroup,
+  ActionIcon,
+  CopyButton,
+  rem,
+  Tooltip,
 } from '@mantine/core'
+import { IconCheck, IconCopy } from '@tabler/icons-react'
 import React, { useEffect, useState } from 'react'
 
 const PlanCard = ({
@@ -144,7 +149,30 @@ const ApiKeyCard = ({
         <Text my="md" size="xl" fw={700}>
           API Key Management
         </Text>
-        <Text mb="md">Current API Key: {apiKey}</Text>
+        <Flex align="center" justify="space-between">
+          <Text>Current API Key: {apiKey}</Text>
+          <CopyButton value={apiKey} timeout={2000}>
+            {({ copied, copy }) => (
+              <Tooltip
+                label={copied ? 'Copied' : 'Copy'}
+                withArrow
+                position="right"
+              >
+                <ActionIcon
+                  color={copied ? 'violet' : 'gray'}
+                  variant="subtle"
+                  onClick={copy}
+                >
+                  {copied ? (
+                    <IconCheck style={{ width: rem(16) }} />
+                  ) : (
+                    <IconCopy style={{ width: rem(16) }} />
+                  )}
+                </ActionIcon>
+              </Tooltip>
+            )}
+          </CopyButton>
+        </Flex>
       </Box>
       <Box>
         <Button fullWidth onClick={onGenerateNewKey}>
