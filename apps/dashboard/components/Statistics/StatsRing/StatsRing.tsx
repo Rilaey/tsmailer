@@ -1,5 +1,5 @@
 import { SimpleGrid, Text, Paper, Group, RingProgress } from '@mantine/core'
-import { Stat } from '../useStatistics'
+import { Stat } from '../statistics.types'
 
 // Components
 export function StatsRing({ stats }: { stats: Stat[] }) {
