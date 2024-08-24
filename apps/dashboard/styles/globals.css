@@ -1,5 +1,5 @@
 body {
-  background: #1c1d21;
+  background: var(--mantine-color-dark-9) !important;
   /* font-family: "Lato"; */
 }
 .rdw-editor-toolbar {
