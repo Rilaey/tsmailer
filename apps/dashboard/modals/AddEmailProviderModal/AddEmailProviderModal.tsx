@@ -9,6 +9,7 @@ import {
   Checkbox,
   Blockquote,
   Group,
+  Flex,
 } from '@mantine/core'
 import styles from './AddEmailProviderModal.module.css'
 import { useDisclosure } from '@mantine/hooks'
@@ -35,7 +36,7 @@ const AddEmailProviderModal = ({}) => {
     }
   }
 
-  const [opened, { open, close }] = useDisclosure(false)
+  const [opened, { open, close }] = useDisclosure(true)
 
   const handleModalClose = () => {
     // close modal
@@ -50,9 +51,7 @@ const AddEmailProviderModal = ({}) => {
     }, 300)
   }
   return (
-    <>
-      <Button onClick={open}>Add New Service</Button>
-
+    <Flex justify="flex-end" align="center">
       <Modal
         opened={opened}
         onClose={() => handleModalClose()}
@@ -142,7 +141,7 @@ const AddEmailProviderModal = ({}) => {
           </Stepper.Step>
         </Stepper>
       </Modal>
-    </>
+    </Flex>
   )
 }
 
