@@ -1,45 +1,50 @@
-import { useState } from 'react'
-import { Group, Code, Button } from '@mantine/core'
+import { useState, useEffect } from 'react'
+import { Button } from '@mantine/core'
 import {
-  IconBellRinging,
-  IconFingerprint,
   IconKey,
   IconSettings,
-  Icon2fa,
-  IconDatabaseImport,
-  IconReceipt2,
   IconSwitchHorizontal,
-  IconLogout,
+  IconDashboard,
+  IconMail,
+  IconTextDirectionLtr,
+  IconHistory,
 } from '@tabler/icons-react'
 import classes from './Navbar.module.css'
 import { signOut } from 'next-auth/react'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 const data = [
-  { link: '/services', label: 'Services', icon: IconBellRinging },
-  { link: '/templates', label: 'Templates', icon: IconReceipt2 },
-  { link: '/email-history', label: 'Email History', icon: IconFingerprint },
-  { link: '/contact', label: 'Contacts', icon: IconKey },
-  { link: '/statistics', label: 'Statistics', icon: Icon2fa },
+  { link: '/', label: 'Dashboard', icon: IconDashboard },
+  { link: '/providers', label: 'Providers', icon: IconMail },
+  { link: '/templates', label: 'Templates', icon: IconTextDirectionLtr },
+  { link: '/email-history', label: 'Email History', icon: IconHistory },
+  { link: '/contacts', label: 'Contacts', icon: IconKey },
   { link: '/settings', label: 'Settings', icon: IconSettings },
 ]
 
 export function Navbar() {
-  const [active, setActive] = useState('Services')
+  const router = useRouter()
+  const [active, setActive] = useState('')
+
+  // Set the active link based on the current route
+  useEffect(() => {
+    const currentPath = router.asPath
+    const currentItem = data.find((item) => item.link === currentPath)
+    setActive(currentItem?.label || 'Dashboard')
+  }, [router.asPath])
 
   const links = data.map((item) => (
-    <a
+    <Link
       className={classes.link}
       data-active={item.label === active || undefined}
       href={item.link}
       key={item.label}
-      onClick={(event) => {
-        event.preventDefault()
-        setActive(item.label)
-      }}
+      onClick={() => setActive(item.label)}
     >
       <item.icon className={classes.linkIcon} stroke={1.5} />
       <span>{item.label}</span>
-    </a>
+    </Link>
   ))
 
   return (
