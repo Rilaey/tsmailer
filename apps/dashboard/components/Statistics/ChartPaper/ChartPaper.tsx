@@ -1,4 +1,4 @@
-import { Button, Flex, Paper, Text } from '@mantine/core'
+import { Button, Flex, Paper, Skeleton, Text } from '@mantine/core'
 import { IconArrowUpRight } from '@tabler/icons-react'
 
 // Reusable chart wrapper component
@@ -7,6 +7,7 @@ type ChartPaperProps = {
   width: string
   minWidth: number
   children: React.ReactNode
+  loading: boolean
 }
 
 export function ChartPaper({
@@ -14,10 +15,22 @@ export function ChartPaper({
   width,
   minWidth,
   children,
+  loading,
 }: ChartPaperProps) {
   return (
-    <Paper withBorder radius="md" w={width} miw={minWidth} pb="md" pr="lg">
-      <Flex align="center" justify="space-between">
+    <Paper
+      withBorder
+      radius="md"
+      w={width}
+      miw={minWidth}
+      pb="md"
+      pr={loading ? 0 : 'lg'}
+      mih={200}
+      style={{
+        overflow: 'hidden',
+      }}
+    >
+      <Flex align="center" justify="space-between" px={loading ? 'sm' : 0}>
         <Text size="lg" ml="xs" my="sm" mb="md">
           {title}
         </Text>
@@ -25,7 +38,7 @@ export function ChartPaper({
           <IconArrowUpRight />
         </Button>
       </Flex>
-      {children}
+      {loading ? <Skeleton h="100%" w="100%" /> : children}
     </Paper>
   )
 }

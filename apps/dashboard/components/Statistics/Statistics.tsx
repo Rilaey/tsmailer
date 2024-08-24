@@ -27,10 +27,15 @@ export default function Statistics() {
 
   return (
     <>
-      <StatsRing stats={platformStats} />
+      <StatsRing loading={platformStats.length === 0} stats={platformStats} />
       <Text>This month's statistics</Text>
       <Flex justify="space-between" mt="md" wrap="wrap" gap="sm">
-        <ChartPaper title="Emails" width={graphWidth} minWidth={graphMinWidth}>
+        <ChartPaper
+          title="Emails"
+          width={graphWidth}
+          minWidth={graphMinWidth}
+          loading={emailDeliveryData.length === 0}
+        >
           <BarChart
             h={graphHeight}
             w="100%"
@@ -45,7 +50,12 @@ export default function Statistics() {
           />
         </ChartPaper>
 
-        <ChartPaper title="Traffic" width={graphWidth} minWidth={graphMinWidth}>
+        <ChartPaper
+          title="Traffic"
+          width={graphWidth}
+          minWidth={graphMinWidth}
+          loading={trafficData.length === 0}
+        >
           <LineChart
             h={graphHeight}
             w="100%"
@@ -65,6 +75,7 @@ export default function Statistics() {
           title="Bounce Rate"
           width={graphWidth}
           minWidth={graphMinWidth}
+          loading={bounceRateData.length === 0}
         >
           <AreaChart
             h={graphHeight}
@@ -81,6 +92,7 @@ export default function Statistics() {
           title="API Usage"
           width={graphWidth}
           minWidth={graphMinWidth}
+          loading={apiUsageData.length === 0}
         >
           <BarChart
             h={graphHeight}
@@ -99,6 +111,7 @@ export default function Statistics() {
           title="Email Engagement"
           width={graphWidth}
           minWidth={graphMinWidth}
+          loading={emailEngagementData.length === 0}
         >
           <LineChart
             h={graphHeight}
@@ -116,6 +129,7 @@ export default function Statistics() {
           title="Performance"
           width={graphWidth}
           minWidth={graphMinWidth}
+          loading={performanceData.length === 0}
         >
           <LineChart
             h={graphHeight}
@@ -133,6 +147,7 @@ export default function Statistics() {
           title="Provider Activity"
           width={graphWidth}
           minWidth={graphMinWidth}
+          loading={providerActivityData.length === 0}
         >
           <BarChart
             h={graphHeight}
@@ -144,7 +159,12 @@ export default function Statistics() {
           />
         </ChartPaper>
 
-        <ChartPaper title="Cost" width={graphWidth} minWidth={graphMinWidth}>
+        <ChartPaper
+          title="Cost"
+          width={graphWidth}
+          minWidth={graphMinWidth}
+          loading={costData.length === 0}
+        >
           <BarChart
             h={graphHeight}
             w="100%"
