@@ -12,6 +12,7 @@ export default function CreateTemplate() {
 You got a new message from {{from_name}}:
 {{message}}
 Best Regards,
+{{from_name}}
 `)
 
   const router = useRouter()
