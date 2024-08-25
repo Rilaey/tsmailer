@@ -8,7 +8,13 @@ import {
   Progress,
   Radio,
   RadioGroup,
+  ActionIcon,
+  CopyButton,
+  rem,
+  Tooltip,
+  Divider,
 } from '@mantine/core'
+import { IconCheck, IconCopy } from '@tabler/icons-react'
 import React, { useEffect, useState } from 'react'
 
 const PlanCard = ({
@@ -21,14 +27,16 @@ const PlanCard = ({
   <Card w="100%" mb="md" h="100%">
     <Flex
       h="100%"
+      w="100%"
       direction="column"
       align="flex-start"
       justify="space-between"
     >
-      <Box>
+      <Box w="100%">
         <Text my="md" size="xl" fw={700}>
           Current Plan
         </Text>
+        <Divider my="sm" />
         <Text>Plan: {plan}</Text>
         <Text>Status: Active</Text>
         <Text>Next Billing Date: August 31, 2024</Text>
@@ -64,6 +72,7 @@ const ApiUsageCard = ({ used, limit }: { used: number; limit: number }) => {
           <Text my="md" size="xl" fw={700}>
             API Usage
           </Text>
+          <Divider my="sm" />
           <Text>Requests Used: {used}</Text>
           <Text>Requests Remaining: {remainingRequests}</Text>
         </Box>
@@ -103,11 +112,13 @@ const ManageSubscriptionCard = ({
       align="flex-start"
       justify="space-between"
       h="100%"
+      w="100%"
     >
-      <Box>
+      <Box w="100%">
         <Text my="md" size="xl" fw={700}>
           Manage Your Subscription
         </Text>
+        <Divider my="sm" />
         <RadioGroup
           value={selectedPlan}
           onChange={onPlanChange}
@@ -144,7 +155,31 @@ const ApiKeyCard = ({
         <Text my="md" size="xl" fw={700}>
           API Key Management
         </Text>
-        <Text mb="md">Current API Key: {apiKey}</Text>
+        <Divider my="sm" />
+        <Flex align="center" justify="space-between">
+          <Text>Current API Key: {apiKey}</Text>
+          <CopyButton value={apiKey} timeout={2000}>
+            {({ copied, copy }) => (
+              <Tooltip
+                label={copied ? 'Copied' : 'Copy'}
+                withArrow
+                position="right"
+              >
+                <ActionIcon
+                  color={copied ? 'violet' : 'gray'}
+                  variant="subtle"
+                  onClick={copy}
+                >
+                  {copied ? (
+                    <IconCheck style={{ width: rem(16) }} />
+                  ) : (
+                    <IconCopy style={{ width: rem(16) }} />
+                  )}
+                </ActionIcon>
+              </Tooltip>
+            )}
+          </CopyButton>
+        </Flex>
       </Box>
       <Box>
         <Button fullWidth onClick={onGenerateNewKey}>
@@ -219,6 +254,7 @@ export default function Subscriptions() {
           <Text my="md" size="xl" fw={700}>
             Need Help?
           </Text>
+          <Divider my="sm" />
           <Text>
             If you have any issues with your subscription, contact our support
             team.

@@ -11,11 +11,12 @@ import {
   rem,
 } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
+import { Notifications } from '@mantine/notifications'
 import Navbar from 'components/Navbar/Navbar'
 import { UserContext } from 'context/userContext'
-import { signOut } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import React, { useContext } from 'react'
+import '@mantine/notifications/styles.css';
 
 /**
  * Higher-order component that handles displaying authenticated sessions
@@ -96,6 +97,7 @@ export const withAuth = (WrappedComponent: React.FC): React.FC => {
                 paddingTop: '2rem',
               }}
             >
+              <Notifications />
               <WrappedComponent {...props} />
             </AppShell.Main>
           </>
