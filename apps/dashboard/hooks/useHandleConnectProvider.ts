@@ -1,29 +1,29 @@
-import "dotenv/config";
-import { useState } from "react";
+import { useRouter } from "next/router";
 
 export const useHandleConnectProvider = () => {
-  // handle errors differently.
-  // 1) send users back to dashboard home with error
-  const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const handleConnectProvider = async (provider: string, session: any) => {
-    console.log(process.env.NEXT_PUBLIC_DASHBOARD_API_URL);
     switch (provider) {
       case "Gmail":
-        await fetch(
-          `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/google/connect`,
-          {
-            // works with no-cors
-            mode: "no-cors"
-          }
+        router.push(
+          `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/google/connect`
         );
         break;
       case "Yahoo":
-        await fetch(
-          `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/yahoo/connect`,
-          {
-            method: "GET"
-          }
+      case "AOL":
+        router.push(
+          `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/yahoo/connect`
+        );
+        break;
+      case "Outlook":
+        router.push(
+          `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/outlook/connect`
+        );
+        break;
+      case "Zoho":
+        router.push(
+          `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/zoho/connect`
         );
         break;
       default:

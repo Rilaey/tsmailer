@@ -4,7 +4,7 @@ import { getSession } from "next-auth/react";
 
 const YAHOO_CLIENT_ID = process.env.YAHOO_CLIENT_ID;
 const YAHOO_CLIENT_SECRET = process.env.YAHOO_CLIENT_SECRET;
-const YAHOO_REDIRECT_URI = `${process.env.NEXTAUTH_URL}/api/yahoo/callback`;
+const YAHOO_REDIRECT_URI = `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/yahoo/callback`;
 
 export default async function callback(
   req: NextApiRequest,
@@ -77,9 +77,8 @@ export default async function callback(
       lastModifiedDate: currentDate.toISOString()
     });
 
-    res.redirect("/"); // Redirect to the dashboard or any other page
+    res.redirect(`${process.env.NEXTAUTH_URL}/`);
   } catch (error) {
-    console.error("Error handling Yahoo callback:", error);
     res.status(500).send("Authentication failed");
   }
 }

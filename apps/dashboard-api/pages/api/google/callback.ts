@@ -6,18 +6,18 @@ import { MongoClient } from "mongodb";
 const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
   process.env.GOOGLE_CLIENT_SECRET,
-  `${process.env.NEXTAUTH_URL}/api/google/callback`
+  `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/google/callback`
 );
 
 export default async function callback(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // const session = await getSession({ req });
+  const session = await getSession({ req });
 
-  // if (!session) {
-  //   return res.status(401).json({ error: "Unauthorized" });
-  // }
+  if (!session) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
 
   const { code } = req.query;
 
@@ -50,5 +50,5 @@ export default async function callback(
     lastModifiedDate: currentDate.toISOString()
   });
 
-  res.status(200).redirect("/");
+  res.status(200).redirect(`${process.env.NEXTAUTH_URL}/`);
 }

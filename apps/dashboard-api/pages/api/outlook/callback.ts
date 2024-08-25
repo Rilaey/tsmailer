@@ -2,7 +2,7 @@ import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 
-const OUTLOOK_REDIRECT_URI = `${process.env.NEXTAUTH_URL}/api/outlook/callback`;
+const OUTLOOK_REDIRECT_URI = `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/outlook/callback`;
 
 export default async function callback(
   req: NextApiRequest,
@@ -75,7 +75,7 @@ export default async function callback(
       lastModifiedDate: currentDate.toISOString()
     });
 
-    res.redirect("/");
+    res.redirect(`${process.env.NEXTAUTH_URL}/`);
   } catch (err) {
     res.status(500).send("Authentication failed");
   }

@@ -5,19 +5,13 @@ import { getSession } from "next-auth/react";
 const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
   process.env.GOOGLE_CLIENT_SECRET,
-  `${process.env.NEXTAUTH_URL}/api/google/callback`
+  `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/google/callback`
 );
 
 export default async function connect(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  // const session = await getSession({ req });
-
-  // if (!session) {
-  //   return res.status(401).json({ error: "Unauthorized" });
-  // }
-
   const authUrl = oauth2Client.generateAuthUrl({
     access_type: "offline",
     prompt: "consent",
