@@ -1,17 +1,19 @@
-import React from "react";
-import "@mantine/charts/styles.css";
-import { Text, Flex } from "@mantine/core";
-import { LineChart, AreaChart, BarChart } from "@mantine/charts";
-import { useMediaQuery } from "@mantine/hooks";
-import { ChartPaper } from "./ChartPaper/ChartPaper";
-import { useStatistics } from "./useStatistics";
-import { StatsRing } from "./StatsRing/StatsRing";
+import React from 'react'
+import '@mantine/charts/styles.css'
+import { Text, Flex } from '@mantine/core'
+import { LineChart, AreaChart, BarChart } from '@mantine/charts'
+import { useMediaQuery } from '@mantine/hooks'
+import { ChartPaper } from './ChartPaper/ChartPaper'
+import { useStatistics } from './useStatistics'
+import { StatsRing } from './StatsRing/StatsRing'
 
 export default function Statistics() {
-  const isTabletOrMobile = useMediaQuery("(max-width: 1200px)");
-  const graphWidth = isTabletOrMobile ? "100%" : "32.5%";
-  const graphHeight = 200;
-  const graphMinWidth = 200;
+  const isMobile = useMediaQuery('(max-width: 768px)')
+  const isTablet = useMediaQuery('(max-width: 1200px) and (min-width: 769px)')
+
+  const graphWidth = isMobile ? '100%' : isTablet ? '48%' : '32.5%'
+  const graphHeight = 200
+  const graphMinWidth = 200
 
   const {
     platformStats,
@@ -22,162 +24,127 @@ export default function Statistics() {
     emailEngagementData,
     performanceData,
     providerActivityData,
-    costData
-  } = useStatistics();
+    costData,
+  } = useStatistics()
+
+  const chartConfigs = [
+    {
+      title: 'Emails',
+      data: emailDeliveryData,
+      chartType: BarChart,
+      dataKey: 'Month',
+      series: [
+        { name: 'Sent', color: 'violet.6' },
+        { name: 'Delivered', color: 'blue.6' },
+        { name: 'Failed', color: 'red.6' },
+      ],
+    },
+    {
+      title: 'Traffic',
+      data: trafficData,
+      chartType: LineChart,
+      dataKey: 'Name',
+      series: [
+        { name: 'Uv', color: 'pink.6' },
+        { name: 'Pv', color: 'violet.6', yAxisId: 'right' },
+      ],
+      extraProps: {
+        withRightYAxis: true,
+        yAxisLabel: 'Uv',
+        rightYAxisLabel: 'Pv',
+      },
+    },
+    {
+      title: 'Bounce Rate',
+      data: bounceRateData,
+      chartType: AreaChart,
+      dataKey: 'Date',
+      series: [{ name: 'BounceRate', color: 'indigo.6' }],
+      extraProps: { curveType: 'linear', connectNulls: true },
+    },
+    {
+      title: 'API Usage',
+      data: apiUsageData,
+      chartType: BarChart,
+      dataKey: 'Period',
+      series: [
+        { name: 'Requests', color: 'teal.6' },
+        { name: 'Errors', color: 'red.6' },
+      ],
+    },
+    {
+      title: 'Email Engagement',
+      data: emailEngagementData,
+      chartType: LineChart,
+      dataKey: 'Date',
+      series: [
+        { name: 'OpenRate', color: 'orange.6' },
+        { name: 'ClickRate', color: 'green.6' },
+      ],
+    },
+    {
+      title: 'Performance',
+      data: performanceData,
+      chartType: LineChart,
+      dataKey: 'Time',
+      series: [
+        { name: 'AvgResponseTime', color: 'blue.6' },
+        { name: 'ServerErrors', color: 'red.6' },
+      ],
+    },
+    {
+      title: 'Provider Activity',
+      data: providerActivityData,
+      chartType: BarChart,
+      dataKey: 'ProviderId',
+      series: [{ name: 'ApiCalls', color: 'cyan.6' }],
+    },
+    {
+      title: 'Cost',
+      data: costData,
+      chartType: BarChart,
+      dataKey: 'Month',
+      series: [
+        { name: 'Month', color: 'violet.6' },
+        { name: 'Cost', color: 'blue.6' },
+      ],
+    },
+  ]
 
   return (
     <>
       <StatsRing loading={platformStats.length === 0} stats={platformStats} />
-      <Text>This months statistics</Text>
+      <Text>This month's statistics</Text>
       <Flex justify="space-between" mt="md" wrap="wrap" gap="sm">
-        <ChartPaper
-          title="Emails"
-          width={graphWidth}
-          minWidth={graphMinWidth}
-          loading={emailDeliveryData.length === 0}
-        >
-          <BarChart
-            h={graphHeight}
-            w="100%"
-            data={emailDeliveryData}
-            dataKey="Month"
-            series={[
-              { name: "Sent", color: "violet.6" },
-              { name: "Delivered", color: "blue.6" },
-              { name: "Failed", color: "red.6" }
-            ]}
-            tickLine="y"
-          />
-        </ChartPaper>
-
-        <ChartPaper
-          title="Traffic"
-          width={graphWidth}
-          minWidth={graphMinWidth}
-          loading={trafficData.length === 0}
-        >
-          <LineChart
-            h={graphHeight}
-            w="100%"
-            data={trafficData}
-            dataKey="Name"
-            withRightYAxis
-            yAxisLabel="Uv"
-            rightYAxisLabel="Pv"
-            series={[
-              { name: "Uv", color: "pink.6" },
-              { name: "Pv", color: "violet.6", yAxisId: "right" }
-            ]}
-          />
-        </ChartPaper>
-
-        <ChartPaper
-          title="Bounce Rate"
-          width={graphWidth}
-          minWidth={graphMinWidth}
-          loading={bounceRateData.length === 0}
-        >
-          <AreaChart
-            h={graphHeight}
-            w="100%"
-            data={bounceRateData}
-            dataKey="Date"
-            series={[{ name: "BounceRate", color: "indigo.6" }]}
-            curveType="linear"
-            connectNulls
-          />
-        </ChartPaper>
-
-        <ChartPaper
-          title="API Usage"
-          width={graphWidth}
-          minWidth={graphMinWidth}
-          loading={apiUsageData.length === 0}
-        >
-          <BarChart
-            h={graphHeight}
-            w="100%"
-            data={apiUsageData}
-            dataKey="Period"
-            series={[
-              { name: "Requests", color: "teal.6" },
-              { name: "Errors", color: "red.6" }
-            ]}
-            tickLine="y"
-          />
-        </ChartPaper>
-
-        <ChartPaper
-          title="Email Engagement"
-          width={graphWidth}
-          minWidth={graphMinWidth}
-          loading={emailEngagementData.length === 0}
-        >
-          <LineChart
-            h={graphHeight}
-            w="100%"
-            data={emailEngagementData}
-            dataKey="Date"
-            series={[
-              { name: "OpenRate", color: "orange.6" },
-              { name: "ClickRate", color: "green.6" }
-            ]}
-          />
-        </ChartPaper>
-
-        <ChartPaper
-          title="Performance"
-          width={graphWidth}
-          minWidth={graphMinWidth}
-          loading={performanceData.length === 0}
-        >
-          <LineChart
-            h={graphHeight}
-            w="100%"
-            data={performanceData}
-            dataKey="Time"
-            series={[
-              { name: "AvgResponseTime", color: "blue.6" },
-              { name: "ServerErrors", color: "red.6" }
-            ]}
-          />
-        </ChartPaper>
-
-        <ChartPaper
-          title="Provider Activity"
-          width={graphWidth}
-          minWidth={graphMinWidth}
-          loading={providerActivityData.length === 0}
-        >
-          <BarChart
-            h={graphHeight}
-            w="100%"
-            data={providerActivityData}
-            dataKey="ProviderId"
-            series={[{ name: "ApiCalls", color: "cyan.6" }]}
-            tickLine="y"
-          />
-        </ChartPaper>
-
-        <ChartPaper
-          title="Cost"
-          width={graphWidth}
-          minWidth={graphMinWidth}
-          loading={costData.length === 0}
-        >
-          <BarChart
-            h={graphHeight}
-            w="100%"
-            data={costData}
-            dataKey="Month"
-            series={[
-              { name: "Month", color: "violet.6" },
-              { name: "Cost", color: "blue.6" }
-            ]}
-            tickLine="y"
-          />
-        </ChartPaper>
+        {chartConfigs.map(
+          ({
+            title,
+            data,
+            chartType: ChartType,
+            dataKey,
+            series,
+            extraProps = {},
+          }) => (
+            <ChartPaper
+              key={title}
+              title={title}
+              width={graphWidth}
+              minWidth={graphMinWidth}
+              loading={data.length === 0}
+            >
+              {/* @ts-expect-error todo: fix props spread */}
+              <ChartType
+                h={graphHeight}
+                w="100%"
+                data={data}
+                dataKey={dataKey}
+                series={series}
+                {...extraProps}
+              />
+            </ChartPaper>
+          ),
+        )}
       </Flex>
     </>
-  );
+  )
 }

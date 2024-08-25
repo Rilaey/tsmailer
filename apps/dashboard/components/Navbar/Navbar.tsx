@@ -30,7 +30,9 @@ export function Navbar() {
   // Set the active link based on the current route
   useEffect(() => {
     const currentPath = router.asPath
-    const currentItem = data.find((item) => item.link === currentPath)
+    const currentItem = data.find(
+      (item) => currentPath.includes(item.link) && item.link !== '/',
+    )
     setActive(currentItem?.label || 'Dashboard')
   }, [router.asPath])
 
@@ -52,15 +54,6 @@ export function Navbar() {
       <div className={classes.navbarMain}>{links}</div>
 
       <div className={classes.footer}>
-        <a
-          href="#"
-          className={classes.link}
-          onClick={(event) => event.preventDefault()}
-        >
-          <IconSwitchHorizontal className={classes.linkIcon} stroke={1.5} />
-          <span>Manage account</span>
-        </a>
-
         <a
           href="#"
           className={classes.link}

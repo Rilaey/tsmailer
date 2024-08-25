@@ -1,15 +1,13 @@
 import type { NextPage } from 'next'
 import { withTabs } from 'hocs/withTabs'
 import { withAuth } from 'hocs/withAuth'
-import { Flex, Text } from '@mantine/core'
+import EmailTemplates from 'components/EmailTemplates/EmailTemplates'
 
 const Templates: NextPage = () => {
   return (
-    <Flex align="center" justify="space-between" mt="md">
-      <Text variant="text" size="xl">
-        Templates
-      </Text>
-    </Flex>
+    <>
+      <EmailTemplates />
+    </>
   )
 }
 

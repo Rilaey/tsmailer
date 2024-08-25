@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Modal,
   Stepper,
@@ -24,7 +24,6 @@ const AddEmailProviderModal = ({}) => {
   const { handleConnectProvider } = useHandleConnectProvider();
 
   const { data: session } = useSession();
-  console.log(session);
 
   const handleConnect = () => {
     if (session) {
@@ -48,10 +47,6 @@ const AddEmailProviderModal = ({}) => {
       setActive(0);
     }, 300);
   };
-
-  useEffect(() => {
-    console.log(process.env.DASHBOARD_API_URL);
-  }, [process.env.DASHBOARD_API_URL]);
   return (
     <Flex justify="flex-end" align="center">
       <Modal
