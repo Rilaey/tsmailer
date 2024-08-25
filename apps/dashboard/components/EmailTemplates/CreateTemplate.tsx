@@ -3,6 +3,7 @@ import { Button, Flex, Grid, Text, TextInput } from '@mantine/core'
 import RichTextEditor from 'components/common/RichTextEditor/RichTextEditor'
 import { ContentState } from 'draft-js'
 import { useRouter } from 'next/router'
+import { notifications } from '@mantine/notifications'
 
 export default function CreateTemplate() {
   const [name, setName] = useState(`My new template`)
@@ -23,7 +24,16 @@ Best Regards,
         <Text variant="text" size="xl">
           Email Templates
         </Text>
-        <Button onClick={() => router.push('/templates/create')}>
+        <Button
+          onClick={() =>
+            notifications.show({
+              position: 'top-right',
+              title: "Emailed templated created!",
+              message: 'You can start using your new template immediately.',
+              color: 'violet',
+            })
+          }
+        >
           Create Template
         </Button>
       </Flex>
