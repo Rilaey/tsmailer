@@ -7,63 +7,63 @@ import {
   TextInput,
   Select,
   Button,
-  Stack,
-} from '@mantine/core'
+  Stack
+} from "@mantine/core";
 
 const emailProvidersList = [
   {
-    id: 'example@gmail.com',
+    id: "example@gmail.com",
     image:
-      'https://img.icons8.com/?size=100&id=qyRpAggnV0zH&format=png&color=000000',
-    label: 'Gmail',
+      "https://img.icons8.com/?size=100&id=qyRpAggnV0zH&format=png&color=000000",
+    label: "Gmail",
     description:
-      'Google’s email service with a clean interface and integrated Google apps.',
+      "Google’s email service with a clean interface and integrated Google apps.",
     content:
-      'Gmail is a free email service developed by Google, known for its user-friendly interface and integration with other Google services.',
+      "Gmail is a free email service developed by Google, known for its user-friendly interface and integration with other Google services."
   },
   {
-    id: 'example@yahoo.com',
-    image: 'https://img.icons8.com/color/256/yahoo.png',
-    label: 'Yahoo Mail',
-    description: 'Yahoo’s email service with robust features and spam filters.',
+    id: "example@yahoo.com",
+    image: "https://img.icons8.com/color/256/yahoo.png",
+    label: "Yahoo Mail",
+    description: "Yahoo’s email service with robust features and spam filters.",
     content:
-      'Yahoo Mail offers 1TB of storage, advanced search, and various security features to protect your emails.',
+      "Yahoo Mail offers 1TB of storage, advanced search, and various security features to protect your emails."
   },
   {
-    id: 'example@icloud.com',
+    id: "example@icloud.com",
     image:
-      'https://img.icons8.com/?size=100&id=VKsqR5pHg8u5&format=png&color=FFFFFF',
-    label: 'iCloud',
+      "https://img.icons8.com/?size=100&id=VKsqR5pHg8u5&format=png&color=FFFFFF",
+    label: "iCloud",
     description:
-      'Apple’s email service with integrated Apple ecosystem features.',
+      "Apple’s email service with integrated Apple ecosystem features.",
     content:
-      'iCloud Mail integrates with Apple devices and services, providing seamless syncing of emails across devices.',
+      "iCloud Mail integrates with Apple devices and services, providing seamless syncing of emails across devices."
   },
   {
-    id: 'example@outlook.com',
-    image: 'https://img.icons8.com/color/256/microsoft-outlook-2019.png',
-    label: 'Outlook',
+    id: "example@outlook.com",
+    image: "https://img.icons8.com/color/256/microsoft-outlook-2019.png",
+    label: "Outlook",
     description:
-      'Microsoft’s email service with integrated calendar and task management.',
+      "Microsoft’s email service with integrated calendar and task management.",
     content:
-      'Outlook includes an email client, calendar, task manager, and address book, integrating well with other Microsoft Office applications.',
+      "Outlook includes an email client, calendar, task manager, and address book, integrating well with other Microsoft Office applications."
   },
   {
-    id: 'example@aol.com',
+    id: "example@aol.com",
     image:
-      'https://img.icons8.com/?size=100&id=BT3PNvFusxnD&format=png&color=000000',
-    label: 'Aol',
+      "https://img.icons8.com/?size=100&id=BT3PNvFusxnD&format=png&color=000000",
+    label: "Aol",
     description:
-      'Aol’s email service with a long history and robust spam filters.',
+      "Aol’s email service with a long history and robust spam filters.",
     content:
-      'Aol Mail offers unlimited storage, advanced spam filters, and a user-friendly interface, known for its reliability and security features.',
-  },
-]
+      "Aol Mail offers unlimited storage, advanced spam filters, and a user-friendly interface, known for its reliability and security features."
+  }
+];
 
 interface AccordionLabelProps {
-  label: string
-  image: string
-  description: string
+  label: string;
+  image: string;
+  description: string;
 }
 
 function AccordionLabel({ label, image, description }: AccordionLabelProps) {
@@ -77,15 +77,15 @@ function AccordionLabel({ label, image, description }: AccordionLabelProps) {
         </Text>
       </div>
     </Group>
-  )
+  );
 }
 
 interface ProviderFormProps {
-  id: string
-  email: string
-  serviceName: string
-  serviceId: string
-  serviceType: string
+  id: string;
+  email: string;
+  serviceName: string;
+  serviceId: string;
+  serviceType: string;
 }
 
 function ProviderForm({
@@ -93,7 +93,7 @@ function ProviderForm({
   email,
   serviceName,
   serviceId,
-  serviceType,
+  serviceType
 }: ProviderFormProps) {
   return (
     <Stack p="md">
@@ -123,13 +123,13 @@ function ProviderForm({
             label="Service Type"
             defaultValue={serviceType}
             variant="filled"
-            data={['Personal', 'Business']}
+            data={["Personal", "Business"]}
           />
         </Grid.Col>
       </Grid>
       <Text size="sm">
-        Allow "Send email on your behalf" permission during connection. Both
-        Gmail and Google Apps accounts are supported.
+        {`Allow "Send email on your behalf" permission during connection. Both
+        Gmail and Google Apps accounts are supported.`}
       </Text>
       <Button>Save</Button>
       <Button variant="outline">Send test email to verify configuration</Button>
@@ -137,7 +137,7 @@ function ProviderForm({
         Remove Provider
       </Button>
     </Stack>
-  )
+  );
 }
 
 export default function ProviderList() {
@@ -156,11 +156,11 @@ export default function ProviderList() {
         />
       </Accordion.Panel>
     </Accordion.Item>
-  ))
+  ));
 
   return (
     <Accordion chevronPosition="right" variant="contained" mt="xl">
       {items}
     </Accordion>
-  )
+  );
 }

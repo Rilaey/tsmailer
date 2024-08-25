@@ -3,25 +3,25 @@ import { useRouter } from "next/router";
 export const useHandleConnectProvider = () => {
   const router = useRouter();
 
-  const handleConnectProvider = async (provider: string, session: any) => {
+  const handleConnectProvider = async (provider: string) => {
     switch (provider) {
-      case "Gmail":
+      case "gmail":
         router.push(
           `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/google/connect`
         );
         break;
-      case "Yahoo":
-      case "AOL":
+      case "yahoo":
+      case "aol":
         router.push(
           `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/yahoo/connect`
         );
         break;
-      case "Outlook":
+      case "outlook":
         router.push(
           `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/outlook/connect`
         );
         break;
-      case "Zoho":
+      case "zoho":
         router.push(
           `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/zoho/connect`
         );
