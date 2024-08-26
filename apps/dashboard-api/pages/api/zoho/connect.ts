@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  const scope = "ZohoMail.messages.READ,ZohoMail.messages.CREATE"; // Adjust scopes as needed
+  const scope =
+    "AaaServer.profile.read,ZohoMail.messages.CREATE,ZohoMail.messages.ALL,ZohoMail.accounts.READ";
 
   const zohoAuthUrl = `https://accounts.zoho.com/oauth/v2/auth?scope=${encodeURIComponent(
     scope

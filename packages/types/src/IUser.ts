@@ -7,7 +7,7 @@ type IUser = {
   name: string;
   email: string;
   image: string | undefined | null;
-  role: IRole;
+  role: IRole[];
   tier: ITier;
   createdDate: number;
   lastModifiedDate: number;

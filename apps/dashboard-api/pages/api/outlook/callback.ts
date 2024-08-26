@@ -1,4 +1,3 @@
-import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 
@@ -22,7 +21,7 @@ export default async function callback(
 
   try {
     const response = await fetch(
-      "https://login.microsoftonline.com/{tenant}/oauth2/v2.0/token",
+      "https://login.microsoftonline.com/common/oauth2/v2.0/token",
       {
         method: "POST",
         headers: {
@@ -30,18 +29,14 @@ export default async function callback(
         },
         body: new URLSearchParams({
           client_id: process.env.OUTLOOK_CLIENT_ID ?? "",
-          scope: "openid profile email offline_access Mail.Read Mail.Send",
+          scope: "openid profile email offline_access Mail.Send User.Read",
           code: code as string,
           redirect_uri: OUTLOOK_REDIRECT_URI,
           grant_type: "authorization_code",
           client_secret: process.env.OUTLOOK_CLIENT_SECRET ?? ""
-        })
+        }).toString()
       }
     );
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch tokens: ${response.statusText}`);
-    }
 
     const data = await response.json();
 
@@ -56,27 +51,25 @@ export default async function callback(
 
     const decodedTokenJson = await decodedTokenResponse.json();
 
-    const clientPromise = MongoClient.connect(
-      process.env.MONGODB_URI as string
+    await fetch(
+      `${process.env.NEXT_PUBLIC_DASHBOARD_DB_URL}/api/emailAccounts/createEmailAccount`,
+      {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json"
+        },
+        body: JSON.stringify({
+          userId: session.id,
+          provider: "Outlook",
+          email: decodedTokenJson.mail,
+          accessToken: data.access_token,
+          refreshToken: data.refresh_token
+        })
+      }
     );
 
-    const db = (await clientPromise).db();
-
-    const currentDate = new Date();
-
-    await db.collection("emailAccounts").insertOne({
-      //@ts-ignore
-      userId: session.id,
-      provider: "Outlook",
-      email: decodedTokenJson.email,
-      accessToken: data.access_token,
-      refreshToken: data.refresh_token,
-      createdDate: currentDate.toISOString(),
-      lastModifiedDate: currentDate.toISOString()
-    });
-
     res.redirect(`${process.env.NEXTAUTH_URL}/`);
-  } catch (err) {
-    res.status(500).send("Authentication failed");
+  } catch (err: any) {
+    res.status(500).send(`Authentication failed: ${err.message}`);
   }
 }

@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { google } from "googleapis";
 import { getSession } from "next-auth/react";
-import { MongoClient } from "mongodb";
 
 const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
@@ -33,22 +32,22 @@ export default async function callback(
 
   const decodedTokenJson = await decodedTokenResponse.json();
 
-  const clientPromise = MongoClient.connect(process.env.MONGODB_URI as string);
-
-  const db = (await clientPromise).db();
-
-  const currentDate = new Date();
-
-  await db.collection("emailAccounts").insertOne({
-    //@ts-ignore
-    userId: session.id,
-    provider: "Gmail",
-    email: decodedTokenJson.email,
-    accessToken: tokens.access_token,
-    refreshToken: tokens.refresh_token,
-    createdDate: currentDate.toISOString(),
-    lastModifiedDate: currentDate.toISOString()
-  });
+  await fetch(
+    `${process.env.NEXT_PUBLIC_DASHBOARD_DB_URL}/api/emailAccounts/createEmailAccount`,
+    {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json"
+      },
+      body: JSON.stringify({
+        userId: session.id,
+        provider: "Gmail",
+        email: decodedTokenJson.email,
+        accessToken: tokens.access_token,
+        refreshToken: tokens.refresh_token
+      })
+    }
+  );
 
   res.status(200).redirect(`${process.env.NEXTAUTH_URL}/`);
 }

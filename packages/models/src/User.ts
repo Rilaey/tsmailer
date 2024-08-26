@@ -19,8 +19,8 @@ const userSchema = new Schema<IUser>({
     type: String
   },
   role: {
-    type: String,
-    default: "Free User"
+    type: [String],
+    default: ["Free User"]
   },
   tier: {
     type: String,

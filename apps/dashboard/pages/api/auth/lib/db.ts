@@ -2,6 +2,8 @@ import { MongoDBAdapter as DefaultMongoDBAdapter } from "@next-auth/mongodb-adap
 import { IUser } from "@repo/types";
 import { MongoClient, ObjectId as MongoDBObjectId } from "mongodb";
 
+const currentDate = new Date();
+
 const clientPromise = MongoClient.connect(process.env.MONGODB_URI as string);
 
 const CustomMongoDBAdapter = {
@@ -12,7 +14,11 @@ const CustomMongoDBAdapter = {
 
     const newUser = {
       ...user,
-      _id: new MongoDBObjectId()
+      _id: new MongoDBObjectId(),
+      role: ["Free User"],
+      tier: "Free",
+      createdDate: currentDate.toISOString(),
+      lastModifiedDate: currentDate.toISOString()
     };
 
     const newLogsObject = {

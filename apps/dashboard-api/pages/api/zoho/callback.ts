@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { MongoClient } from "mongodb";
 import { getSession } from "next-auth/react";
 
 export default async function handler(
@@ -41,14 +40,12 @@ export default async function handler(
 
   const tokenData = await tokenResponse.json();
 
-  const accessToken = tokenData.access_token;
-
   const userInfoResponse = await fetch(
     "https://mail.zoho.com/api/accounts/your_account_id/users/your_user_id",
     {
       method: "GET",
       headers: {
-        Authorization: `Zoho-oauthtoken ${accessToken}`,
+        Authorization: `Zoho-oauthtoken ${tokenData.accessToken}`,
         "Content-Type": "application/json"
       }
     }
@@ -60,22 +57,22 @@ export default async function handler(
 
   const userInfo = await userInfoResponse.json();
 
-  const clientPromise = MongoClient.connect(process.env.MONGODB_URI as string);
-  const db = (await clientPromise).db();
+  await fetch(
+    `${process.env.NEXT_PUBLIC_DASHBOARD_DB_URL}/api/emailAccounts/createEmailAccount`,
+    {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json"
+      },
+      body: JSON.stringify({
+        userId: session.id,
+        provider: "Zoho",
+        email: userInfo.email,
+        accessToken: tokenData.access_token,
+        refreshToken: tokenData.refresh_token
+      })
+    }
+  );
 
-  const currentDate = new Date();
-
-  await db.collection("emailAccounts").insertOne({
-    //@ts-ignore
-    userId: session.id,
-    provider: "Zoho",
-    email: userInfo.email,
-    accessToken: tokenData.access_token,
-    refreshToken: tokenData.refresh_token,
-    createdDate: currentDate.toISOString(),
-    lastModifiedDate: currentDate.toISOString()
-  });
-
-  // Redirect to homepage or desired location
   res.status(200).redirect(`${process.env.NEXTAUTH_URL}/`);
 }
