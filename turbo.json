@@ -10,6 +10,7 @@
         "MONGODB_URI",
         "NEXTAUTH_URL",
         "NEXT_PUBLIC_DASHBOARD_API_URL",
+        "NEXT_PUBLIC_DASHBOARD_DB_URL",
         "GITHUB_ID",
         "GITHUB_SECRET",
         "GOOGLE_CLIENT_ID",
