@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { MongoClient } from "mongodb";
+import clientPromise from "lib/db";
 
 export default async function createEmailAccount(
   req: NextApiRequest,
@@ -10,10 +10,6 @@ export default async function createEmailAccount(
   const currentDate = new Date();
 
   try {
-    const clientPromise = MongoClient.connect(
-      process.env.MONGODB_URI as string
-    );
-
     const db = (await clientPromise).db();
 
     const emailAccount = await db.collection("emailaccounts").insertOne({

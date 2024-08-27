@@ -1,13 +1,10 @@
 /** @type {import('next').NextConfig} */
 
-const path = require("path");
+import path from "path";
 
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true
-};
-
-module.exports = {
+  swcMinify: true,
   webpack: (config, { defaultLoaders }) => {
     config.module.rules.push({
       test: /\.tsx?$/,
@@ -16,15 +13,20 @@ module.exports = {
     });
 
     config.resolve.alias["@models"] = path.join(
-      __dirname,
+      path.resolve(),
       "../../packages/models/src"
     );
     config.resolve.alias["@types"] = path.join(
-      __dirname,
+      path.resolve(),
       "../../packages/types/src"
+    );
+    config.resolve.alias["@enums"] = path.join(
+      path.resolve(),
+      "../../packages/enums/src"
     );
 
     return config;
-  },
-  nextConfig
+  }
 };
+
+export default nextConfig;

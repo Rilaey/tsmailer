@@ -15,7 +15,8 @@
     "baseUrl": ".",
     "paths": {
       "@models/*": ["../../packages/models/src/*"],
-      "@types/*": ["../../packages/types/src/*"]
+      "@types/*": ["../../packages/types/src/*"],
+      "@enums/*": ["../../packages/enums/src/*"],
     },
     "allowJs": true,
     "skipLibCheck": true,
