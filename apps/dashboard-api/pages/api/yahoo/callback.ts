@@ -1,10 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { MongoClient } from "mongodb";
 import { getSession } from "next-auth/react";
 
 const YAHOO_CLIENT_ID = process.env.YAHOO_CLIENT_ID;
 const YAHOO_CLIENT_SECRET = process.env.YAHOO_CLIENT_SECRET;
-const YAHOO_REDIRECT_URI = `${process.env.NEXTAUTH_URL}/api/yahoo/callback`;
+const YAHOO_REDIRECT_URI = `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/yahoo/callback`;
 
 export default async function callback(
   req: NextApiRequest,
@@ -56,30 +55,26 @@ export default async function callback(
     );
 
     const decodedTokenJson = await decodedTokenResponse.json();
-    console.log(decodedTokenJson);
 
-    const clientPromise = MongoClient.connect(
-      process.env.MONGODB_URI as string
+    await fetch(
+      `${process.env.NEXT_PUBLIC_DASHBOARD_DB_URL}/api/emailAccounts/createEmailAccount`,
+      {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json"
+        },
+        body: JSON.stringify({
+          userId: session.id,
+          provider: "Yahoo",
+          email: decodedTokenJson.email,
+          accessToken: data.access_token,
+          refreshToken: data.refresh_token
+        })
+      }
     );
 
-    const db = (await clientPromise).db();
-
-    const currentDate = new Date();
-
-    await db.collection("emailAccounts").insertOne({
-      //@ts-ignore
-      userId: session.id,
-      provider: "Yahoo",
-      email: decodedTokenJson.email,
-      accessToken: data.access_token,
-      refreshToken: data.refresh_token,
-      createdDate: currentDate.toISOString(),
-      lastModifiedDate: currentDate.toISOString()
-    });
-
-    res.redirect("/"); // Redirect to the dashboard or any other page
+    res.redirect(`${process.env.NEXTAUTH_URL}/`);
   } catch (error) {
-    console.error("Error handling Yahoo callback:", error);
     res.status(500).send("Authentication failed");
   }
 }

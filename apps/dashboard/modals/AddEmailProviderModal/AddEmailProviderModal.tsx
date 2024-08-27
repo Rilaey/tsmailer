@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from "react";
 import {
   Modal,
   Grid,
@@ -12,79 +12,63 @@ import {
   Group,
   Flex,
   Image,
-  Card,
-} from '@mantine/core'
-import styles from './AddEmailProviderModal.module.css'
-import { IconInfoCircle } from '@tabler/icons-react'
-import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/router'
+  Card
+} from "@mantine/core";
+import styles from "./AddEmailProviderModal.module.css";
+import { IconInfoCircle } from "@tabler/icons-react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import { useHandleConnectProvider } from "hooks/useHandleConnectProvider";
 
 const providerIcons: Record<
-  'gmail' | 'yahoo' | 'iCloud' | 'outlook' | 'aol',
+  "gmail" | "yahoo" | "iCloud" | "outlook" | "aol",
   string
 > = {
   gmail:
-    'https://img.icons8.com/?size=100&id=qyRpAggnV0zH&format=png&color=000000',
-  yahoo: 'https://img.icons8.com/color/256/yahoo.png',
+    "https://img.icons8.com/?size=100&id=qyRpAggnV0zH&format=png&color=000000",
+  yahoo: "https://img.icons8.com/color/256/yahoo.png",
   iCloud:
-    'https://img.icons8.com/?size=100&id=VKsqR5pHg8u5&format=png&color=FFFFFF',
-  outlook: 'https://img.icons8.com/color/256/microsoft-outlook-2019.png',
-  aol:
-    'https://img.icons8.com/?size=100&id=BT3PNvFusxnD&format=png&color=000000',
-}
+    "https://img.icons8.com/?size=100&id=VKsqR5pHg8u5&format=png&color=FFFFFF",
+  outlook: "https://img.icons8.com/color/256/microsoft-outlook-2019.png",
+  aol: "https://img.icons8.com/?size=100&id=BT3PNvFusxnD&format=png&color=000000"
+};
 
 const providerImages = {
   gmail: providerIcons.gmail,
   yahoo: providerIcons.yahoo,
   iCloud: providerIcons.iCloud,
   outlook: providerIcons.outlook,
-  aol: providerIcons.aol,
-}
+  aol: providerIcons.aol
+};
 
 const AddEmailProviderModal = ({
   opened,
-  toggle,
+  toggle
 }: {
-  opened: boolean
-  toggle: () => void
+  opened: boolean;
+  toggle: () => void;
 }) => {
-  const [active, setActive] = useState(0)
-  const [selectedProvider, setSelectedProvider] = useState<string | null>(null)
+  const [active, setActive] = useState(0);
+  const [selectedProvider, setSelectedProvider] = useState<string | null>(null);
 
-  const { data: session } = useSession()
-  const router = useRouter()
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  const { handleConnectProvider } = useHandleConnectProvider();
 
   const handleConnect = () => {
     if (session) {
-      switch (selectedProvider?.toLowerCase()) {
-        case 'gmail':
-          router.push('/api/google/connect')
-          break
-        case 'yahoo':
-          router.push('/api/yahoo/connect')
-          break
-        case 'icloud':
-          router.push('/api/icloud/connect')
-          break
-        case 'outlook':
-          router.push('/api/outlook/connect')
-          break
-        case 'aol':
-          router.push('/api/aol/connect')
-          break
-        default:
-          break
-      }
+      handleConnectProvider(selectedProvider?.toLowerCase() as string);
     }
-  }
+  };
 
   const handleModalClose = () => {
-    toggle()
-    setSelectedProvider(null)
+    toggle();
+    setSelectedProvider(null);
     setTimeout(() => {
-      setActive(0)
-    }, 300)
-  }
+      setActive(0);
+    }, 300);
+  };
 
   return (
     <Flex justify="flex-end" align="center">
@@ -92,7 +76,7 @@ const AddEmailProviderModal = ({
         opened={opened}
         onClose={handleModalClose}
         title={
-          active === 0 ? 'Select an email provider' : 'Configure Email Service'
+          active === 0 ? "Select an email provider" : "Configure Email Service"
         }
         centered
         overlayProps={{ backgroundOpacity: 0.55, blur: 3 }}
@@ -117,8 +101,8 @@ const AddEmailProviderModal = ({
                     variant="transparent"
                     mih={120}
                     onClick={() => {
-                      setSelectedProvider(provider)
-                      setActive(1)
+                      setSelectedProvider(provider);
+                      setActive(1);
                     }}
                   >
                     <Card miw={100}>
@@ -131,7 +115,7 @@ const AddEmailProviderModal = ({
                         alt={provider}
                         width={35}
                         height={35}
-                        style={{ cursor: 'pointer', marginBottom: 10 }}
+                        style={{ cursor: "pointer", marginBottom: 10 }}
                       />
                       <Text ta="center">
                         {provider.charAt(0).toUpperCase() + provider.slice(1)}
@@ -151,7 +135,7 @@ const AddEmailProviderModal = ({
               <TextInput
                 name="nickName"
                 label="Nick Name"
-                defaultValue={selectedProvider || ''}
+                defaultValue={selectedProvider || ""}
                 tt="capitalize"
                 pb={5}
                 pt={5}
@@ -177,7 +161,12 @@ const AddEmailProviderModal = ({
               />
             </Stack>
             <Group justify="right" className={styles.buttonGroup}>
-              <Button ta="start" tt="capitalize" onClick={handleConnect} fullWidth>
+              <Button
+                ta="start"
+                tt="capitalize"
+                onClick={handleConnect}
+                fullWidth
+              >
                 Connect {selectedProvider}
               </Button>
               <Button
@@ -198,7 +187,7 @@ const AddEmailProviderModal = ({
         </Flex>
       </Modal>
     </Flex>
-  )
-}
+  );
+};
 
-export default AddEmailProviderModal
+export default AddEmailProviderModal;

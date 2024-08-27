@@ -1,19 +1,19 @@
-import React from 'react'
-import '@mantine/charts/styles.css'
-import { Text, Flex } from '@mantine/core'
-import { LineChart, AreaChart, BarChart } from '@mantine/charts'
-import { useMediaQuery } from '@mantine/hooks'
-import { ChartPaper } from './ChartPaper/ChartPaper'
-import { useStatistics } from './useStatistics'
-import { StatsRing } from './StatsRing/StatsRing'
+import React from "react";
+import "@mantine/charts/styles.css";
+import { Text, Flex } from "@mantine/core";
+import { LineChart, AreaChart, BarChart } from "@mantine/charts";
+import { useMediaQuery } from "@mantine/hooks";
+import { ChartPaper } from "./ChartPaper/ChartPaper";
+import { useStatistics } from "./useStatistics";
+import { StatsRing } from "./StatsRing/StatsRing";
 
 export default function Statistics() {
-  const isMobile = useMediaQuery('(max-width: 768px)')
-  const isTablet = useMediaQuery('(max-width: 1200px) and (min-width: 769px)')
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  const isTablet = useMediaQuery("(max-width: 1200px) and (min-width: 769px)");
 
-  const graphWidth = isMobile ? '100%' : isTablet ? '48%' : '32.5%'
-  const graphHeight = 200
-  const graphMinWidth = 200
+  const graphWidth = isMobile ? "100%" : isTablet ? "48%" : "32.5%";
+  const graphHeight = 200;
+  const graphMinWidth = 200;
 
   const {
     platformStats,
@@ -24,97 +24,97 @@ export default function Statistics() {
     emailEngagementData,
     performanceData,
     providerActivityData,
-    costData,
-  } = useStatistics()
+    costData
+  } = useStatistics();
 
   const chartConfigs = [
     {
-      title: 'Emails',
+      title: "Emails",
       data: emailDeliveryData,
       chartType: BarChart,
-      dataKey: 'Month',
+      dataKey: "Month",
       series: [
-        { name: 'Sent', color: 'violet.6' },
-        { name: 'Delivered', color: 'blue.6' },
-        { name: 'Failed', color: 'red.6' },
-      ],
+        { name: "Sent", color: "violet.6" },
+        { name: "Delivered", color: "blue.6" },
+        { name: "Failed", color: "red.6" }
+      ]
     },
     {
-      title: 'Traffic',
+      title: "Traffic",
       data: trafficData,
       chartType: LineChart,
-      dataKey: 'Name',
+      dataKey: "Name",
       series: [
-        { name: 'Uv', color: 'pink.6' },
-        { name: 'Pv', color: 'violet.6', yAxisId: 'right' },
+        { name: "Uv", color: "pink.6" },
+        { name: "Pv", color: "violet.6", yAxisId: "right" }
       ],
       extraProps: {
         withRightYAxis: true,
-        yAxisLabel: 'Uv',
-        rightYAxisLabel: 'Pv',
-      },
+        yAxisLabel: "Uv",
+        rightYAxisLabel: "Pv"
+      }
     },
     {
-      title: 'Bounce Rate',
+      title: "Bounce Rate",
       data: bounceRateData,
       chartType: AreaChart,
-      dataKey: 'Date',
-      series: [{ name: 'BounceRate', color: 'indigo.6' }],
-      extraProps: { curveType: 'linear', connectNulls: true },
+      dataKey: "Date",
+      series: [{ name: "BounceRate", color: "indigo.6" }],
+      extraProps: { curveType: "linear", connectNulls: true }
     },
     {
-      title: 'API Usage',
+      title: "API Usage",
       data: apiUsageData,
       chartType: BarChart,
-      dataKey: 'Period',
+      dataKey: "Period",
       series: [
-        { name: 'Requests', color: 'teal.6' },
-        { name: 'Errors', color: 'red.6' },
-      ],
+        { name: "Requests", color: "teal.6" },
+        { name: "Errors", color: "red.6" }
+      ]
     },
     {
-      title: 'Email Engagement',
+      title: "Email Engagement",
       data: emailEngagementData,
       chartType: LineChart,
-      dataKey: 'Date',
+      dataKey: "Date",
       series: [
-        { name: 'OpenRate', color: 'orange.6' },
-        { name: 'ClickRate', color: 'green.6' },
-      ],
+        { name: "OpenRate", color: "orange.6" },
+        { name: "ClickRate", color: "green.6" }
+      ]
     },
     {
-      title: 'Performance',
+      title: "Performance",
       data: performanceData,
       chartType: LineChart,
-      dataKey: 'Time',
+      dataKey: "Time",
       series: [
-        { name: 'AvgResponseTime', color: 'blue.6' },
-        { name: 'ServerErrors', color: 'red.6' },
-      ],
+        { name: "AvgResponseTime", color: "blue.6" },
+        { name: "ServerErrors", color: "red.6" }
+      ]
     },
     {
-      title: 'Provider Activity',
+      title: "Provider Activity",
       data: providerActivityData,
       chartType: BarChart,
-      dataKey: 'ProviderId',
-      series: [{ name: 'ApiCalls', color: 'cyan.6' }],
+      dataKey: "ProviderId",
+      series: [{ name: "ApiCalls", color: "cyan.6" }]
     },
     {
-      title: 'Cost',
+      title: "Cost",
       data: costData,
       chartType: BarChart,
-      dataKey: 'Month',
+      dataKey: "Month",
       series: [
-        { name: 'Month', color: 'violet.6' },
-        { name: 'Cost', color: 'blue.6' },
-      ],
-    },
-  ]
+        { name: "Month", color: "violet.6" },
+        { name: "Cost", color: "blue.6" }
+      ]
+    }
+  ];
 
   return (
     <>
       <StatsRing loading={platformStats.length === 0} stats={platformStats} />
-      <Text>This month's statistics</Text>
+      <Text>{`This month's statistics`}</Text>
       <Flex justify="space-between" mt="md" wrap="wrap" gap="sm">
         {chartConfigs.map(
           ({
@@ -123,7 +123,7 @@ export default function Statistics() {
             chartType: ChartType,
             dataKey,
             series,
-            extraProps = {},
+            extraProps = {}
           }) => (
             <ChartPaper
               key={title}
@@ -142,9 +142,9 @@ export default function Statistics() {
                 {...extraProps}
               />
             </ChartPaper>
-          ),
+          )
         )}
       </Flex>
     </>
-  )
+  );
 }

@@ -16,7 +16,7 @@
     "paths": {
       "@models/*": ["../../packages/models/src/*"],
       "@types/*": ["../../packages/types/src/*"],
-      "@enums/*": ["../../packages/enums/src/*"],
+      "@enums/*": ["../../packages/enums/src/*"]
     },
     "allowJs": true,
     "skipLibCheck": true,
@@ -31,13 +31,15 @@
     "module": "NodeNext",
     "isolatedModules": true
   },
+  "typeRoots": ["./types", "./node_modules/@types"],
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     "public/data/**/*.json",
     "pages/api/auth/[...nextauth].js",
-    "src/**/*"
+    "src/**/*",
+    "types/**/*.d.ts"
   ],
   "exclude": [
     "node_modules"

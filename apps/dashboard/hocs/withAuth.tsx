@@ -8,15 +8,15 @@ import {
   Avatar,
   Box,
   Flex,
-  rem,
-} from '@mantine/core'
-import { useDisclosure } from '@mantine/hooks'
-import { Notifications } from '@mantine/notifications'
-import Navbar from 'components/Navbar/Navbar'
-import { UserContext } from 'context/userContext'
-import { useRouter } from 'next/router'
-import React, { useContext } from 'react'
-import '@mantine/notifications/styles.css';
+  rem
+} from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { Notifications } from "@mantine/notifications";
+import Navbar from "components/Navbar/Navbar";
+import { UserContext } from "context/userContext";
+import { useRouter } from "next/router";
+import React, { useContext } from "react";
+import "@mantine/notifications/styles.css";
 
 /**
  * Higher-order component that handles displaying authenticated sessions
@@ -26,21 +26,21 @@ import '@mantine/notifications/styles.css';
  */
 export const withAuth = (WrappedComponent: React.FC): React.FC => {
   return (props) => {
-    const { user } = useContext(UserContext)
-    const [opened, { toggle }] = useDisclosure()
-    const router = useRouter()
+    const { user } = useContext(UserContext);
+    const [opened, { toggle }] = useDisclosure();
+    const router = useRouter();
 
     return (
       <AppShell
         header={{ height: 60 }}
         navbar={{
           width: 300,
-          breakpoint: 'sm',
-          collapsed: { mobile: !opened },
+          breakpoint: "sm",
+          collapsed: { mobile: !opened }
         }}
         padding="md"
       >
-        {user?.status === 'authenticated' ? (
+        {user?.status === "authenticated" ? (
           <>
             <AppShell.Header>
               <Flex
@@ -52,13 +52,13 @@ export const withAuth = (WrappedComponent: React.FC): React.FC => {
               >
                 <Text
                   style={{
-                    fontSize: '30px',
+                    fontSize: "30px"
                   }}
                   c="#fefefe"
                 >
                   <span
                     style={{
-                      color: '#9c6fe4',
+                      color: "#9c6fe4"
                     }}
                   >
                     TS
@@ -66,11 +66,11 @@ export const withAuth = (WrappedComponent: React.FC): React.FC => {
                   Mailer
                 </Text>
                 <Flex align="center">
-                  <Text>Hi, {user.data.name.split(' ')[0]}</Text>
+                  <Text>Hi, {user.data.name.split(" ")[0]}</Text>
 
                   <Button
                     aria-label="Go to settings"
-                    onClick={() => router.push('/settings')}
+                    onClick={() => router.push("/settings")}
                     mih={40}
                     variant="transparent"
                     mr={rem(-16)}
@@ -94,14 +94,14 @@ export const withAuth = (WrappedComponent: React.FC): React.FC => {
 
             <AppShell.Main
               style={{
-                paddingTop: '2rem',
+                paddingTop: "2rem"
               }}
             >
               <Notifications />
               <WrappedComponent {...props} />
             </AppShell.Main>
           </>
-        ) : user?.status === 'loading' ? (
+        ) : user?.status === "loading" ? (
           <Center mih="50vh">
             <Loader color="#9c6fe4" />
           </Center>
@@ -118,6 +118,6 @@ export const withAuth = (WrappedComponent: React.FC): React.FC => {
           </Button>
         )}
       </AppShell>
-    )
-  }
-}
+    );
+  };
+};
