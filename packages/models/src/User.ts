@@ -18,6 +18,14 @@ const userSchema = new Schema<IUser>({
   image: {
     type: String
   },
+  role: {
+    type: [String],
+    default: ["Free User"]
+  },
+  tier: {
+    type: String,
+    default: "Free"
+  },
   createdDate: {
     type: Number,
     default: Date.now()

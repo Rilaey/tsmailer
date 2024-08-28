@@ -1,0 +1,11 @@
+{
+    "name": "enums",
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+      "target": "ES6",
+      "strict": true,
+      "esModuleInterop": true,
+      "skipLibCheck": true
+    }
+  }
+  

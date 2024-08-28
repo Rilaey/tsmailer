@@ -4,6 +4,7 @@
       "paths": {
         "@packages/*": ["packages/*"],
         "@models/*": ["packages/models/src/*"],
+        "@enums/*": ["packages/enums/src/*"],
         "@types/*": ["packages/types/src/*"],
         "@utility/*": ["packages/utility/src/*"]
       },
@@ -19,7 +20,8 @@
     },
     "references": [
       { "path": "./packages/models" },
-      { "path": "./packages/types" }
+      { "path": "./packages/types" },
+      { "path": "./packages/enums" },
     ],
     "include": ["packages/**/*", "apps/**/*"]
   }
