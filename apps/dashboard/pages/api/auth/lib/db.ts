@@ -8,6 +8,7 @@ const CustomMongoDBAdapter = {
   ...DefaultMongoDBAdapter(clientPromise),
 
   async createUser(user: IUser) {
+    console.log(process.env.DASHBOARD_API_URL)
     const response = await fetch(
       `${process.env.DASHBOARD_API_URL}/api/oAuthSignIn`,
       {
