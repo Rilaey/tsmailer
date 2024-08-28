@@ -51,7 +51,7 @@ export const authOptions: NextAuthOptions = {
 
         if (account && account?.provider in EmailProviders) {
           await fetch(
-            `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/emailAccounts/createInitialEmailAccount`,
+            `${process.env.DASHBOARD_API_URL}/api/emailAccounts/createInitialEmailAccount`,
             {
               method: "POST",
               headers: {
