@@ -1,0 +1,47 @@
+{
+  "extends": "@repo/typescript-config/nextjs.json",
+  "compilerOptions": {
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "target": "es6",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@models/*": ["../../packages/models/src/*"],
+      "@types/*": ["../../packages/types/src/*"],
+      "@enums/*": ["../../packages/enums/src/*"]
+    },
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "moduleResolution": "NodeNext",
+    "resolveJsonModule": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "module": "NodeNext",
+    "isolatedModules": true
+  },
+  "typeRoots": ["./types", "./node_modules/@types"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "public/data/**/*.json",
+    "pages/api/auth/[...nextauth].js",
+    "src/**/*",
+    "types/**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

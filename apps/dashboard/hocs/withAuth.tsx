@@ -1,7 +1,22 @@
-import { Button, Center, Loader } from '@mantine/core'
-import { UserContext } from 'context/userContext'
-import { signOut } from 'next-auth/react'
-import React, { useContext } from 'react'
+import {
+  AppShell,
+  Burger,
+  Text,
+  Button,
+  Center,
+  Loader,
+  Avatar,
+  Box,
+  Flex,
+  rem
+} from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { Notifications } from "@mantine/notifications";
+import Navbar from "components/Navbar/Navbar";
+import { UserContext } from "context/userContext";
+import { useRouter } from "next/router";
+import React, { useContext } from "react";
+import "@mantine/notifications/styles.css";
 
 /**
  * Higher-order component that handles displaying authenticated sessions
@@ -11,17 +26,82 @@ import React, { useContext } from 'react'
  */
 export const withAuth = (WrappedComponent: React.FC): React.FC => {
   return (props) => {
-    const { user } = useContext(UserContext)
+    const { user } = useContext(UserContext);
+    const [opened, { toggle }] = useDisclosure();
+    const router = useRouter();
+
     return (
-      <>
-        {user?.status === 'authenticated' ? (
+      <AppShell
+        header={{ height: 60 }}
+        navbar={{
+          width: 300,
+          breakpoint: "sm",
+          collapsed: { mobile: !opened }
+        }}
+        padding="md"
+      >
+        {user?.status === "authenticated" ? (
           <>
-            <WrappedComponent {...props} />
-            <Button color="#9c6fe4" c="#fefefe" onClick={() => signOut()}>
-              Logout
-            </Button>
+            <AppShell.Header>
+              <Flex
+                pt="xs"
+                px="lg"
+                align="center"
+                justify="space-between"
+                w="100%"
+              >
+                <Text
+                  style={{
+                    fontSize: "30px"
+                  }}
+                  c="#fefefe"
+                >
+                  <span
+                    style={{
+                      color: "#9c6fe4"
+                    }}
+                  >
+                    TS
+                  </span>
+                  Mailer
+                </Text>
+                <Flex align="center">
+                  <Text>Hi, {user.data.name.split(" ")[0]}</Text>
+
+                  <Button
+                    aria-label="Go to settings"
+                    onClick={() => router.push("/settings")}
+                    mih={40}
+                    variant="transparent"
+                    mr={rem(-16)}
+                  >
+                    <Avatar src={user.data.picture} />
+                  </Button>
+
+                  <Burger
+                    opened={opened}
+                    onClick={toggle}
+                    hiddenFrom="sm"
+                    size="sm"
+                  />
+                </Flex>
+              </Flex>
+            </AppShell.Header>
+
+            <AppShell.Navbar>
+              <Navbar />
+            </AppShell.Navbar>
+
+            <AppShell.Main
+              style={{
+                paddingTop: "2rem"
+              }}
+            >
+              <Notifications />
+              <WrappedComponent {...props} />
+            </AppShell.Main>
           </>
-        ) : user?.status === 'loading' ? (
+        ) : user?.status === "loading" ? (
           <Center mih="50vh">
             <Loader color="#9c6fe4" />
           </Center>
@@ -37,7 +117,7 @@ export const withAuth = (WrappedComponent: React.FC): React.FC => {
             Login
           </Button>
         )}
-      </>
-    )
-  }
-}
+      </AppShell>
+    );
+  };
+};

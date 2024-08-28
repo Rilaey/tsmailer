@@ -1,6 +1,11 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "@repo/typescript-config/nextjs.json",
   "compilerOptions": {
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
     "target": "es6",
     "lib": [
       "dom",
@@ -10,7 +15,8 @@
     "baseUrl": ".",
     "paths": {
       "@models/*": ["../../packages/models/src/*"],
-      "@types/*": ["../../packages/types/src/*"]
+      "@types/*": ["../../packages/types/src/*"],
+      "@enums/*": ["../../packages/enums/src/*"],
     },
     "allowJs": true,
     "skipLibCheck": true,
