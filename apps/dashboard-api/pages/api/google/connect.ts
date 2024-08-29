@@ -4,7 +4,7 @@ import { google } from "googleapis";
 const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
   process.env.GOOGLE_CLIENT_SECRET,
-  `${process.env.DASHBOARD_API_URL}/api/google/callback`
+  `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/google/callback`
 );
 
 export default async function connect(

@@ -7,7 +7,6 @@ export default async function oAuthSignIn(
   res: NextApiResponse
 ) {
   const { user } = req.body;
-  console.log(user);
   try {
     const db = (await clientPromise).db();
 
