@@ -3,7 +3,7 @@ import { getSession } from "next-auth/react";
 
 const YAHOO_CLIENT_ID = process.env.YAHOO_CLIENT_ID;
 const YAHOO_CLIENT_SECRET = process.env.YAHOO_CLIENT_SECRET;
-const YAHOO_REDIRECT_URI = `${process.env.DASHBOARD_API_URL}/api/yahoo/callback`;
+const YAHOO_REDIRECT_URI = `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/yahoo/callback`;
 
 export default async function callback(
   req: NextApiRequest,
@@ -57,7 +57,7 @@ export default async function callback(
     const decodedTokenJson = await decodedTokenResponse.json();
 
     await fetch(
-      `${process.env.NEXT_PUBLIC_DASHBOARD_DB_URL}/api/emailAccounts/createEmailAccount`,
+      `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/emailAccounts/createEmailAccount`,
       {
         method: "POST",
         headers: {

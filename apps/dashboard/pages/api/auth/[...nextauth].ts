@@ -24,7 +24,7 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GITHUB_SECRET || "",
       authorization: {
         params: {
-          prompt: "login" // Forces GitHub to always show the login screen
+          prompt: "login"
         }
       }
     }),
@@ -51,7 +51,7 @@ export const authOptions: NextAuthOptions = {
 
         if (account && account?.provider in EmailProviders) {
           await fetch(
-            `${process.env.DASHBOARD_API_URL}/api/emailAccounts/createInitialEmailAccount`,
+            `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/emailAccounts/createInitialEmailAccount`,
             {
               method: "POST",
               headers: {
