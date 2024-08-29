@@ -9,7 +9,7 @@
       "env": [
         "MONGODB_URI",
         "NEXTAUTH_URL",
-        "DASHBOARD_API_URL",
+        "NEXT_PUBLIC_DASHBOARD_API_URL",
         "GITHUB_ID",
         "GITHUB_SECRET",
         "GOOGLE_CLIENT_ID",
