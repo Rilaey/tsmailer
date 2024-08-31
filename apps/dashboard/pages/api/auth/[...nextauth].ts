@@ -4,9 +4,33 @@ import GithubProvider from "next-auth/providers/github";
 import { CustomMongoDBAdapter } from "./lib/db";
 import { EmailProviders } from "@repo/enums";
 
+const getDomainWithoutSubdomain = (url: string): string => {
+  const urlParts = new URL(url).hostname.split(".");
+  return urlParts.slice(-(urlParts.length === 4 ? 3 : 2)).join(".");
+};
+
+const useSecureCookies =
+  process.env.NEXTAUTH_URL?.startsWith("https://") ?? false;
+
+const cookiePrefix = useSecureCookies ? "__Secure-" : "";
+
+const hostName = getDomainWithoutSubdomain(process.env.NEXTAUTH_URL as string);
+
 export const authOptions: NextAuthOptions = {
   adapter: CustomMongoDBAdapter as any,
   secret: process.env.NEXTAUTH_SECRET,
+  cookies: {
+    sessionToken: {
+      name: `${cookiePrefix}next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: "lax",
+        path: "/",
+        secure: useSecureCookies,
+        domain: `.${hostName}` // Use the root domain, e.g., `.tsmailer.com`
+      }
+    }
+  },
   session: {
     strategy: "jwt"
   },
