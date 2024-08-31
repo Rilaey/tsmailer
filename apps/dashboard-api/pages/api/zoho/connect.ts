@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default function connect(req: NextApiRequest, res: NextApiResponse) {
   const scope =
     "AaaServer.profile.read,ZohoMail.messages.CREATE,ZohoMail.messages.ALL,ZohoMail.accounts.READ";
 
