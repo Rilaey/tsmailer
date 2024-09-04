@@ -73,7 +73,7 @@ export default async function callback(
       }
     );
 
-    res.redirect(`${process.env.NEXTAUTH_URL}/`);
+    res.redirect(`${process.env.NEXTAUTH_URL}/providers`);
   } catch (error) {
     res.status(500).send("Authentication failed");
   }

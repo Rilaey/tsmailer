@@ -5,7 +5,8 @@ export default async function addInitialEmailAccount(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { email, provider, id, access_token, refresh_token } = req.body;
+  const { email, provider, id, access_token, refresh_token, nickName } =
+    req.body;
 
   try {
     const db = (await clientPromise).db();
@@ -17,6 +18,7 @@ export default async function addInitialEmailAccount(
     if (emailAccountDocument == null) {
       const newEmailAccountDocument = {
         userId: id,
+        nickName: nickName,
         email: email,
         provider: provider,
         accessToken: access_token,

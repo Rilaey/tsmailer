@@ -7,6 +7,10 @@ const emailAccountsSchema = new Schema<IEmailAccounts>({
     required: true,
     ref: "User"
   },
+  nickName: {
+    type: String,
+    required: true
+  },
   email: {
     type: String,
     required: true
