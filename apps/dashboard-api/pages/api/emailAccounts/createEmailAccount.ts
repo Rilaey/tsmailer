@@ -19,6 +19,7 @@ export default async function createEmailAccount(
       email,
       accessToken,
       refreshToken,
+      sentMail: 0,
       createdDate: currentDate.toISOString(),
       lastModifiedDate: currentDate.toISOString()
     });

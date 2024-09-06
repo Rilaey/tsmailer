@@ -23,6 +23,7 @@ export default async function addInitialEmailAccount(
         provider: provider,
         accessToken: access_token,
         refreshToken: refresh_token,
+        sentMail: 0,
         createdDate: new Date().toISOString(),
         lastModifiedDate: new Date().toISOString()
       };
