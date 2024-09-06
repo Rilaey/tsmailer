@@ -64,7 +64,7 @@ export default async function callback(
           "Content-type": "application/json"
         },
         body: JSON.stringify({
-          userId: session.id,
+          userId: session.sub,
           provider: "Yahoo",
           email: decodedTokenJson.email,
           accessToken: data.access_token,
