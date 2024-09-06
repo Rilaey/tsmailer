@@ -9,6 +9,10 @@ const emailAccountSchema = new Schema<IEmailAccountsDocument>({
     required: true,
     ref: "User"
   },
+  nickName: {
+    type: String,
+    required: true
+  },
   email: {
     type: String,
     required: true

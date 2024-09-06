@@ -91,7 +91,8 @@ export const authOptions: NextAuthOptions = {
                 provider: account?.provider,
                 id: user.id,
                 access_token: account?.access_token,
-                refresh_token: account?.refresh_token
+                refresh_token: account?.refresh_token,
+                nickName: account?.provider
               })
             }
           );

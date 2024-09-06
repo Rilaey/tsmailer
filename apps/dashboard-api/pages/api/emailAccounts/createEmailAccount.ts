@@ -5,7 +5,8 @@ export default async function createEmailAccount(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { userId, provider, email, accessToken, refreshToken } = req.body;
+  const { userId, provider, email, accessToken, refreshToken, nickName } =
+    req.body;
 
   const currentDate = new Date();
 
