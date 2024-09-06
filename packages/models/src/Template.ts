@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
 import { ITemplate } from "@repo/types";
 
 const templateSchema = new Schema<ITemplate>({
@@ -22,9 +22,19 @@ const templateSchema = new Schema<ITemplate>({
   content: {
     type: String,
     required: true
+  },
+  createdDate: {
+    type: String,
+    required: true
+  },
+  lastModifiedDate: {
+    type: String,
+    required: true
   }
 });
 
-export const Template = model<ITemplate>("Templates", templateSchema);
+export const Template =
+  mongoose.models.Template ||
+  mongoose.model<ITemplate>("Template", templateSchema);
 
 export default Template;

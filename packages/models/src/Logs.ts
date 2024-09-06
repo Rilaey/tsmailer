@@ -1,5 +1,5 @@
 import { ILogs } from "@repo/types";
-import { Schema, Types, model } from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
 
 const logSchema = new Schema<ILogs>({
   userId: {
@@ -16,9 +16,8 @@ const logSchema = new Schema<ILogs>({
     required: true
   },
   date: {
-    type: Number,
-    required: true,
-    default: Date.now()
+    type: String,
+    required: true
   },
   variation: {
     type: String,
@@ -26,6 +25,6 @@ const logSchema = new Schema<ILogs>({
   }
 });
 
-export const Logs = model<ILogs>("Logs", logSchema);
+export const Logs = mongoose.models.Logs || mongoose.model("Logs", logSchema);
 
 export default Logs;

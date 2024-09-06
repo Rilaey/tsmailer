@@ -1,5 +1,17 @@
-import { MongoClient } from "mongodb";
+import mongoose from "mongoose";
 
-const clientPromise = MongoClient.connect(process.env.MONGODB_URI as string);
+const connection: { isConnected?: number } = {};
 
-export default clientPromise;
+const dbConnect = async () => {
+  if (connection.isConnected) {
+    return mongoose.connection;
+  }
+
+  const db = await mongoose.connect(process.env.MONGODB_URI!);
+
+  connection.isConnected = db.connections[0]!.readyState;
+
+  return db.connection;
+};
+
+export default dbConnect;

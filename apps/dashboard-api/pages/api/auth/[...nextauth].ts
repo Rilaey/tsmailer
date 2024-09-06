@@ -41,7 +41,7 @@ const callbacks: AuthOptions["callbacks"] = {
     return token;
   },
 
-  async session({ session, token }) {
+  async session({ session, token, user }) {
     if (token.user) {
       const { firstName, lastName, email } = token.user as {
         firstName: string;
@@ -58,7 +58,7 @@ const callbacks: AuthOptions["callbacks"] = {
     session.accessToken = token.accessToken;
     //@ts-expect-error
     session.refreshToken = token.refreshToken;
-    return session;
+    return { ...session, ...token, ...user };
   }
 };
 

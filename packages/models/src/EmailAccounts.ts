@@ -1,7 +1,9 @@
 import { IEmailAccounts } from "@repo/types";
-import { Schema, model } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
-const emailAccountsSchema = new Schema<IEmailAccounts>({
+export interface IEmailAccountsDocument extends IEmailAccounts, Document {}
+
+const emailAccountSchema = new Schema<IEmailAccountsDocument>({
   userId: {
     type: Schema.Types.ObjectId,
     required: true,
@@ -23,16 +25,23 @@ const emailAccountsSchema = new Schema<IEmailAccounts>({
     type: String,
     required: true
   },
-  createdDate: {
+  sentMail: {
     type: Number,
+    required: true,
+    default: 0
+  },
+  createdDate: {
+    type: String,
     required: true
   },
   lastModifiedDate: {
-    type: Number,
+    type: String,
     required: true
   }
 });
 
-export const EmailAccounts = model("EmailAccounts", emailAccountsSchema);
+export const EmailAccounts =
+  mongoose.models.EmailAccounts ||
+  mongoose.model("EmailAccounts", emailAccountSchema);
 
 export default EmailAccounts;

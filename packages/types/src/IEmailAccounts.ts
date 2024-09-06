@@ -6,8 +6,9 @@ type IEmailAccounts = {
   provider: string;
   accessToken: string;
   refreshToken: string;
-  createdDate: number;
-  lastModifiedDate: number;
+  sentMail: number;
+  createdDate: string;
+  lastModifiedDate: string;
 };
 
 export type { IEmailAccounts };

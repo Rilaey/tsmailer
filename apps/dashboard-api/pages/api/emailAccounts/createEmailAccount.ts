@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import clientPromise from "lib/db";
+import dbConnect from "lib/db";
 
 export default async function createEmailAccount(
   req: NextApiRequest,
@@ -10,7 +10,7 @@ export default async function createEmailAccount(
   const currentDate = new Date();
 
   try {
-    const db = (await clientPromise).db();
+    const db = await dbConnect();
 
     const emailAccount = await db.collection("emailaccounts").insertOne({
       userId,
