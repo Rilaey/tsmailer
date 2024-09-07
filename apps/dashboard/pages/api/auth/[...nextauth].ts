@@ -61,19 +61,24 @@ export const authOptions: NextAuthOptions = {
           access_type: "offline",
           response_type: "code",
           scope:
-            "https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email"
+            "https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email https://mail.google.com/"
         }
       }
     })
   ],
   callbacks: {
-    async jwt({ token, user, account }) {
-      if (user) {
+    async jwt({ token, user, account, trigger }) {
+      if (user && trigger == "signUp") {
         token.id = user.id;
         token.email = user.email;
         token.name = user.name;
 
         if (account && account?.provider in EmailProviders) {
+          // adjust provider name for nodemailer conventions
+          if (account.provider == "google") {
+            account.provider = "gmail";
+          }
+
           await fetch(
             `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/emailAccounts/createInitialEmailAccount`,
             {
@@ -93,6 +98,23 @@ export const authOptions: NextAuthOptions = {
           );
         }
       }
+
+      // Check user document for monthly email reset
+      if (user && trigger == "signIn") {
+        const { apiKey } = user;
+
+        await fetch(
+          `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/user/validateMonthlyResetDate`,
+          {
+            method: "POST",
+            headers: {
+              "Content-type": "application/json"
+            },
+            body: JSON.stringify({ apiKey })
+          }
+        );
+      }
+
       return token;
     },
     async redirect({ url, baseUrl }) {

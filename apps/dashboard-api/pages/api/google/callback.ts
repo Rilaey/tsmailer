@@ -40,7 +40,7 @@ export default async function callback(
         "Content-type": "application/json"
       },
       body: JSON.stringify({
-        userId: session.id,
+        userId: session.sub,
         provider: "google",
         email: decodedTokenJson.email,
         accessToken: tokens.access_token,

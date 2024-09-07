@@ -8,7 +8,7 @@ type ILogs = {
   userId: ObjectId;
   message: string;
   state: IState;
-  date: number;
+  date: string;
   variation: IVariation;
 };
 

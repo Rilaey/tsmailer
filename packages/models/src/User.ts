@@ -1,7 +1,9 @@
-import { Schema, model } from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
 import { IUser } from "@repo/types";
 
-const userSchema = new Schema<IUser>({
+export interface IUserDocument extends IUser, Document {}
+
+const userSchema = new Schema<IUserDocument>({
   name: {
     required: true,
     type: String
@@ -26,16 +28,34 @@ const userSchema = new Schema<IUser>({
     type: String,
     default: "Free"
   },
-  createdDate: {
+  totalSentMail: {
     type: Number,
-    default: Date.now()
+    required: true,
+    default: 0
+  },
+  monthlySentMail: {
+    type: Number,
+    required: true,
+    default: 0
+  },
+  resetMonthlyEmailDate: {
+    type: String,
+    required: true
+  },
+  apiKey: {
+    type: String,
+    required: true
+  },
+  createdDate: {
+    type: String,
+    required: true
   },
   lastModifiedDate: {
-    type: Number,
-    default: Date.now()
+    type: String,
+    required: true
   }
 });
 
-export const User = model<IUser>("User", userSchema);
+export const User = mongoose.models.User || mongoose.model("User", userSchema);
 
 export default User;

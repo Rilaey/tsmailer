@@ -65,7 +65,7 @@ export default async function callback(
         "Content-type": "application/json"
       },
       body: JSON.stringify({
-        userId: session.id,
+        userId: session.sub,
         provider: "Zoho",
         email: userInfo.Email,
         accessToken: tokenData.access_token,
