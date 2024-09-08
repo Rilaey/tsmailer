@@ -7,6 +7,8 @@ type ITemplate = {
   description: string;
   subject: string;
   content: string;
+  createdDate: string;
+  lastModifiedDate: string;
 };
 
 export type { ITemplate };

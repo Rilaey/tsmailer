@@ -1,14 +1,15 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import clientPromise from "lib/db";
+import dbConnect from "lib/db";
 
 export default async function addInitialEmailAccount(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { email, provider, id, access_token, refresh_token } = req.body;
+  const { email, provider, id, access_token, refresh_token, nickName } =
+    req.body;
 
   try {
-    const db = (await clientPromise).db();
+    const db = await dbConnect();
 
     const emailAccountDocument = await db
       .collection("emailaccounts")
@@ -17,10 +18,12 @@ export default async function addInitialEmailAccount(
     if (emailAccountDocument == null) {
       const newEmailAccountDocument = {
         userId: id,
+        nickName: nickName,
         email: email,
         provider: provider,
         accessToken: access_token,
         refreshToken: refresh_token,
+        sentMail: 0,
         createdDate: new Date().toISOString(),
         lastModifiedDate: new Date().toISOString()
       };

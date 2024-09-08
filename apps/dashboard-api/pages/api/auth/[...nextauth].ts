@@ -31,17 +31,14 @@ const cookies = {
 const callbacks: AuthOptions["callbacks"] = {
   async jwt({ token, user }) {
     if (user) {
-      //@ts-expect-error
-      token.accessToken = user.access_token;
-      //@ts-expect-error
-      token.user = user.user;
-      //@ts-expect-error
-      token.refreshToken = user.refresh_token;
+      token.id = user.id;
+      token.email = user.email;
+      token.name = user.name;
     }
     return token;
   },
 
-  async session({ session, token }) {
+  async session({ session, token, user, ...rest }) {
     if (token.user) {
       const { firstName, lastName, email } = token.user as {
         firstName: string;
@@ -51,19 +48,15 @@ const callbacks: AuthOptions["callbacks"] = {
       session.user = {
         name: `${firstName} ${lastName}`,
         email: email
-        // Include other user properties if needed
       };
     }
-    //@ts-expect-error
-    session.accessToken = token.accessToken;
-    //@ts-expect-error
-    session.refreshToken = token.refreshToken;
-    return session;
+
+    return { ...session, ...token, ...user, ...rest };
   }
 };
 
 // Define AuthOptions
-const options: AuthOptions = {
+export const options: AuthOptions = {
   debug: false,
   secret: process.env.NEXTAUTH_SECRET,
   useSecureCookies,

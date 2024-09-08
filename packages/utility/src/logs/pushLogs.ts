@@ -1,32 +1,28 @@
-import { Logs } from "@repo/models";
+import { Connection } from "mongoose";
+import { ObjectId } from "mongodb";
 import { IVariation, IState } from "@repo/types";
 
 export const pushLogs = async (
-  userId: string,
+  userId: ObjectId | string,
   message: string,
   state: IState,
-  variation: IVariation
+  variation: IVariation,
+  db: Connection
 ) => {
   try {
-    const log = await Logs.findOneAndUpdate(
-      { userId: userId },
-      {
-        $push: {
-          entries: {
-            message: message,
-            state: state,
-            variation: variation
-          }
-        }
-      },
-      {
-        new: true
-      }
-    );
+    const log = await db.collection("logs").insertOne({
+      userId,
+      message,
+      state,
+      variation,
+      date: new Date().toISOString()
+    });
 
     if (!log) {
       throw new Error("Unable to push logs at this time. Please try again.");
     }
+
+    return log;
   } catch (err: any) {
     return err.message;
   }
