@@ -64,7 +64,7 @@ export default async function callback(
           "Content-type": "application/json"
         },
         body: JSON.stringify({
-          userId: session.id,
+          userId: session.sub,
           provider: "Yahoo",
           email: decodedTokenJson.email,
           accessToken: data.access_token,
@@ -73,7 +73,7 @@ export default async function callback(
       }
     );
 
-    res.redirect(`${process.env.NEXTAUTH_URL}/`);
+    res.redirect(`${process.env.NEXTAUTH_URL}/providers`);
   } catch (error) {
     res.status(500).send("Authentication failed");
   }

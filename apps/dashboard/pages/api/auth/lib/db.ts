@@ -8,12 +8,8 @@ const CustomMongoDBAdapter = {
   ...DefaultMongoDBAdapter(clientPromise),
 
   async createUser(user: IUser) {
-    // This is for the vercel logs
-    // Will remove once env is verified :)
-    console.log(process.env.NEXT_PUBLIC_DASHBOARD_API_URL);
-
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/oAuthSignIn`,
+      `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/oAuthCreateAccount`,
       {
         method: "POST",
         headers: {
@@ -23,11 +19,7 @@ const CustomMongoDBAdapter = {
       }
     );
 
-    console.log(response);
-
     const data = await response.json();
-
-    console.log("data", data);
 
     return data;
   }

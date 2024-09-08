@@ -1,4 +1,4 @@
-import clientPromise from "lib/db";
+import dbConnect from "lib/db";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function getAllUserEmailAccounts(
@@ -10,7 +10,7 @@ export default async function getAllUserEmailAccounts(
     if (!_id) {
       throw new Error("_id is required for getting user's email accounts.");
     }
-    const db = (await clientPromise).db();
+    const db = await dbConnect();
 
     const emailAccounts = await db
       .collection("emailaccounts")

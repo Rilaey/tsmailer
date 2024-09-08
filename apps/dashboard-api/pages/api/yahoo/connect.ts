@@ -10,7 +10,8 @@ export default function connect(req: NextApiRequest, res: NextApiResponse) {
       client_id: YAHOO_CLIENT_ID,
       redirect_uri: YAHOO_REDIRECT_URI,
       response_type: "code",
-      scope: "openid email profile"
+      scope: "openid email profile",
+      prompt: "consent"
     }
   )}`;
 
