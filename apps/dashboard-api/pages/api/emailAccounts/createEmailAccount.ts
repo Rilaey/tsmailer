@@ -5,8 +5,15 @@ export default async function createEmailAccount(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { userId, provider, email, accessToken, refreshToken, nickName } =
-    req.body;
+  const {
+    userId,
+    provider,
+    email,
+    accessToken,
+    refreshToken,
+    nickName,
+    emailProviderId
+  } = req.body;
 
   const currentDate = new Date();
 
@@ -19,6 +26,7 @@ export default async function createEmailAccount(
       email,
       accessToken,
       refreshToken,
+      emailProviderId: emailProviderId ?? null,
       sentMail: 0,
       createdDate: currentDate.toISOString(),
       lastModifiedDate: currentDate.toISOString()

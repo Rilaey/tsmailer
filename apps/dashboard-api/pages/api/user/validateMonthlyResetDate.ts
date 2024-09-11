@@ -31,9 +31,10 @@ export default async function validateMonthlyResetDate(
     }
 
     const currentDate = new Date(); // Gets the current date
+    const resetDate = new Date(user.resetMonthlyEmailDate); // Convert reset date to a Date object
 
     // Checks if the current date is past the user's monthly reset date
-    if (currentDate > user.resetMonthlyEmailDate) {
+    if (currentDate > resetDate) {
       // If so, adds one month to the current date
       const addMonthDate = new Date(
         currentDate.setMonth(currentDate.getMonth() + 1)
@@ -44,9 +45,9 @@ export default async function validateMonthlyResetDate(
         .collection("users")
         .updateOne(
           { apiKey },
-          { $set: { resetMonthlyEmailDate: addMonthDate } }
+          { $set: { resetMonthlyEmailDate: addMonthDate, monthlySentMail: 0 } }
         );
-
+      console.log("updated!");
       // Sends a success response with the updated reset date
       res
         .status(200)

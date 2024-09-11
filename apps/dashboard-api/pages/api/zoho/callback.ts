@@ -57,6 +57,17 @@ export default async function callback(
 
   const userInfo = await userInfoResponse.json();
 
+  const getZohoAccountId = await fetch("https://mail.zoho.com/api/accounts", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Zoho-oauthtoken ${tokenData.access_token}`
+    }
+  });
+
+  const getZohoAccountIdJson = await getZohoAccountId.json();
+
   await fetch(
     `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/emailAccounts/createEmailAccount`,
     {
@@ -67,6 +78,7 @@ export default async function callback(
       body: JSON.stringify({
         userId: session.sub,
         provider: "Zoho",
+        emailProviderId: getZohoAccountIdJson.data[0].accountId,
         email: userInfo.Email,
         accessToken: tokenData.access_token,
         refreshToken: tokenData.refresh_token

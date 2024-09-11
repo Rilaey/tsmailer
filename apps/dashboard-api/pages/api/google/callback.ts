@@ -41,7 +41,7 @@ export default async function callback(
       },
       body: JSON.stringify({
         userId: session.sub,
-        provider: "google",
+        provider: "gmail",
         email: decodedTokenJson.email,
         accessToken: tokens.access_token,
         refreshToken: tokens.refresh_token

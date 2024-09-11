@@ -4,6 +4,7 @@ type IEmailAccounts = {
   userId: ObjectId;
   nickName: string;
   email: string;
+  emailProviderId?: string | number;
   provider: string;
   accessToken: string;
   refreshToken: string;
