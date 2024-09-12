@@ -10,6 +10,7 @@ interface IUser extends Document {
   role: IRole[];
   tier: ITier;
   totalSentMail: number;
+  totalApiCalls: number;
   monthlySentMail: number;
   resetMonthlyEmailDate: string;
   apiKey: string;

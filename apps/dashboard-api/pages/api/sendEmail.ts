@@ -169,8 +169,8 @@ export default async function sendEmail(
       .updateOne(
         { apiKey },
         newEmailDocument.status == "Sent"
-          ? { $inc: { totalSentMail: 1, monthlySentMail: 1 } }
-          : { $inc: { totalSentMail: 0, monthlySentMail: 0 } }
+          ? { $inc: { totalApiCalls: 1, totalSentMail: 1, monthlySentMail: 1 } }
+          : { $inc: { totalApiCalls: 1 } }
       );
 
     // update email account

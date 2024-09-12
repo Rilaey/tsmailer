@@ -25,6 +25,7 @@ export default async function oAuthSignIn(
       apiKey: await generateUniqueApiKey(32, db),
       resetMonthlyEmailDate: addMonthDate,
       totalSentMail: 0,
+      totalApiCalls: 0,
       monthlySentMail: 0,
       createdDate: new Date().toISOString(),
       lastModifiedDate: new Date().toISOString()

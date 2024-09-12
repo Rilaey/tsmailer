@@ -33,6 +33,11 @@ const userSchema = new Schema<IUserDocument>({
     required: true,
     default: 0
   },
+  totalApiCalls: {
+    type: Number,
+    required: true,
+    default: 0
+  },
   monthlySentMail: {
     type: Number,
     required: true,
