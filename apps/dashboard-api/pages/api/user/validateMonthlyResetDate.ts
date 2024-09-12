@@ -45,11 +45,20 @@ export default async function validateMonthlyResetDate(
         month: "long"
       });
 
+      const currentYear = nextMonthDate.toLocaleString("default", {
+        year: "numeric"
+      });
+
       // Updates the user's resetMonthlyEmailDate in the database
       await db.collection("users").updateOne({ apiKey }, {
         $set: { resetMonthlyEmailDate: addMonthDate },
         $push: {
-          monthlyEmailData: { month: currentMonth, sent: 0, failed: 0 }
+          monthlyEmailData: {
+            month: currentMonth,
+            year: currentYear,
+            sent: 0,
+            failed: 0
+          }
         }
       } as Partial<Document>);
 

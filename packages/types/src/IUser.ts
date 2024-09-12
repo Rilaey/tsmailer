@@ -6,6 +6,7 @@ type ITier = "Free" | "Standard" | "Pro" | "Enterprise";
 
 interface IMonthlyEmailData {
   month: IMonth;
+  year: string;
   sent: number;
   failed: number;
 }

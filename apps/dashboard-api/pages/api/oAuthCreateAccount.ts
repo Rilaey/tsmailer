@@ -18,6 +18,10 @@ export default async function oAuthSignIn(
       month: "long"
     });
 
+    const currentYear = currentDate.toLocaleString("default", {
+      year: "numeric"
+    });
+
     const addMonthDate = new Date(
       currentDate.setMonth(currentDate.getMonth() + 1)
     ).toISOString();
@@ -32,6 +36,7 @@ export default async function oAuthSignIn(
       monthlyEmailData: [
         {
           month: currentMonth,
+          year: currentYear,
           sent: 0,
           failed: 0
         }

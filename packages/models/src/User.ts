@@ -34,6 +34,10 @@ const userSchema = new Schema<IUserDocument>({
         type: String,
         required: true
       },
+      year: {
+        type: String,
+        required: true
+      },
       sent: {
         type: Number,
         required: true
