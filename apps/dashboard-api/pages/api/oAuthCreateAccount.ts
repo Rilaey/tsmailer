@@ -13,6 +13,11 @@ export default async function oAuthSignIn(
 
     let currentDate = new Date();
 
+    // get current month
+    const currentMonth = currentDate.toLocaleString("default", {
+      month: "long"
+    });
+
     const addMonthDate = new Date(
       currentDate.setMonth(currentDate.getMonth() + 1)
     ).toISOString();
@@ -24,9 +29,15 @@ export default async function oAuthSignIn(
       tier: "Free",
       apiKey: await generateUniqueApiKey(32, db),
       resetMonthlyEmailDate: addMonthDate,
+      monthlyEmailData: [
+        {
+          month: currentMonth,
+          sent: 0,
+          failed: 0
+        }
+      ],
       totalSentMail: 0,
       totalApiCalls: 0,
-      monthlySentMail: 0,
       createdDate: new Date().toISOString(),
       lastModifiedDate: new Date().toISOString()
     };

@@ -28,17 +28,28 @@ const userSchema = new Schema<IUserDocument>({
     type: String,
     default: "Free"
   },
+  monthlyEmailData: [
+    {
+      month: {
+        type: String,
+        required: true
+      },
+      sent: {
+        type: Number,
+        required: true
+      },
+      failed: {
+        type: Number,
+        required: true
+      }
+    }
+  ],
   totalSentMail: {
     type: Number,
     required: true,
     default: 0
   },
   totalApiCalls: {
-    type: Number,
-    required: true,
-    default: 0
-  },
-  monthlySentMail: {
     type: Number,
     required: true,
     default: 0

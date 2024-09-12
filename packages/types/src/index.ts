@@ -1,8 +1,9 @@
-import { IUser } from "./IUser";
+import { IUser, IMonthlyEmailData } from "./IUser";
 import { IEmailAccounts } from "./IEmailAccounts";
 import { ILogs, IVariation, IState } from "./ILogs";
 import { ITemplate } from "./ITemplate";
 import { IEmail } from "./IEmail";
+import { IMonth } from "./IDates";
 
 export type {
   IUser,
@@ -11,5 +12,7 @@ export type {
   IVariation,
   IState,
   ITemplate,
-  IEmail
+  IEmail,
+  IMonth,
+  IMonthlyEmailData
 };

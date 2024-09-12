@@ -1,6 +1,14 @@
+import { IMonth } from "./index";
+
 type IRole = "Free User" | "Standard User" | "Pro User" | "Admin";
 
 type ITier = "Free" | "Standard" | "Pro" | "Enterprise";
+
+interface IMonthlyEmailData {
+  month: IMonth;
+  sent: number;
+  failed: number;
+}
 
 interface IUser extends Document {
   _id: string;
@@ -9,13 +17,13 @@ interface IUser extends Document {
   image: string | undefined | null;
   role: IRole[];
   tier: ITier;
+  monthlyEmailData: IMonthlyEmailData;
   totalSentMail: number;
   totalApiCalls: number;
-  monthlySentMail: number;
   resetMonthlyEmailDate: string;
   apiKey: string;
   createdDate: string;
   lastModifiedDate: string;
 }
 
-export type { IUser };
+export type { IUser, IMonthlyEmailData };

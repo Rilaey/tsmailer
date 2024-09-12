@@ -30,8 +30,12 @@ export default async function sendEmail(
       throw new Error("Unable to locate email account.");
     }
 
+    // get most recent entry in monthly email data
+    const { month, sent, failed } =
+      user.monthlyEmailData[user.monthlyEmailData.length - 1];
+
     // Check if user is at their max emails
-    if (user.tier == "Free" && user.monthlySentMail >= 200) {
+    if (user.tier == "Free" && sent >= 200) {
       await pushLogs(
         user._id,
         "Maximum monthly email cap hit.",
@@ -163,15 +167,25 @@ export default async function sendEmail(
     // insert new email document
     await db.collection("emails").insertOne(newEmailDocument);
 
+    const lastIndexOfMonthlyEmailData = user.monthlyEmailData.length - 1;
     // update user
-    await db
-      .collection("users")
-      .updateOne(
-        { apiKey },
-        newEmailDocument.status == "Sent"
-          ? { $inc: { totalApiCalls: 1, totalSentMail: 1, monthlySentMail: 1 } }
-          : { $inc: { totalApiCalls: 1 } }
-      );
+    await db.collection("users").updateOne(
+      { apiKey },
+      newEmailDocument.status == "Sent"
+        ? {
+            $inc: {
+              totalApiCalls: 1,
+              totalSentMail: 1,
+              [`monthlyEmailData.${lastIndexOfMonthlyEmailData}.sent`]: 1
+            }
+          }
+        : {
+            $inc: {
+              totalApiCalls: 1,
+              [`monthlyEmailData.${lastIndexOfMonthlyEmailData}.sent`]: 1
+            }
+          }
+    );
 
     // update email account
     await db
