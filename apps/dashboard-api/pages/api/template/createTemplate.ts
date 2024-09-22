@@ -33,6 +33,7 @@ export default async function createTemplate(
         description,
         subject,
         content,
+        totalEmailUsage: 0,
         createdDate: new Date().toISOString(),
         lastModifiedDate: new Date().toISOString()
       };

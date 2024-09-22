@@ -8,6 +8,7 @@ type ITemplate = {
   description: string;
   subject: string;
   content: string;
+  totalEmailUsage: number;
   createdDate: string;
   lastModifiedDate: string;
 };

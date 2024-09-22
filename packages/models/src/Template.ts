@@ -27,6 +27,10 @@ const templateSchema = new Schema<ITemplate>({
     type: String,
     required: true
   },
+  totalEmailUsage: {
+    type: Number,
+    required: true
+  },
   createdDate: {
     type: String,
     required: true

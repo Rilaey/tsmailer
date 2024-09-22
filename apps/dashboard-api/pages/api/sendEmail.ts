@@ -24,16 +24,8 @@ export default async function sendEmail(
 ) {
   // only here for testing in postman
   // will be removed once testing is no longer needed.
-  // const {
-  //   apiKey,
-  //   emailAccountId,
-  //   to,
-  //   emailProviderId,
-  //   toName,
-  //   fromName,
-  //   yourMessage,
-  //   templateId
-  // } = req.body;
+  // const { apiKey, emailAccountId, to, emailProviderId, options, templateId } =
+  //   req.body;
 
   // if (!apiKey || !emailAccountId) {
   //   return res
@@ -217,6 +209,7 @@ export default async function sendEmail(
     // Insert email document
     const newEmailDocument = {
       userId: user._id,
+      templateId: template._id,
       to: Array.isArray(to) ? to : [to],
       from: sendingEmailAccount.email,
       message: updatedContentString,
@@ -255,18 +248,17 @@ export default async function sendEmail(
           }
     );
 
-    // update email account
-    await db
-      .collection("emailaccounts")
-      .updateOne(
-        { _id: new ObjectId(String(emailAccountId as string)) },
-        newEmailDocument.status == "Sent"
-          ? { $inc: { sentMail: to.length } }
-          : { $inc: { sentMail: 0 } }
-      );
-
     // success
     if (newEmailDocument.status == "Sent") {
+      // update email account
+      await db
+        .collection("emailaccounts")
+        .updateOne(
+          { _id: new ObjectId(String(emailAccountId as string)) },
+          { $inc: { sentMail: to.length } }
+        );
+
+      // create success logs
       for (let i = 0; i < to.length; i++) {
         await pushLogs(
           user._id,
@@ -277,6 +269,16 @@ export default async function sendEmail(
           newEmailDocumentMongoMeta.insertedId
         );
       }
+
+      // update template
+      await db.collection("templates").updateOne(
+        { _id: new ObjectId(template._id) },
+        {
+          $inc: {
+            totalEmailUsage: to.length
+          }
+        }
+      );
 
       return res.status(200).json({ "Email sent!": sendingEmail });
     }

@@ -7,6 +7,11 @@ const emailSchema = new Schema<IEmail>({
     required: true,
     ref: "User"
   },
+  templateId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: "Template"
+  },
   to: {
     type: [String],
     required: true

@@ -5,6 +5,7 @@ type IStaus = "Sent" | "Queued" | "Failed";
 interface IEmail extends Document {
   _id: ObjectId;
   userId: ObjectId;
+  templateId: ObjectId;
   to: string[];
   from: string;
   message: string;
