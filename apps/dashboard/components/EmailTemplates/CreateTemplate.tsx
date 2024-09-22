@@ -25,42 +25,42 @@ Best Regards,
   // 2) Needs to be made into a hook
   // 3) Outlines how we have to send the token to api
 
-  // const handleCreateTemplate = async () => {
-  //   try {
-  //     if (!session) return null;
+  const handleCreateTemplate = async () => {
+    try {
+      if (!session) return null;
 
-  //     const response = await fetch(
-  //       `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/template/createTemplate`,
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${session.user.accessToken}`
-  //         },
-  //         body: JSON.stringify({
-  //           name: name,
-  //           description: description,
-  //           subject: subject,
-  //           content: content
-  //         }),
-  //         credentials: "include"
-  //       }
-  //     );
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/template/createTemplate`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.user.accessToken}`
+          },
+          body: JSON.stringify({
+            name: name,
+            description: description,
+            subject: subject,
+            content: content
+          }),
+          credentials: "include"
+        }
+      );
 
-  //     if (!response.ok) {
-  //       return notifications.show({
-  //         position: "top-right",
-  //         title: "Error creating template.",
-  //         message: "Try again.",
-  //         color: "red"
-  //       });
-  //     }
+      if (!response.ok) {
+        return notifications.show({
+          position: "top-right",
+          title: "Error creating template.",
+          message: "Try again.",
+          color: "red"
+        });
+      }
 
-  //     router.push(`/templates`);
-  //   } catch (err) {
-  //     console.log("error", err);
-  //   }
-  // };
+      router.push(`/templates`);
+    } catch (err) {
+      console.log("error", err);
+    }
+  };
 
   return (
     <Flex direction="column" justify="space-between" mt={50}>
@@ -68,18 +68,7 @@ Best Regards,
         <Text variant="text" size="xl">
           Email Templates
         </Text>
-        <Button
-          onClick={() =>
-            notifications.show({
-              position: "top-right",
-              title: "Emailed templated created!",
-              message: "You can start using your new template immediately.",
-              color: "violet"
-            })
-          }
-        >
-          Create Template
-        </Button>
+        <Button onClick={() => handleCreateTemplate()}>Create Template</Button>
       </Flex>
       <Grid>
         <Grid.Col span={6}>

@@ -8,23 +8,24 @@ export default async function createTemplate(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { name, description, subject, content } = req.body;
-
-  if (!name || !description || !subject || !content) {
-    return res.status(400).json({
-      Error: "Name, description, subject, and content are required."
-    });
-  }
-
-  const token = await getToken({ req });
-
-  if (!token) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-
-  const db = await dbConnect();
   try {
     cors(req, res, async () => {
+      const { name, description, subject, content } = req.body;
+
+      if (!name || !description || !subject || !content) {
+        return res.status(400).json({
+          Error: "Name, description, subject, and content are required."
+        });
+      }
+
+      const token = await getToken({ req });
+
+      if (!token) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
+
+      const db = await dbConnect();
+
       const newTemplate = {
         userId: token.id as string,
         templateId: `template_${await generateTemplateId(db)}`,
