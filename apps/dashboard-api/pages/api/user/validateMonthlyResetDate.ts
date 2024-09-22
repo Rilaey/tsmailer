@@ -30,6 +30,15 @@ export default async function validateMonthlyResetDate(
       throw new Error("Unable to locate user.");
     }
 
+    const userStats = await db
+      .collection("userstats")
+      .findOne({ userId: user._id });
+
+    if (!userStats) {
+      // If no user is found, throws an error
+      throw new Error("Unable to locate user stats.");
+    }
+
     const currentDate = new Date(); // Gets the current date
     const resetDate = new Date(user.resetMonthlyEmailDate); // Convert reset date to a Date object
 
@@ -49,15 +58,16 @@ export default async function validateMonthlyResetDate(
         year: "numeric"
       });
 
-      // Updates the user's resetMonthlyEmailDate in the database
-      await db.collection("users").updateOne({ apiKey }, {
+      // Updates the user stats resetMonthlyEmailDate in the database
+      await db.collection("userstats").updateOne({ userId: user._id }, {
         $set: { resetMonthlyEmailDate: addMonthDate },
         $push: {
           monthlyEmailData: {
             month: currentMonth,
             year: currentYear,
             sent: 0,
-            failed: 0
+            failed: 0,
+            apiCalls: 0
           }
         }
       } as Partial<Document>);

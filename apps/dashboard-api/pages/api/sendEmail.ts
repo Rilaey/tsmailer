@@ -4,22 +4,83 @@ import { NextApiRequest, NextApiResponse } from "next";
 import nodemailer from "nodemailer";
 import { pushLogs } from "@repo/utility";
 import { ObjectId } from "mongodb";
+import { ITemplate } from "@repo/types";
+
+interface IDynamicEmailVariables {
+  toName: string;
+  fromName: string;
+  yourMessage: string;
+}
 
 // Send email endpoint
 export default async function sendEmail(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
+  to: string[],
+  templateId: ITemplate,
+  apiKey: string,
+  emailAccountId: string,
+  options: IDynamicEmailVariables
 ) {
-  const { apiKey, emailAccountId, to, message, subject, emailProviderId } =
-    req.body;
+  // only here for testing in postman
+  // will be removed once testing is no longer needed.
+  // const {
+  //   apiKey,
+  //   emailAccountId,
+  //   to,
+  //   emailProviderId,
+  //   toName,
+  //   fromName,
+  //   yourMessage,
+  //   templateId
+  // } = req.body;
+
+  // if (!apiKey || !emailAccountId) {
+  //   return res
+  //     .status(400)
+  //     .json({ Error: "API key and email provider are required." });
+  // }
+
+  const db = await dbConnect();
 
   try {
-    const db = await dbConnect();
-
     const user = await db.collection("users").findOne({ apiKey });
 
     if (!user) {
-      throw new Error("Unable to locate user.");
+      return res.status(400).json({ Error: "Invalid API key." });
+    }
+
+    const template = await db.collection("templates").findOne({ templateId });
+
+    if (!template) {
+      return res.status(400).json({ Error: "Invalid template ID." });
+    }
+
+    const { content, subject } = template;
+
+    // Replace dynamic values in content string
+    const replacements: { [key: string]: string } = {
+      to_name: options.toName,
+      from_name: options.fromName,
+      message: options.yourMessage
+    };
+
+    const updatedContentString = content.replace(
+      /{{(.*?)}}/g,
+      (match: string, p1: string) => replacements[p1.trim()] || match // Fallback to the original match if no replacement is found
+    );
+
+    const updatedSubjectString = subject.replace(
+      /{{(.*?)}}/g,
+      (match: string, p1: string) => replacements[p1.trim()] || match // Fallback to the original match if no replacement is found
+    );
+
+    const userStats = await db
+      .collection("userstats")
+      .findOne({ userId: user._id });
+
+    if (!userStats) {
+      return res.status(400).json({ Error: "Unable to update user stats." });
     }
 
     const sendingEmailAccount = await db
@@ -27,15 +88,15 @@ export default async function sendEmail(
       .findOne({ _id: new ObjectId(String(emailAccountId as string)) });
 
     if (!sendingEmailAccount) {
-      throw new Error("Unable to locate email account.");
+      return res.status(400).json({ Error: "Unable to locate email account" });
     }
 
     // get most recent entry in monthly email data
-    const { month, sent, failed } =
-      user.monthlyEmailData[user.monthlyEmailData.length - 1];
+    const { apiCalls } =
+      userStats.monthlyEmailData[userStats.monthlyEmailData.length - 1];
 
     // Check if user is at their max emails
-    if (user.tier == "Free" && sent >= 200) {
+    if (user.tier == "Free" && apiCalls >= 200) {
       await pushLogs(
         user._id,
         "Maximum monthly email cap hit.",
@@ -80,7 +141,7 @@ export default async function sendEmail(
         break;
       case "Zoho":
         const zohoEmail = await fetch(
-          `https://mail.zoho.com/api/accounts/${emailProviderId}/messages`,
+          `https://mail.zoho.com/api/accounts/${sendingEmailAccount.emailProviderId}/messages`,
           {
             method: "POST",
             headers: {
@@ -91,8 +152,8 @@ export default async function sendEmail(
             body: JSON.stringify({
               fromAddress: sendingEmailAccount.email,
               toAddress: to,
-              subject: subject,
-              content: message,
+              subject: updatedSubjectString,
+              content: updatedContentString,
               askReceipt: "yes"
             })
           }
@@ -101,6 +162,7 @@ export default async function sendEmail(
         sendingEmail = await zohoEmail.json();
 
         isEmailResponseOk = sendingEmail.status.code == 200;
+        break;
       case "yahoo":
       case "aol":
         assignedClientId = process.env.YAHOO_CLIENT_ID;
@@ -145,9 +207,8 @@ export default async function sendEmail(
       sendingEmail = await transporter?.sendMail({
         from: sendingEmailAccount.email,
         to: to,
-        subject: subject,
-        text: message,
-        html: `<p>${message}</p>`
+        subject: updatedSubjectString,
+        text: updatedContentString
       });
 
       isEmailResponseOk = sendingEmail?.response.includes("250");
@@ -158,31 +219,38 @@ export default async function sendEmail(
       userId: user._id,
       to: Array.isArray(to) ? to : [to],
       from: sendingEmailAccount.email,
-      message,
-      subject,
+      message: updatedContentString,
+      subject: updatedSubjectString,
       status: isEmailResponseOk ? "Sent" : "Failed",
+      responseTime: sendingEmail.messageTime,
+      size: sendingEmail.messageSize,
       sentDate: new Date().toISOString()
     };
 
     // insert new email document
-    await db.collection("emails").insertOne(newEmailDocument);
+    const newEmailDocumentMongoMeta = await db
+      .collection("emails")
+      .insertOne(newEmailDocument);
 
-    const lastIndexOfMonthlyEmailData = user.monthlyEmailData.length - 1;
-    // update user
-    await db.collection("users").updateOne(
-      { apiKey },
+    const lastIndexOfMonthlyEmailData = userStats.monthlyEmailData.length - 1;
+
+    // update user stats
+    await db.collection("userstats").updateOne(
+      { userId: user._id },
       newEmailDocument.status == "Sent"
         ? {
             $inc: {
               totalApiCalls: 1,
-              totalSentMail: 1,
-              [`monthlyEmailData.${lastIndexOfMonthlyEmailData}.sent`]: 1
+              totalSentMail: to.length,
+              [`monthlyEmailData.${lastIndexOfMonthlyEmailData}.sent`]:
+                to.length,
+              [`monthlyEmailData.${lastIndexOfMonthlyEmailData}.apiCalls`]: 1
             }
           }
         : {
             $inc: {
               totalApiCalls: 1,
-              [`monthlyEmailData.${lastIndexOfMonthlyEmailData}.sent`]: 1
+              [`monthlyEmailData.${lastIndexOfMonthlyEmailData}.apiCalls`]: 1
             }
           }
     );
@@ -193,20 +261,38 @@ export default async function sendEmail(
       .updateOne(
         { _id: new ObjectId(String(emailAccountId as string)) },
         newEmailDocument.status == "Sent"
-          ? { $inc: { sentMail: 1 } }
+          ? { $inc: { sentMail: to.length } }
           : { $inc: { sentMail: 0 } }
       );
 
     // success
     if (newEmailDocument.status == "Sent") {
-      await pushLogs(user._id, "Email sent.", "Success", "Email", db);
+      for (let i = 0; i < to.length; i++) {
+        await pushLogs(
+          user._id,
+          "Email sent.",
+          "Success",
+          "Email",
+          db,
+          newEmailDocumentMongoMeta.insertedId
+        );
+      }
 
       return res.status(200).json({ "Email sent!": sendingEmail });
     }
 
     // Failure
     if (newEmailDocument.status == "Failed") {
-      await pushLogs(user._id, "Email not sent.", "Error", "Email", db);
+      for (let i = 0; i < to.length; i++) {
+        await pushLogs(
+          user._id,
+          "Email not sent.",
+          "Error",
+          "Email",
+          db,
+          newEmailDocumentMongoMeta.insertedId
+        );
+      }
 
       return res.status(500).json({ Error: "Error sending email." });
     }

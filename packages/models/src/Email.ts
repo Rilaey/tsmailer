@@ -26,6 +26,14 @@ const emailSchema = new Schema<IEmail>({
     type: String,
     required: true
   },
+  responseTime: {
+    type: Number,
+    required: true
+  },
+  size: {
+    type: Number,
+    required: true
+  },
   sentDate: {
     type: String,
     required: true

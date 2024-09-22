@@ -1,13 +1,14 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
+import dbConnect from "lib/db";
 
 export default async function callback(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const session = await getSession({ req });
-
   const { code } = req.query;
+
+  const session = await getSession({ req });
 
   if (!session) {
     return res.status(401).json({ error: "Unauthorized" });
@@ -73,7 +74,8 @@ export default async function callback(
     {
       method: "POST",
       headers: {
-        "Content-type": "application/json"
+        "Content-type": "application/json",
+        Authorization: `Bearer ${session}` // Send the JWT token here
       },
       body: JSON.stringify({
         userId: session.sub,

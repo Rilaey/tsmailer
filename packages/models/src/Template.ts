@@ -7,6 +7,10 @@ const templateSchema = new Schema<ITemplate>({
     required: true,
     ref: "User"
   },
+  templateId: {
+    type: String,
+    required: true
+  },
   name: {
     type: String,
     required: true

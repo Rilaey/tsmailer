@@ -10,6 +10,8 @@ interface IEmail extends Document {
   message: string;
   subject: string;
   status: IStaus;
+  responseTime: number;
+  size: number;
   sentDate: string;
 }
 

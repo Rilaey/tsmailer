@@ -1,3 +1,5 @@
+import { getToken } from "next-auth/jwt";
+import { ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "lib/db";
 
@@ -15,32 +17,38 @@ export default async function getUserEmailStats(
   req: NextApiRequest,
   res: NextApiResponse
 ): Promise<void> {
-  const { apiKey } = req.body;
+  const token = await getToken({ req });
+
+  if (!token) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  const db = await dbConnect();
 
   try {
-    // Connect to the database
-    const db = await dbConnect();
-
-    // Find the user by apiKey
-    const user = await db.collection("users").findOne({ apiKey });
+    const userStats = await db
+      .collection("userstats")
+      .findOne({ userId: new ObjectId(token.id as string) });
 
     // If no user found, throw an error
-    if (!user) {
-      throw new Error("Unable to locate user.");
+    if (!userStats) {
+      throw new Error("Unable to locate user stats.");
     }
 
     // Count the number of successful emails sent by the user
-    const successfulEmails = await db
-      .collection("emails")
-      .countDocuments({ userId: user._id, status: "Sent" });
+    const successfulEmails = await db.collection("emails").countDocuments({
+      userId: new ObjectId(token.id as string),
+      status: "Sent"
+    });
 
     // Calculate the email delivery rate
-    const emailDeliveryRate = (successfulEmails / user.totalSentMail) * 100;
+    const emailDeliveryRate =
+      (successfulEmails / userStats.totalSentMail) * 100;
 
     // Send a successful response with the user's stats
     res.status(200).json({
-      totalApiCalls: user.totalApiCalls,
-      totalEmailSent: user.totalSentMail,
+      totalApiCalls: userStats.totalApiCalls,
+      totalEmailSent: userStats.totalSentMail,
       deliveryRate: emailDeliveryRate
     });
   } catch (err) {

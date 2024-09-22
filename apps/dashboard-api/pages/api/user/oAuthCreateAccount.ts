@@ -32,13 +32,21 @@ export default async function oAuthSignIn(
       role: ["Free User"],
       tier: "Free",
       apiKey: await generateUniqueApiKey(32, db),
+      createdDate: new Date().toISOString(),
+      lastModifiedDate: new Date().toISOString()
+    };
+
+    const newUserStats = {
+      _id: new MongoDBObjectId(),
+      userId: newUser._id,
       resetMonthlyEmailDate: addMonthDate,
       monthlyEmailData: [
         {
           month: currentMonth,
           year: currentYear,
           sent: 0,
-          failed: 0
+          failed: 0,
+          apiCalls: 0
         }
       ],
       totalSentMail: 0,
@@ -56,6 +64,8 @@ export default async function oAuthSignIn(
     };
 
     await db.collection("users").insertOne(newUser);
+
+    await db.collection("userstats").insertOne(newUserStats);
 
     await db.collection("logs").insertOne(newLogsObject);
 
