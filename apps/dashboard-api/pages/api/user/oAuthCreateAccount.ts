@@ -32,6 +32,11 @@ export default async function oAuthSignIn(
       role: ["Free User"],
       tier: "Free",
       apiKey: await generateUniqueApiKey(32, db),
+      street: null,
+      city: null,
+      zipCode: null,
+      state: null,
+      phoneNumber: null,
       createdDate: new Date().toISOString(),
       lastModifiedDate: new Date().toISOString()
     };

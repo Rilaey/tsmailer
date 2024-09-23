@@ -56,7 +56,6 @@ export default async function createTemplate(
 }
 
 // might need this on all api calls to prevent console message of "API resolved without sending a response".
-
 // maybe a global solution?
 export const config = {
   api: {

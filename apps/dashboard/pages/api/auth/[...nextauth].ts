@@ -109,7 +109,7 @@ export const authOptions: NextAuthOptions = {
         const { apiKey } = user;
 
         await fetch(
-          `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/user/validateMonthlyResetDate`,
+          `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/userStats/validateMonthlyResetDate`,
           {
             method: "POST",
             headers: {

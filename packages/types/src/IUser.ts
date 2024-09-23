@@ -10,6 +10,11 @@ interface IUser extends Document {
   role: IRole[];
   tier: ITier;
   apiKey: string;
+  street: string;
+  city: string;
+  zipCode: number;
+  state: string;
+  phoneNumber: number;
   createdDate: string;
   lastModifiedDate: string;
 }
