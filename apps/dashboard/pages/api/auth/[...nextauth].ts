@@ -9,12 +9,16 @@ const getDomainWithoutSubdomain = (url: string): string => {
   return urlParts.slice(-(urlParts.length === 4 ? 3 : 2)).join(".");
 };
 
+// Check if the app is running on a secure connection
 const useSecureCookies =
   process.env.NEXTAUTH_URL?.startsWith("https://") ?? false;
 
 const cookiePrefix = useSecureCookies ? "__Secure-" : "";
 
+// Extract hostname for subdomain usage, only relevant in production
 const hostName = getDomainWithoutSubdomain(process.env.NEXTAUTH_URL as string);
+
+const isLocalhost = process.env.NEXTAUTH_URL?.includes("localhost");
 
 export const authOptions: NextAuthOptions = {
   adapter: CustomMongoDBAdapter as any,
@@ -24,10 +28,10 @@ export const authOptions: NextAuthOptions = {
       name: `${cookiePrefix}next-auth.session-token`,
       options: {
         httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: useSecureCookies,
-        domain: `.${hostName}` // Use the root domain, e.g., `.tsmailer.com`
+        sameSite: "lax", // 'lax' helps maintain cookies across subdomains
+        path: "/", // The cookie will be sent with all requests to this path
+        secure: useSecureCookies, // Ensure cookies are secure in production
+        domain: isLocalhost ? "localhost" : `.${hostName}` // Use 'localhost' in dev, root domain in production
       }
     }
   },
@@ -67,11 +71,12 @@ export const authOptions: NextAuthOptions = {
     })
   ],
   callbacks: {
-    async jwt({ token, user, account, trigger }) {
+    async jwt({ token, user, account, trigger, session, ...rest }) {
       if (user && trigger == "signUp") {
         token.id = user.id;
         token.email = user.email;
         token.name = user.name;
+        token.apiKey = user.apiKey;
 
         if (account && account?.provider in EmailProviders) {
           // adjust provider name for nodemailer conventions
@@ -104,7 +109,7 @@ export const authOptions: NextAuthOptions = {
         const { apiKey } = user;
 
         await fetch(
-          `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/user/validateMonthlyResetDate`,
+          `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/userStats/validateMonthlyResetDate`,
           {
             method: "POST",
             headers: {
@@ -115,12 +120,14 @@ export const authOptions: NextAuthOptions = {
         );
       }
 
-      return token;
+      return { ...token, ...user };
     },
     async redirect({ url, baseUrl }) {
       return baseUrl;
     },
-    async session({ session, token, user }) {
+    async session({ session, token, user, ...rest }) {
+      session.user.accessToken = token;
+
       return { ...session, ...token, ...user };
     },
     async signIn({ user, profile, account }) {

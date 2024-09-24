@@ -9,7 +9,7 @@ const CustomMongoDBAdapter = {
 
   async createUser(user: IUser) {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/oAuthCreateAccount`,
+      `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/user/oAuthCreateAccount`,
       {
         method: "POST",
         headers: {

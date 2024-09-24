@@ -7,6 +7,11 @@ const emailSchema = new Schema<IEmail>({
     required: true,
     ref: "User"
   },
+  templateId: {
+    type: Schema.Types.ObjectId,
+    required: true,
+    ref: "Template"
+  },
   to: {
     type: [String],
     required: true
@@ -24,6 +29,14 @@ const emailSchema = new Schema<IEmail>({
   },
   status: {
     type: String,
+    required: true
+  },
+  responseTime: {
+    type: Number,
+    required: true
+  },
+  size: {
+    type: Number,
     required: true
   },
   sentDate: {
