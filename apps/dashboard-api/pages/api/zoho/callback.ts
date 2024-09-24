@@ -1,13 +1,14 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
+import dbConnect from "lib/db";
 
 export default async function callback(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const session = await getSession({ req });
-
   const { code } = req.query;
+
+  const session = await getSession({ req });
 
   if (!session) {
     return res.status(401).json({ error: "Unauthorized" });
@@ -57,16 +58,29 @@ export default async function callback(
 
   const userInfo = await userInfoResponse.json();
 
+  const getZohoAccountId = await fetch("https://mail.zoho.com/api/accounts", {
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Zoho-oauthtoken ${tokenData.access_token}`
+    }
+  });
+
+  const getZohoAccountIdJson = await getZohoAccountId.json();
+
   await fetch(
     `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/emailAccounts/createEmailAccount`,
     {
       method: "POST",
       headers: {
-        "Content-type": "application/json"
+        "Content-type": "application/json",
+        Authorization: `Bearer ${session}` // Send the JWT token here
       },
       body: JSON.stringify({
         userId: session.sub,
         provider: "Zoho",
+        emailProviderId: getZohoAccountIdJson.data[0].accountId,
         email: userInfo.Email,
         accessToken: tokenData.access_token,
         refreshToken: tokenData.refresh_token

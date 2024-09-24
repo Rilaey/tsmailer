@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "lib/db";
 import { ObjectId as MongoDBObjectId } from "mongodb";
-import { generateUniqueApiKey } from "@repo/utility";
+import { generateUniqueId } from "@repo/utility";
 
 export default async function oAuthSignIn(
   req: NextApiRequest,
@@ -13,6 +13,15 @@ export default async function oAuthSignIn(
 
     let currentDate = new Date();
 
+    // get current month
+    const currentMonth = currentDate.toLocaleString("default", {
+      month: "long"
+    });
+
+    const currentYear = currentDate.toLocaleString("default", {
+      year: "numeric"
+    });
+
     const addMonthDate = new Date(
       currentDate.setMonth(currentDate.getMonth() + 1)
     ).toISOString();
@@ -22,10 +31,31 @@ export default async function oAuthSignIn(
       _id: new MongoDBObjectId(),
       role: ["Free User"],
       tier: "Free",
-      apiKey: await generateUniqueApiKey(32, db),
+      apiKey: await generateUniqueId(db, "apiKey", 32),
+      street: null,
+      city: null,
+      zipCode: null,
+      state: null,
+      phoneNumber: null,
+      createdDate: new Date().toISOString(),
+      lastModifiedDate: new Date().toISOString()
+    };
+
+    const newUserStats = {
+      _id: new MongoDBObjectId(),
+      userId: newUser._id,
       resetMonthlyEmailDate: addMonthDate,
+      monthlyEmailData: [
+        {
+          month: currentMonth,
+          year: currentYear,
+          sent: 0,
+          failed: 0,
+          apiCalls: 0
+        }
+      ],
       totalSentMail: 0,
-      monthlySentMail: 0,
+      totalApiCalls: 0,
       createdDate: new Date().toISOString(),
       lastModifiedDate: new Date().toISOString()
     };
@@ -39,6 +69,8 @@ export default async function oAuthSignIn(
     };
 
     await db.collection("users").insertOne(newUser);
+
+    await db.collection("userstats").insertOne(newUserStats);
 
     await db.collection("logs").insertOne(newLogsObject);
 

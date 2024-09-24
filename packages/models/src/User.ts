@@ -1,4 +1,4 @@
-import mongoose, { Schema, model } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { IUser } from "@repo/types";
 
 export interface IUserDocument extends IUser, Document {}
@@ -28,23 +28,29 @@ const userSchema = new Schema<IUserDocument>({
     type: String,
     default: "Free"
   },
-  totalSentMail: {
-    type: Number,
-    required: true,
-    default: 0
-  },
-  monthlySentMail: {
-    type: Number,
-    required: true,
-    default: 0
-  },
-  resetMonthlyEmailDate: {
-    type: String,
-    required: true
-  },
   apiKey: {
     type: String,
     required: true
+  },
+  street: {
+    type: String,
+    default: null
+  },
+  city: {
+    type: String,
+    default: null
+  },
+  zipCode: {
+    type: Number,
+    default: null
+  },
+  state: {
+    type: String,
+    default: null
+  },
+  phoneNumber: {
+    type: Number,
+    default: null
   },
   createdDate: {
     type: String,

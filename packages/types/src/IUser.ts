@@ -9,10 +9,12 @@ interface IUser extends Document {
   image: string | undefined | null;
   role: IRole[];
   tier: ITier;
-  totalSentMail: number;
-  monthlySentMail: number;
-  resetMonthlyEmailDate: string;
   apiKey: string;
+  street: string;
+  city: string;
+  zipCode: number;
+  state: string;
+  phoneNumber: number;
   createdDate: string;
   lastModifiedDate: string;
 }

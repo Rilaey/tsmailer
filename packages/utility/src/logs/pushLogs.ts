@@ -7,11 +7,13 @@ export const pushLogs = async (
   message: string,
   state: IState,
   variation: IVariation,
-  db: Connection
+  db: Connection,
+  emailId: ObjectId | string | null = null
 ) => {
   try {
     const log = await db.collection("logs").insertOne({
       userId,
+      emailId,
       message,
       state,
       variation,
