@@ -7,6 +7,10 @@ const logSchema = new Schema<ILogs>({
     required: true,
     ref: "User"
   },
+  emailId: {
+    type: Schema.Types.ObjectId,
+    ref: "Email"
+  },
   message: {
     type: String,
     required: true

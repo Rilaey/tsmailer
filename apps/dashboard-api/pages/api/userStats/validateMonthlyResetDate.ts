@@ -30,22 +30,47 @@ export default async function validateMonthlyResetDate(
       throw new Error("Unable to locate user.");
     }
 
+    const userStats = await db
+      .collection("userstats")
+      .findOne({ userId: user._id });
+
+    if (!userStats) {
+      // If no user is found, throws an error
+      throw new Error("Unable to locate user stats.");
+    }
+
     const currentDate = new Date(); // Gets the current date
+    const resetDate = new Date(user.resetMonthlyEmailDate); // Convert reset date to a Date object
 
     // Checks if the current date is past the user's monthly reset date
-    if (currentDate > user.resetMonthlyEmailDate) {
+    if (currentDate > resetDate) {
       // If so, adds one month to the current date
-      const addMonthDate = new Date(
-        currentDate.setMonth(currentDate.getMonth() + 1)
-      ).toISOString();
+      const nextMonthDate = new Date(currentDate);
+      nextMonthDate.setMonth(nextMonthDate.getMonth() + 1);
 
-      // Updates the user's resetMonthlyEmailDate in the database
-      await db
-        .collection("users")
-        .updateOne(
-          { apiKey },
-          { $set: { resetMonthlyEmailDate: addMonthDate } }
-        );
+      const addMonthDate = nextMonthDate.toISOString();
+
+      const currentMonth = nextMonthDate.toLocaleString("default", {
+        month: "long"
+      });
+
+      const currentYear = nextMonthDate.toLocaleString("default", {
+        year: "numeric"
+      });
+
+      // Updates the user stats resetMonthlyEmailDate in the database
+      await db.collection("userstats").updateOne({ userId: user._id }, {
+        $set: { resetMonthlyEmailDate: addMonthDate },
+        $push: {
+          monthlyEmailData: {
+            month: currentMonth,
+            year: currentYear,
+            sent: 0,
+            failed: 0,
+            apiCalls: 0
+          }
+        }
+      } as Partial<Document>);
 
       // Sends a success response with the updated reset date
       res
