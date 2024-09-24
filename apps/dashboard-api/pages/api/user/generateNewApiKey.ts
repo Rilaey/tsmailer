@@ -2,7 +2,7 @@ import { getToken } from "next-auth/jwt";
 import { ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "lib/db";
-import { generateUniqueApiKey, pushLogs } from "@repo/utility";
+import { generateUniqueId, pushLogs } from "@repo/utility";
 
 export default async function generateNewApiKey(
   req: NextApiRequest,
@@ -21,7 +21,7 @@ export default async function generateNewApiKey(
       .collection("users")
       .findOneAndUpdate(
         { _id: new ObjectId(token.id as string) },
-        { $set: { apiKey: await generateUniqueApiKey(32, db) } },
+        { $set: { apiKey: await generateUniqueId(db, "apiKey", 32) } },
         { returnDocument: "after" }
       );
 

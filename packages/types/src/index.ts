@@ -5,6 +5,7 @@ import { ITemplate } from "./ITemplate";
 import { IEmail } from "./IEmail";
 import { IMonth } from "./IDates";
 import { IUserStats, IMonthlyEmailData } from "./IUserStats";
+import { IPlan } from "./IPlan";
 
 export type {
   IUser,
@@ -16,5 +17,6 @@ export type {
   IEmail,
   IMonth,
   IMonthlyEmailData,
-  IUserStats
+  IUserStats,
+  IPlan
 };

@@ -19,7 +19,7 @@ export default async function sendEmail(
   to: string[],
   templateId: ITemplate,
   apiKey: string,
-  emailAccountId: string,
+  providerId: string,
   options: IDynamicEmailVariables
 ) {
   // only here for testing in postman
@@ -52,9 +52,9 @@ export default async function sendEmail(
 
     // Replace dynamic values in content string
     const replacements: { [key: string]: string } = {
-      to_name: options.toName,
-      from_name: options.fromName,
-      message: options.yourMessage
+      to_name: options.toName ?? "",
+      from_name: options.fromName ?? "",
+      message: options.yourMessage ?? ""
     };
 
     const updatedContentString = content.replace(
@@ -77,7 +77,7 @@ export default async function sendEmail(
 
     const sendingEmailAccount = await db
       .collection("emailaccounts")
-      .findOne({ _id: new ObjectId(String(emailAccountId as string)) });
+      .findOne({ providerId });
 
     if (!sendingEmailAccount) {
       return res.status(400).json({ Error: "Unable to locate email account" });
@@ -253,10 +253,7 @@ export default async function sendEmail(
       // update email account
       await db
         .collection("emailaccounts")
-        .updateOne(
-          { _id: new ObjectId(String(emailAccountId as string)) },
-          { $inc: { sentMail: to.length } }
-        );
+        .updateOne({ providerId }, { $inc: { sentMail: to.length } });
 
       // create success logs
       for (let i = 0; i < to.length; i++) {

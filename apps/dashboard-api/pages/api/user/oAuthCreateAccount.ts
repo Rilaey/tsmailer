@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "lib/db";
 import { ObjectId as MongoDBObjectId } from "mongodb";
-import { generateUniqueApiKey } from "@repo/utility";
+import { generateUniqueId } from "@repo/utility";
 
 export default async function oAuthSignIn(
   req: NextApiRequest,
@@ -31,7 +31,7 @@ export default async function oAuthSignIn(
       _id: new MongoDBObjectId(),
       role: ["Free User"],
       tier: "Free",
-      apiKey: await generateUniqueApiKey(32, db),
+      apiKey: await generateUniqueId(db, "apiKey", 32),
       street: null,
       city: null,
       zipCode: null,

@@ -1,6 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "lib/db";
-import { pushLogs, validateEmailAccount } from "@repo/utility";
+import {
+  generateUniqueId,
+  pushLogs,
+  validateEmailAccount
+} from "@repo/utility";
 
 export default async function addInitialEmailAccount(
   req: NextApiRequest,
@@ -24,6 +28,7 @@ export default async function addInitialEmailAccount(
     if (!doesEmailExist) {
       const newEmailAccountDocument = {
         userId: id,
+        providerId: `provider_${await generateUniqueId(db, "provider", 32)}`,
         nickName: nickName,
         email: email,
         provider: provider,

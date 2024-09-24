@@ -1,6 +1,10 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "lib/db";
-import { pushLogs, validateEmailAccount } from "@repo/utility";
+import {
+  pushLogs,
+  validateEmailAccount,
+  generateUniqueId
+} from "@repo/utility";
 
 export default async function createEmailAccount(
   req: NextApiRequest,
@@ -16,12 +20,10 @@ export default async function createEmailAccount(
   } = req.body;
 
   if (!userId || !provider || !email || !accessToken || !refreshToken) {
-    return res
-      .status(400)
-      .json({
-        Error:
-          "User ID, provider, email, access token, and refresh token are required."
-      });
+    return res.status(400).json({
+      Error:
+        "User ID, provider, email, access token, and refresh token are required."
+    });
   }
 
   const currentDate = new Date();
@@ -34,11 +36,12 @@ export default async function createEmailAccount(
     if (!doesEmailExist) {
       const emailAccount = await db.collection("emailaccounts").insertOne({
         userId,
+        providerId: `provider_${await generateUniqueId(db, "provider", 32)}`,
         provider,
         email,
         accessToken,
         refreshToken,
-        emailProviderId: emailProviderId ?? null,
+        emailProviderId: emailProviderId ?? null, // Currently only for zoho
         sentMail: 0,
         createdDate: currentDate.toISOString(),
         lastModifiedDate: currentDate.toISOString()

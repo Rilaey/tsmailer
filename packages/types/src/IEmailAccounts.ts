@@ -2,6 +2,7 @@ import { ObjectId } from "mongoose";
 
 type IEmailAccounts = {
   userId: ObjectId;
+  providerId: string;
   nickName: string;
   email: string;
   emailProviderId?: string | number;

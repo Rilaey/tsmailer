@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getToken } from "next-auth/jwt";
 import dbConnect from "lib/db";
-import { pushLogs, generateTemplateId } from "@repo/utility";
+import { pushLogs, generateUniqueId } from "@repo/utility";
 import cors from "../middleware/corsMiddleware";
 
 export default async function createTemplate(
@@ -28,7 +28,7 @@ export default async function createTemplate(
 
       const newTemplate = {
         userId: token.id as string,
-        templateId: `template_${await generateTemplateId(db)}`,
+        templateId: `template_${await generateUniqueId(db, "template", 32)}`,
         name,
         description,
         subject,
