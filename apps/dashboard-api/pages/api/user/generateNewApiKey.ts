@@ -21,7 +21,7 @@ export default async function generateNewApiKey(
       .collection("users")
       .findOneAndUpdate(
         { _id: new ObjectId(token.id as string) },
-        { $set: { apiKey: await generateUniqueId(db, "apiKey", 32) } },
+        { $set: { apiKey: await generateUniqueId(db, "apiKey", 16) } },
         { returnDocument: "after" }
       );
 

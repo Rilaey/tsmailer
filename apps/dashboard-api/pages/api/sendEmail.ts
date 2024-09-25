@@ -39,13 +39,13 @@ export default async function sendEmail(
     const user = await db.collection("users").findOne({ apiKey });
 
     if (!user) {
-      return res.status(400).json({ Error: "Invalid API key." });
+      return res.status(400).json({ error: "Invalid API key." });
     }
 
     const template = await db.collection("templates").findOne({ templateId });
 
     if (!template) {
-      return res.status(400).json({ Error: "Invalid template ID." });
+      return res.status(400).json({ error: "Invalid template ID." });
     }
 
     const { content, subject } = template;
@@ -72,7 +72,7 @@ export default async function sendEmail(
       .findOne({ userId: user._id });
 
     if (!userStats) {
-      return res.status(400).json({ Error: "Unable to update user stats." });
+      return res.status(400).json({ error: "Unable to update user stats." });
     }
 
     const sendingEmailAccount = await db
@@ -80,7 +80,7 @@ export default async function sendEmail(
       .findOne({ providerId });
 
     if (!sendingEmailAccount) {
-      return res.status(400).json({ Error: "Unable to locate email account" });
+      return res.status(400).json({ error: "Unable to locate email account" });
     }
 
     // get most recent entry in monthly email data
@@ -99,7 +99,7 @@ export default async function sendEmail(
 
       return res
         .status(403)
-        .json({ Error: "Maximum sent emails reached based on tier." });
+        .json({ error: "Maximum sent emails reached based on tier." });
     }
 
     // assign clientId and clientSecret
@@ -293,9 +293,9 @@ export default async function sendEmail(
         );
       }
 
-      return res.status(500).json({ Error: "Error sending email." });
+      return res.status(500).json({ error: "Error sending email." });
     }
   } catch (err) {
-    return res.status(500).json({ Error: err });
+    return res.status(500).json({ error: err });
   }
 }

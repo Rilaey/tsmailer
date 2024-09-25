@@ -41,6 +41,6 @@ export default async function getAllLogs(
 
     res.status(200).json({ Logs: logs });
   } catch (err: any) {
-    res.status(500).json({ Error: err.message });
+    res.status(500).json({ error: err.message });
   }
 }

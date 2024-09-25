@@ -52,6 +52,14 @@ const userSchema = new Schema<IUserDocument>({
     type: Number,
     default: null
   },
+  ipWhitelist: {
+    type: [String],
+    default: null
+  },
+  ipBlacklist: {
+    type: [String],
+    default: null
+  },
   createdDate: {
     type: String,
     required: true

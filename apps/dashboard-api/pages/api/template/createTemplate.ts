@@ -28,7 +28,7 @@ export default async function createTemplate(
 
       const newTemplate = {
         userId: token.id as string,
-        templateId: `template_${await generateUniqueId(db, "template", 32)}`,
+        templateId: `template_${await generateUniqueId(db, "template", 16)}`,
         name,
         description,
         subject,

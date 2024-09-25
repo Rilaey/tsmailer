@@ -31,6 +31,6 @@ export default async function getAllUserEmailAccounts(
 
     res.status(200).json(emailAccounts);
   } catch (err) {
-    res.status(500).json({ Error: err });
+    res.status(500).json({ error: err });
   }
 }

@@ -6,7 +6,7 @@ const planSchema = new Schema<IPlan>({
     type: String,
     required: true
   },
-  monthlyEmails: {
+  monthlyRequest: {
     type: Number,
     required: true
   },

@@ -31,12 +31,14 @@ export default async function oAuthSignIn(
       _id: new MongoDBObjectId(),
       role: ["Free User"],
       tier: "Free",
-      apiKey: await generateUniqueId(db, "apiKey", 32),
+      apiKey: await generateUniqueId(db, "apiKey", 16),
       street: null,
       city: null,
       zipCode: null,
       state: null,
       phoneNumber: null,
+      ipWhitelist: null,
+      ipBlacklist: null,
       createdDate: new Date().toISOString(),
       lastModifiedDate: new Date().toISOString()
     };

@@ -36,7 +36,7 @@ export default async function deleteEmailAccount(
       if (!emailProvider) {
         return res
           .status(500)
-          .json({ Error: "Unable to delete email provider at this time." });
+          .json({ error: "Unable to delete email provider at this time." });
       }
 
       await pushLogs(
@@ -59,7 +59,7 @@ export default async function deleteEmailAccount(
         db
       );
 
-      return res.status(500).json({ Error: err });
+      return res.status(500).json({ error: err });
     }
   });
 }

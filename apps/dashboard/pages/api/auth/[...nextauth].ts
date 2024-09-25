@@ -41,6 +41,7 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/login",
     error: "/login"
+    // newUser: "" // if a new user is detected, takes them to this page
   },
   jwt: {
     secret: process.env.NEXTAUTH_SECRET,
@@ -104,22 +105,6 @@ export const authOptions: NextAuthOptions = {
         }
       }
 
-      // Check user document for monthly email reset
-      if (user && trigger == "signIn") {
-        const { apiKey } = user;
-
-        await fetch(
-          `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/userStats/validateMonthlyResetDate`,
-          {
-            method: "POST",
-            headers: {
-              "Content-type": "application/json"
-            },
-            body: JSON.stringify({ apiKey })
-          }
-        );
-      }
-
       return { ...token, ...user };
     },
     async redirect({ url, baseUrl }) {
@@ -133,6 +118,52 @@ export const authOptions: NextAuthOptions = {
     async signIn({ user, profile, account }) {
       return true;
     }
+  },
+  events: {
+    signOut: async ({ token }) => {
+      await fetch(
+        `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/nextauth/events`,
+        {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json"
+          },
+          body: JSON.stringify({
+            event: "signOut",
+            id: token.id
+          })
+        }
+      );
+    },
+    signIn: async ({ user }) => {
+      await fetch(
+        `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/nextauth/events`,
+        {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json"
+          },
+          body: JSON.stringify({
+            event: "signIn",
+            id: user.id
+          })
+        }
+      );
+
+      await fetch(
+        `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/userStats/validateMonthlyResetDate`,
+        {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json"
+          },
+          body: JSON.stringify({ apiKey: user.apiKey })
+        }
+      );
+    }
+  },
+  theme: {
+    colorScheme: "dark"
   }
 };
 

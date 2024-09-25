@@ -21,7 +21,7 @@ export default async function createEmailAccount(
 
   if (!userId || !provider || !email || !accessToken || !refreshToken) {
     return res.status(400).json({
-      Error:
+      error:
         "User ID, provider, email, access token, and refresh token are required."
     });
   }
@@ -36,7 +36,7 @@ export default async function createEmailAccount(
     if (!doesEmailExist) {
       const emailAccount = await db.collection("emailaccounts").insertOne({
         userId,
-        providerId: `provider_${await generateUniqueId(db, "provider", 32)}`,
+        providerId: `provider_${await generateUniqueId(db, "provider", 16)}`,
         provider,
         email,
         accessToken,
@@ -75,6 +75,6 @@ export default async function createEmailAccount(
       db
     );
 
-    res.status(500).json({ Error: err });
+    res.status(500).json({ error: err });
   }
 }

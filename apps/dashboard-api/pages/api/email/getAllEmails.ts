@@ -37,6 +37,6 @@ export default async function getAllEmails(
 
     return res.status(200).json({ Emails: emails });
   } catch (err: any) {
-    res.status(500).json({ Error: err });
+    res.status(500).json({ error: err });
   }
 }

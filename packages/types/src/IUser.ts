@@ -15,6 +15,8 @@ interface IUser extends Document {
   zipCode: number;
   state: string;
   phoneNumber: number;
+  ipWhitelist: string[];
+  ipBlacklist: string[];
   createdDate: string;
   lastModifiedDate: string;
 }
