@@ -1,12 +1,14 @@
 import { IPlan } from "@repo/types";
 import mongoose, { Schema } from "mongoose";
 
-const planSchema = new Schema<IPlan>({
+export interface IPlanDocument extends IPlan, Document {}
+
+const planSchema = new Schema<IPlanDocument>({
   name: {
     type: String,
     required: true
   },
-  monthlyEmails: {
+  monthlyRequest: {
     type: Number,
     required: true
   },
@@ -69,6 +71,8 @@ const planSchema = new Schema<IPlan>({
   }
 });
 
-export const Plan = mongoose.models.Plan || mongoose.model("Plan", planSchema);
+export const Plan =
+  (mongoose.models.Plan as mongoose.Model<IPlanDocument>) ||
+  mongoose.model("Plan", planSchema);
 
 export default Plan;

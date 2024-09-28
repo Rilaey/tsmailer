@@ -1,9 +1,11 @@
+import { ObjectId } from "mongoose";
+
 type IRole = "Free User" | "Standard User" | "Pro User" | "Admin";
 
 type ITier = "Free" | "Standard" | "Pro" | "Enterprise";
 
-interface IUser extends Document {
-  _id: string;
+interface IUser {
+  _id: ObjectId;
   name: string;
   email: string;
   image: string | undefined | null;
@@ -15,6 +17,8 @@ interface IUser extends Document {
   zipCode: number;
   state: string;
   phoneNumber: number;
+  ipWhitelist: string[];
+  ipBlacklist: string[];
   createdDate: string;
   lastModifiedDate: string;
 }

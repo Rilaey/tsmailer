@@ -3,6 +3,7 @@ import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
 import { CustomMongoDBAdapter } from "./lib/db";
 import { EmailProviders } from "@repo/enums";
+import { ObjectId } from "mongodb";
 
 const getDomainWithoutSubdomain = (url: string): string => {
   const urlParts = new URL(url).hostname.split(".");
@@ -41,6 +42,7 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/login",
     error: "/login"
+    // newUser: "" // if a new user is detected, takes them to this page
   },
   jwt: {
     secret: process.env.NEXTAUTH_SECRET,
@@ -72,11 +74,26 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async jwt({ token, user, account, trigger, session, ...rest }) {
+      if (user && token) {
+        // when the id is passed back to nextauth, it auto converts to a string.
+        // we need this to always be an objectId
+        const userId = new ObjectId(user._id);
+
+        token.id = userId;
+        user._id = userId;
+      }
+
       if (user && trigger == "signUp") {
-        token.id = user.id;
+        // Nested mongo doc on user
+        user = user._doc;
+
         token.email = user.email;
         token.name = user.name;
         token.apiKey = user.apiKey;
+
+        console.log(new Date().toISOString());
+        console.log("JWT USER", user);
+        console.log("JWT TOKEN", token);
 
         if (account && account?.provider in EmailProviders) {
           // adjust provider name for nodemailer conventions
@@ -94,7 +111,7 @@ export const authOptions: NextAuthOptions = {
               body: JSON.stringify({
                 email: user.email,
                 provider: account?.provider,
-                id: user.id,
+                id: user._id,
                 access_token: account?.access_token,
                 refresh_token: account?.refresh_token,
                 nickName: account?.provider
@@ -102,22 +119,6 @@ export const authOptions: NextAuthOptions = {
             }
           );
         }
-      }
-
-      // Check user document for monthly email reset
-      if (user && trigger == "signIn") {
-        const { apiKey } = user;
-
-        await fetch(
-          `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/userStats/validateMonthlyResetDate`,
-          {
-            method: "POST",
-            headers: {
-              "Content-type": "application/json"
-            },
-            body: JSON.stringify({ apiKey })
-          }
-        );
       }
 
       return { ...token, ...user };
@@ -133,6 +134,53 @@ export const authOptions: NextAuthOptions = {
     async signIn({ user, profile, account }) {
       return true;
     }
+  },
+  events: {
+    signOut: async ({ token }) => {
+      console.log("SIGN OUT EVENT", token);
+      await fetch(
+        `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/nextauth/events`,
+        {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json"
+          },
+          body: JSON.stringify({
+            event: "signOut",
+            id: token.id as ObjectId
+          })
+        }
+      );
+    },
+    signIn: async ({ user }) => {
+      await fetch(
+        `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/nextauth/events`,
+        {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json"
+          },
+          body: JSON.stringify({
+            event: "signIn",
+            id: user.id
+          })
+        }
+      );
+
+      await fetch(
+        `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/userStats/validateMonthlyResetDate`,
+        {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json"
+          },
+          body: JSON.stringify({ apiKey: user.apiKey })
+        }
+      );
+    }
+  },
+  theme: {
+    colorScheme: "dark"
   }
 };
 

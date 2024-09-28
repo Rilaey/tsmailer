@@ -1,21 +1,15 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import cors from "../middleware/corsMiddleware";
-import { getToken } from "next-auth/jwt";
 import dbConnect from "lib/db";
+import { getToken } from "next-auth/jwt";
 import { pushLogs } from "@repo/utility";
-import { EmailAccount } from "@repo/models";
 import { ObjectId } from "mongodb";
+import { User } from "@repo/models";
 
-export default async function deleteEmailAccount(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { providerId } = req.body;
-
-  if (!providerId) {
-    return res.status(400).json({ error: "Provider ID is required." });
-  }
-
   cors(req, res, async () => {
     const token = await getToken({ req });
 
@@ -25,36 +19,50 @@ export default async function deleteEmailAccount(
 
     const db = await dbConnect();
 
-    try {
-      const emailProvider = await EmailAccount.findOneAndDelete({ providerId });
+    if (req.method == "DELETE") {
+      const user = await User.findOneAndUpdate(
+        { apiKey: token.apiKey },
+        {
+          $set: {
+            street: null,
+            city: null,
+            zipCode: null,
+            state: null,
+            lastModifiedDate: new Date().toISOString()
+          }
+        },
+        {
+          new: true
+        }
+      );
 
-      if (!emailProvider) {
+      if (!user) {
         return res
-          .status(500)
-          .json({ error: "Unable to delete email provider at this time." });
+          .status(400)
+          .json({ error: "Unable to update user information at this time" });
       }
 
       await pushLogs(
         new ObjectId(token.id as ObjectId),
-        `Delete email provider ${emailProvider.providerId}`,
+        "Deleted location information",
         "Success",
-        "Email",
+        "Account",
+        db
+      );
+
+      return res.status(200).json({ success: true });
+    } else {
+      await pushLogs(
+        new ObjectId(token.id as ObjectId),
+        "Failed to delete location information",
+        "Error",
+        "Account",
         db
       );
 
       return res
         .status(200)
-        .json({ Success: `Deleted ${emailProvider.providerId}` });
-    } catch (err) {
-      await pushLogs(
-        new ObjectId(token.id as ObjectId),
-        "Failed to delete email provider",
-        "Error",
-        "Email",
-        db
-      );
-
-      return res.status(500).json({ error: err });
+        .send("No action performed. Check for correct request method.");
     }
   });
 }

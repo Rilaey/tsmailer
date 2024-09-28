@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "lib/db";
+import { UserStat, User } from "@repo/models";
 
 /**
  * Validates and updates the user's monthly reset date for email limits.
@@ -20,27 +21,25 @@ export default async function validateMonthlyResetDate(
   const { apiKey } = req.body; // Extracts the user's API key from the request body
 
   try {
-    const db = await dbConnect(); // Establishes a connection to the database
+    await dbConnect(); // Establishes a connection to the database
 
     // Finds the user in the database based on the provided API key
-    const user = await db.collection("users").findOne({ apiKey });
+    const user = await User.findOne({ apiKey });
 
     if (!user) {
       // If no user is found, throws an error
-      throw new Error("Unable to locate user.");
+      return res.status(400).json({ error: "Unable to locate user." });
     }
 
-    const userStats = await db
-      .collection("userstats")
-      .findOne({ userId: user._id });
+    const userStats = await UserStat.findOne({ userId: user._id });
 
     if (!userStats) {
       // If no user is found, throws an error
-      throw new Error("Unable to locate user stats.");
+      return res.status(400).json({ error: "Unable to locate user stats." });
     }
 
     const currentDate = new Date(); // Gets the current date
-    const resetDate = new Date(user.resetMonthlyEmailDate); // Convert reset date to a Date object
+    const resetDate = new Date(userStats.resetMonthlyEmailDate); // Convert reset date to a Date object
 
     // Checks if the current date is past the user's monthly reset date
     if (currentDate > resetDate) {
@@ -59,7 +58,7 @@ export default async function validateMonthlyResetDate(
       });
 
       // Updates the user stats resetMonthlyEmailDate in the database
-      await db.collection("userstats").updateOne({ userId: user._id }, {
+      await UserStat.findOneAndUpdate({ userId: user._id }, {
         $set: { resetMonthlyEmailDate: addMonthDate },
         $push: {
           monthlyEmailData: {
@@ -73,17 +72,17 @@ export default async function validateMonthlyResetDate(
       } as Partial<Document>);
 
       // Sends a success response with the updated reset date
-      res
+      return res
         .status(200)
-        .json({ Success: `Updated monthly reset date to ${addMonthDate}.` });
+        .json({ success: `Updated monthly reset date to ${addMonthDate}.` });
     }
 
     // Sends a success response with the current reset date if no update is needed
-    res.status(200).json({
-      Success: `Monthly email limit will reset on ${user.resetMonthlyEmailDate}.`
+    return res.status(200).json({
+      success: `Monthly email limit will reset on ${userStats.resetMonthlyEmailDate}.`
     });
   } catch (err) {
     // Catches any errors and sends a 500 response with the error message
-    res.status(500).json({ Error: err });
+    return res.status(500).json({ error: err });
   }
 }

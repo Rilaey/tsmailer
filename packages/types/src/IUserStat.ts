@@ -1,17 +1,19 @@
-import { ObjectId } from "mongoose";
-import { IMonth } from "./index";
+import { ObjectId } from "mongodb";
+import { Month } from "@repo/enums";
 
 interface IMonthlyEmailData {
-  month: IMonth;
+  _id: ObjectId;
+  month: Month;
   year: string;
   sent: number;
   failed: number;
   apiCalls: number;
 }
 
-interface IUserStats {
+interface IUserStat {
+  _id: ObjectId;
   userId: ObjectId;
-  monthlyEmailData: IMonthlyEmailData;
+  monthlyEmailData: IMonthlyEmailData[];
   totalSentMail: number;
   totalApiCalls: number;
   resetMonthlyEmailDate: string;
@@ -19,4 +21,4 @@ interface IUserStats {
   lastModifiedDate: string;
 }
 
-export type { IUserStats, IMonthlyEmailData };
+export type { IUserStat, IMonthlyEmailData };

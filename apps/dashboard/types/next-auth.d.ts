@@ -1,25 +1,29 @@
 import "next-auth";
 import { DefaultSession } from "next-auth";
 import { JWT } from "next-auth/jwt";
+import { ObjectId } from "mongodb";
 
 declare module "next-auth" {
   interface Session {
     user: {
       apiKey: string;
-      id: string;
+      _id: ObjectId;
       accessToken: JWT;
+      _doc: IUser;
     } & DefaultSession["user"];
   }
 
   interface User {
-    id: string;
+    _id: ObjectId;
     apiKey: string;
     accessToken: JWT;
+    _doc: IUser;
   }
 
   interface AdapterUser {
-    id: string;
+    _id: ObjectId;
     apiKey: string;
     accessToken: JWT;
+    _doc: IUser;
   }
 }

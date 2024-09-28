@@ -3,32 +3,34 @@ import { getToken } from "next-auth/jwt";
 import dbConnect from "lib/db";
 import { pushLogs, generateUniqueId } from "@repo/utility";
 import cors from "../middleware/corsMiddleware";
+import { ObjectId } from "mongodb";
+import { Template } from "@repo/models";
 
 export default async function createTemplate(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  try {
-    cors(req, res, async () => {
-      const { name, description, subject, content } = req.body;
+  cors(req, res, async () => {
+    const { name, description, subject, content } = req.body;
 
-      if (!name || !description || !subject || !content) {
-        return res.status(400).json({
-          Error: "Name, description, subject, and content are required."
-        });
-      }
+    if (!name || !description || !subject || !content) {
+      return res.status(400).json({
+        Error: "Name, description, subject, and content are required."
+      });
+    }
 
-      const token = await getToken({ req });
+    const token = await getToken({ req });
 
-      if (!token) {
-        return res.status(401).json({ error: "Unauthorized" });
-      }
+    if (!token) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
 
-      const db = await dbConnect();
+    const db = await dbConnect();
 
-      const newTemplate = {
-        userId: token.id as string,
-        templateId: `template_${await generateUniqueId(db, "template", 32)}`,
+    try {
+      await Template.create({
+        userId: new ObjectId(token.id as ObjectId),
+        templateId: `template_${await generateUniqueId(db, "template", 16)}`,
         name,
         description,
         subject,
@@ -36,23 +38,29 @@ export default async function createTemplate(
         totalEmailUsage: 0,
         createdDate: new Date().toISOString(),
         lastModifiedDate: new Date().toISOString()
-      };
-
-      await db.collection("templates").insertOne(newTemplate);
+      });
 
       await pushLogs(
-        token.id as string,
-        "Created new template.",
+        new ObjectId(token.id as ObjectId),
+        "Created new template",
         "Success",
         "Template",
         db
       );
 
-      return res.status(200).json({ Success: newTemplate });
-    });
-  } catch (err: any) {
-    res.status(500).json({ Error: err.message });
-  }
+      return res.status(200).json({ Success: true });
+    } catch (err) {
+      await pushLogs(
+        new ObjectId(token.id as ObjectId),
+        "Failed to create template",
+        "Error",
+        "Template",
+        db
+      );
+
+      return res.status(500).json({ error: err });
+    }
+  });
 }
 
 // might need this on all api calls to prevent console message of "API resolved without sending a response".

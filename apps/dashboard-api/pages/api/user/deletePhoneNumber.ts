@@ -3,44 +3,24 @@ import { getToken } from "next-auth/jwt";
 import cors from "../middleware/corsMiddleware";
 import dbConnect from "lib/db";
 import { pushLogs } from "@repo/utility";
+import { ObjectId } from "mongodb";
+import { User } from "@repo/models";
 
 export default async function deletePhoneNumber(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { phoneNumber } = req.body;
+  cors(req, res, async () => {
+    const token = await getToken({ req });
 
-  try {
-    cors(req, res, async () => {
-      if (!phoneNumber) {
-        return res.status(400).json({ Error: "Phone number is required." });
-      }
+    if (!token) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
 
-      const token = await getToken({ req });
+    const db = await dbConnect();
 
-      if (!token) {
-        return res.status(401).json({ Error: "Unauthorized" });
-      }
-
-      const db = await dbConnect();
-
-      const user = await db
-        .collection("users")
-        .findOne({ apiKey: token.apiKey });
-
-      if (!user) {
-        return res
-          .status(500)
-          .json({ Error: "Unable to delete phone number at this time." });
-      }
-
-      if (user.phoneNumber != phoneNumber) {
-        return res.status(500).json({
-          Error: "Mismatch in supplied phone number and user phone number."
-        });
-      }
-
-      await db.collection("users").findOneAndUpdate(
+    try {
+      const user = await User.findOneAndUpdate(
         { apiKey: token.apiKey },
         {
           $set: {
@@ -48,21 +28,27 @@ export default async function deletePhoneNumber(
           }
         },
         {
-          returnDocument: "after"
+          new: true
         }
       );
 
+      if (!user) {
+        return res
+          .status(500)
+          .json({ error: "Unable to delete phone number at this time." });
+      }
+
       await pushLogs(
-        token.id as string,
-        `Deleted phone number ${phoneNumber}`,
+        new ObjectId(token.id as ObjectId),
+        `Deleted phone number`,
         "Success",
         "Account",
         db
       );
 
-      res.status(200).json({ Success: "Deleted phone number." });
-    });
-  } catch (err) {
-    res.status(500).json({ Error: err });
-  }
+      return res.status(200).json({ success: true });
+    } catch (err) {
+      return res.status(500).json({ error: err });
+    }
+  });
 }

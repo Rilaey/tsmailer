@@ -2,9 +2,10 @@ import { ObjectId } from "mongoose";
 
 type IState = "Success" | "Error" | "Warning";
 
-type IVariation = "Email" | "Account" | "Template";
+type IVariation = "Email" | "Account" | "Template" | "Contact";
 
-type ILogs = {
+type ILog = {
+  _id: ObjectId;
   userId: ObjectId;
   emailId: ObjectId;
   message: string;
@@ -13,4 +14,4 @@ type ILogs = {
   variation: IVariation;
 };
 
-export type { ILogs, IVariation, IState };
+export type { ILog, IVariation, IState };

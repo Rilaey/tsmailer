@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
-import dbConnect from "lib/db";
 
 export default async function callback(
   req: NextApiRequest,

@@ -52,6 +52,14 @@ const userSchema = new Schema<IUserDocument>({
     type: Number,
     default: null
   },
+  ipWhitelist: {
+    type: [String],
+    default: null
+  },
+  ipBlacklist: {
+    type: [String],
+    default: null
+  },
   createdDate: {
     type: String,
     required: true
@@ -62,6 +70,8 @@ const userSchema = new Schema<IUserDocument>({
   }
 });
 
-export const User = mongoose.models.User || mongoose.model("User", userSchema);
+export const User =
+  (mongoose.models.User as mongoose.Model<IUserDocument>) ||
+  mongoose.model("User", userSchema);
 
 export default User;

@@ -75,7 +75,7 @@ export const withAuth = (WrappedComponent: React.FC): React.FC => {
                     variant="transparent"
                     mr={rem(-16)}
                   >
-                    <Avatar src={user.data.picture} />
+                    <Avatar src={user.data.image} />
                   </Button>
 
                   <Burger

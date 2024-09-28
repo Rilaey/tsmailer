@@ -5,6 +5,8 @@ import {
   validateEmailAccount,
   generateUniqueId
 } from "@repo/utility";
+import { EmailAccount } from "@repo/models";
+import { ObjectId } from "mongodb";
 
 export default async function createEmailAccount(
   req: NextApiRequest,
@@ -21,7 +23,7 @@ export default async function createEmailAccount(
 
   if (!userId || !provider || !email || !accessToken || !refreshToken) {
     return res.status(400).json({
-      Error:
+      error:
         "User ID, provider, email, access token, and refresh token are required."
     });
   }
@@ -34,13 +36,14 @@ export default async function createEmailAccount(
     const doesEmailExist = await validateEmailAccount(db, email);
 
     if (!doesEmailExist) {
-      const emailAccount = await db.collection("emailaccounts").insertOne({
-        userId,
-        providerId: `provider_${await generateUniqueId(db, "provider", 32)}`,
+      const emailAccount = await EmailAccount.create({
+        userId: new ObjectId(userId as ObjectId),
+        providerId: `provider_${await generateUniqueId(db, "provider", 16)}`,
         provider,
         email,
         accessToken,
         refreshToken,
+        nickName: provider,
         emailProviderId: emailProviderId ?? null, // Currently only for zoho
         sentMail: 0,
         createdDate: currentDate.toISOString(),
@@ -48,7 +51,7 @@ export default async function createEmailAccount(
       });
 
       await pushLogs(
-        userId,
+        new ObjectId(userId as ObjectId),
         `Email account created for ${email}`,
         "Success",
         "Email",
@@ -57,7 +60,7 @@ export default async function createEmailAccount(
       res.status(200).json(emailAccount);
     } else {
       await pushLogs(
-        userId,
+        new ObjectId(userId as ObjectId),
         `Email account already exist for ${email}`,
         "Warning",
         "Email",
@@ -68,13 +71,13 @@ export default async function createEmailAccount(
     }
   } catch (err: any) {
     await pushLogs(
-      userId,
+      new ObjectId(userId as ObjectId),
       "Failed to create email account",
       "Error",
       "Email",
       db
     );
 
-    res.status(500).json({ Error: err });
+    res.status(500).json({ error: err });
   }
 }

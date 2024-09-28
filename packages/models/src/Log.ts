@@ -1,7 +1,9 @@
-import { ILogs } from "@repo/types";
-import mongoose, { Schema, model } from "mongoose";
+import { ILog } from "@repo/types";
+import mongoose, { Schema } from "mongoose";
 
-const logSchema = new Schema<ILogs>({
+export interface ILogDocument extends ILog, Document {}
+
+const logSchema = new Schema<ILogDocument>({
   userId: {
     type: Schema.Types.ObjectId,
     required: true,
@@ -29,6 +31,8 @@ const logSchema = new Schema<ILogs>({
   }
 });
 
-export const Logs = mongoose.models.Logs || mongoose.model("Logs", logSchema);
+export const Log =
+  (mongoose.models.Log as mongoose.Model<ILogDocument>) ||
+  mongoose.model("Log", logSchema);
 
-export default Logs;
+export default Log;
