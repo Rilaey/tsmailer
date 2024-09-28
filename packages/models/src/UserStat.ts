@@ -1,7 +1,9 @@
 import mongoose, { Schema } from "mongoose";
-import { IUserStats } from "@repo/types";
+import { IUserStat } from "@repo/types";
 
-const userStatsSchema = new Schema<IUserStats>({
+export interface IUserStatDocument extends IUserStat, Document {}
+
+const userStatSchema = new Schema<IUserStatDocument>({
   userId: {
     type: Schema.Types.ObjectId,
     required: true,
@@ -55,7 +57,8 @@ const userStatsSchema = new Schema<IUserStats>({
   }
 });
 
-export const UserStats =
-  mongoose.models.UserStats || mongoose.model("UserStats", userStatsSchema);
+export const UserStat =
+  (mongoose.models.UserStat as mongoose.Model<IUserStatDocument>) ||
+  mongoose.model("UserStat", userStatSchema);
 
-export default UserStats;
+export default UserStat;

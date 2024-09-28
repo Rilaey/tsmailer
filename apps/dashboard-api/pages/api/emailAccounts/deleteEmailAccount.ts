@@ -3,11 +3,8 @@ import cors from "../middleware/corsMiddleware";
 import { getToken } from "next-auth/jwt";
 import dbConnect from "lib/db";
 import { pushLogs } from "@repo/utility";
-
-// GET SOME INPUT ON THE WAY THIS IS SETUP
-// 1) able to push logs with a user id if failed to delete email account
-// 2) try / catch wrapped all in cors middleware
-// 3) if token is outside of cors middleware, it throws a cors error
+import { EmailAccount } from "@repo/models";
+import { ObjectId } from "mongodb";
 
 export default async function deleteEmailAccount(
   req: NextApiRequest,
@@ -29,9 +26,7 @@ export default async function deleteEmailAccount(
     const db = await dbConnect();
 
     try {
-      const emailProvider = await db
-        .collection("emailaccounts")
-        .findOneAndDelete({ providerId });
+      const emailProvider = await EmailAccount.findOneAndDelete({ providerId });
 
       if (!emailProvider) {
         return res
@@ -40,7 +35,7 @@ export default async function deleteEmailAccount(
       }
 
       await pushLogs(
-        token.id as string,
+        new ObjectId(token.id as ObjectId),
         `Delete email provider ${emailProvider.providerId}`,
         "Success",
         "Email",
@@ -52,7 +47,7 @@ export default async function deleteEmailAccount(
         .json({ Success: `Deleted ${emailProvider.providerId}` });
     } catch (err) {
       await pushLogs(
-        token.id as string,
+        new ObjectId(token.id as ObjectId),
         "Failed to delete email provider",
         "Error",
         "Email",

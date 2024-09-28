@@ -1,4 +1,5 @@
 import { TeamPermissions } from "@repo/enums";
+import { ObjectId } from "mongoose";
 
 interface ITeamManagement {
   description: string;
@@ -77,6 +78,7 @@ interface ISupport {
 }
 
 interface IPlan {
+  _id: ObjectId;
   name: string;
   monthlyRequest: IMonthlyRequests;
   templates: ITemplates;

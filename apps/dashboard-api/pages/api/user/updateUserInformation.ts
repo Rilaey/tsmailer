@@ -3,6 +3,8 @@ import cors from "../middleware/corsMiddleware";
 import dbConnect from "lib/db";
 import { getToken } from "next-auth/jwt";
 import { pushLogs } from "@repo/utility";
+import { User } from "@repo/models";
+import { ObjectId } from "mongodb";
 
 export default async function handler(
   req: NextApiRequest,
@@ -20,84 +22,100 @@ export default async function handler(
     const db = await dbConnect();
 
     if (req.method == "PUT") {
-      const user = await db.collection("users").findOneAndUpdate(
-        { apiKey: token.apiKey },
-        {
-          $set: {
-            ...(phoneNumber && { phoneNumber }),
-            ...(street && { street }),
-            ...(city && { city }),
-            ...(zipCode && { zipCode }),
-            ...(state && { state }),
-            lastModifiedDate: new Date().toISOString()
+      try {
+        const user = await User.findOneAndUpdate(
+          { apiKey: token.apiKey },
+          {
+            $set: {
+              ...(phoneNumber && { phoneNumber }),
+              ...(street && { street }),
+              ...(city && { city }),
+              ...(zipCode && { zipCode }),
+              ...(state && { state }),
+              lastModifiedDate: new Date().toISOString()
+            }
+          },
+          {
+            new: true
           }
-        },
-        {
-          returnDocument: "after"
+        );
+
+        if (!user) {
+          return res
+            .status(400)
+            .json({ error: "Unable to update user information at this time" });
         }
-      );
 
-      if (!user) {
-        return res
-          .status(400)
-          .json({ error: "Unable to update user information at this time" });
+        await pushLogs(
+          new ObjectId(token.id as ObjectId),
+          "Updated user information",
+          "Success",
+          "Account",
+          db
+        );
+
+        return res.status(200).json({ success: true });
+      } catch (err) {
+        await pushLogs(
+          new ObjectId(token.id as ObjectId),
+          "Failed to update user information",
+          "Error",
+          "Account",
+          db
+        );
+
+        return res.status(500).json({ error: err });
       }
-
-      await pushLogs(
-        token.id as string,
-        "Updated user information",
-        "Success",
-        "Account",
-        db
-      );
-
-      return res.status(200).json({ success: true });
     } else if (req.method == "POST") {
-      if (!street || !city || !zipCode || !state) {
-        return res
-          .status(400)
-          .json({ error: "Street, city, zipcode, and state are required." });
-      }
-
-      const user = await db.collection("users").findOneAndUpdate(
-        { apiKey: token.apiKey },
-        {
-          $set: {
-            street,
-            city,
-            zipCode,
-            state
-          }
-        },
-        {
-          returnDocument: "after"
+      try {
+        if (!street || !city || !zipCode || !state) {
+          return res
+            .status(400)
+            .json({ error: "Street, city, zipcode, and state are required." });
         }
-      );
 
-      if (!user) {
-        return res
-          .status(400)
-          .json({ error: "Unable to update user information at this time" });
+        const user = await User.findOneAndUpdate(
+          { apiKey: token.apiKey },
+          {
+            $set: {
+              street,
+              city,
+              zipCode,
+              state
+            }
+          },
+          {
+            new: true
+          }
+        );
+
+        if (!user) {
+          return res
+            .status(400)
+            .json({ error: "Unable to update user information at this time" });
+        }
+
+        await pushLogs(
+          new ObjectId(token.id as ObjectId),
+          "Updated user information",
+          "Success",
+          "Account",
+          db
+        );
+
+        return res.status(200).json({ success: true });
+      } catch (err) {
+        await pushLogs(
+          new ObjectId(token.id as ObjectId),
+          "Failed to update user information",
+          "Error",
+          "Account",
+          db
+        );
+
+        return res.status(500).json({ error: err });
       }
-
-      await pushLogs(
-        token.id as string,
-        "Updated user information",
-        "Success",
-        "Account",
-        db
-      );
-
-      return res.status(200).json({ success: true });
     } else {
-      await pushLogs(
-        token.id as string,
-        "Failed to update user information",
-        "Error",
-        "Account",
-        db
-      );
-
       return res
         .status(200)
         .send("No action performed. Check for correct request method.");

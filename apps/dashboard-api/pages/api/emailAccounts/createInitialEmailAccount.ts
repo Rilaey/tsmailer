@@ -5,8 +5,10 @@ import {
   pushLogs,
   validateEmailAccount
 } from "@repo/utility";
+import { EmailAccount } from "@repo/models";
+import { ObjectId } from "mongodb";
 
-export default async function addInitialEmailAccount(
+export default async function createInitialEmailAccount(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -26,8 +28,8 @@ export default async function addInitialEmailAccount(
     const doesEmailExist = await validateEmailAccount(db, email);
 
     if (!doesEmailExist) {
-      const newEmailAccountDocument = {
-        userId: id,
+      await EmailAccount.create({
+        userId: new ObjectId(id as ObjectId),
         providerId: `provider_${await generateUniqueId(db, "provider", 16)}`,
         nickName: nickName,
         email: email,
@@ -37,12 +39,10 @@ export default async function addInitialEmailAccount(
         sentMail: 0,
         createdDate: new Date().toISOString(),
         lastModifiedDate: new Date().toISOString()
-      };
-
-      await db.collection("emailaccounts").insertOne(newEmailAccountDocument);
+      });
 
       await pushLogs(
-        id,
+        new ObjectId(id as ObjectId),
         `Email account created for ${email}`,
         "Success",
         "Email",
@@ -52,7 +52,7 @@ export default async function addInitialEmailAccount(
       res.status(200).json("Email account document inserted for new user.");
     } else {
       await pushLogs(
-        id,
+        new ObjectId(id as ObjectId),
         `Email account already exist for ${email}`,
         "Warning",
         "Email",
@@ -62,7 +62,13 @@ export default async function addInitialEmailAccount(
       res.status(202).json("Success. Email document already exists.");
     }
   } catch (err: any) {
-    await pushLogs(id, "Failed to create email account", "Error", "Email", db);
+    await pushLogs(
+      new ObjectId(id as ObjectId),
+      "Failed to create email account",
+      "Error",
+      "Email",
+      db
+    );
 
     res.status(500).json({ error: err });
   }

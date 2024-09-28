@@ -1,6 +1,7 @@
 import { ObjectId } from "mongoose";
 
-type IEmailAccounts = {
+type IEmailAccount = {
+  _id: ObjectId;
   userId: ObjectId;
   providerId: string;
   nickName: string;
@@ -14,4 +15,4 @@ type IEmailAccounts = {
   lastModifiedDate: string;
 };
 
-export type { IEmailAccounts };
+export type { IEmailAccount };

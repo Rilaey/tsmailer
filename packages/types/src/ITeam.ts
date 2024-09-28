@@ -8,6 +8,7 @@ interface ITeamMember {
 }
 
 interface ITeam {
+  _id: ObjectId;
   name: string;
   description: string;
   members: ITeamMember[];

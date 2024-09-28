@@ -3,6 +3,8 @@ import { getToken } from "next-auth/jwt";
 import cors from "../middleware/corsMiddleware";
 import dbConnect from "lib/db";
 import { pushLogs } from "@repo/utility";
+import { ObjectId } from "mongodb";
+import { User } from "@repo/models";
 
 export default async function deletePhoneNumber(
   req: NextApiRequest,
@@ -12,23 +14,13 @@ export default async function deletePhoneNumber(
     const token = await getToken({ req });
 
     if (!token) {
-      return res.status(401).json({ Error: "Unauthorized" });
+      return res.status(401).json({ error: "Unauthorized" });
     }
 
     const db = await dbConnect();
 
     try {
-      const user = await db
-        .collection("users")
-        .findOne({ apiKey: token.apiKey });
-
-      if (!user) {
-        return res
-          .status(500)
-          .json({ Error: "Unable to delete phone number at this time." });
-      }
-
-      await db.collection("users").findOneAndUpdate(
+      const user = await User.findOneAndUpdate(
         { apiKey: token.apiKey },
         {
           $set: {
@@ -36,19 +28,25 @@ export default async function deletePhoneNumber(
           }
         },
         {
-          returnDocument: "after"
+          new: true
         }
       );
 
+      if (!user) {
+        return res
+          .status(500)
+          .json({ error: "Unable to delete phone number at this time." });
+      }
+
       await pushLogs(
-        token.id as string,
+        new ObjectId(token.id as ObjectId),
         `Deleted phone number`,
         "Success",
         "Account",
         db
       );
 
-      return res.status(200).json({ Success: "Deleted phone number." });
+      return res.status(200).json({ success: true });
     } catch (err) {
       return res.status(500).json({ error: err });
     }

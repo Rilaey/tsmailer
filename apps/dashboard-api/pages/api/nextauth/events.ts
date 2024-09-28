@@ -2,12 +2,15 @@ import { NextApiRequest, NextApiResponse } from "next";
 import cors from "../middleware/corsMiddleware";
 import dbConnect from "lib/db";
 import { pushLogs } from "@repo/utility";
+import { ObjectId } from "mongodb";
 
 export default async function events(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   const { event, id } = req.body;
+
+  console.log("ID BODY", id);
 
   if (!event || !id) {
     return res.status(400).json({ error: "Event and user id are required." });
@@ -19,13 +22,25 @@ export default async function events(
 
       switch (event) {
         case "signOut":
-          await pushLogs(id, "User sign out", "Success", "Account", db);
+          await pushLogs(
+            new ObjectId(id as ObjectId),
+            "User sign out",
+            "Success",
+            "Account",
+            db
+          );
 
           res.status(200).json({ success: "User sign out" });
 
           break;
         case "signIn":
-          await pushLogs(id, "User sign in", "Success", "Account", db);
+          await pushLogs(
+            new ObjectId(id as ObjectId),
+            "User sign in",
+            "Success",
+            "Account",
+            db
+          );
 
           res.status(200).json({ success: "User sign in" });
 

@@ -3,6 +3,8 @@ import cors from "../middleware/corsMiddleware";
 import dbConnect from "lib/db";
 import { getToken } from "next-auth/jwt";
 import { pushLogs } from "@repo/utility";
+import { ObjectId } from "mongodb";
+import { User } from "@repo/models";
 
 export default async function handler(
   req: NextApiRequest,
@@ -18,7 +20,7 @@ export default async function handler(
     const db = await dbConnect();
 
     if (req.method == "DELETE") {
-      const user = await db.collection("users").findOneAndUpdate(
+      const user = await User.findOneAndUpdate(
         { apiKey: token.apiKey },
         {
           $set: {
@@ -30,7 +32,7 @@ export default async function handler(
           }
         },
         {
-          returnDocument: "after"
+          new: true
         }
       );
 
@@ -41,7 +43,7 @@ export default async function handler(
       }
 
       await pushLogs(
-        token.id as string,
+        new ObjectId(token.id as ObjectId),
         "Deleted location information",
         "Success",
         "Account",
@@ -51,7 +53,7 @@ export default async function handler(
       return res.status(200).json({ success: true });
     } else {
       await pushLogs(
-        token.id as string,
+        new ObjectId(token.id as ObjectId),
         "Failed to delete location information",
         "Error",
         "Account",

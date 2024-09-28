@@ -1,7 +1,9 @@
-import mongoose, { Schema, model } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { ITemplate } from "@repo/types";
 
-const templateSchema = new Schema<ITemplate>({
+export interface ITemplateDocument extends ITemplate, Document {}
+
+const templateSchema = new Schema<ITemplateDocument>({
   userId: {
     type: Schema.Types.ObjectId,
     required: true,
@@ -42,7 +44,7 @@ const templateSchema = new Schema<ITemplate>({
 });
 
 export const Template =
-  mongoose.models.Template ||
-  mongoose.model<ITemplate>("Template", templateSchema);
+  (mongoose.models.Template as mongoose.Model<ITemplateDocument>) ||
+  mongoose.model("Template", templateSchema);
 
 export default Template;

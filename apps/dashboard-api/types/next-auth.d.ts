@@ -7,19 +7,19 @@ declare module "next-auth" {
     sub: string;
     user: {
       apiKey: string;
-      id: string;
+      _id: string;
       accessToken: JWT;
     } & DefaultSession["user"];
   }
 
   interface User {
-    id: string;
+    _id: string;
     apiKey: string;
     accessToken: JWT;
   }
 
   interface AdapterUser {
-    id: string;
+    _id: string;
     apiKey: string;
     accessToken: JWT;
   }

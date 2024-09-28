@@ -1,6 +1,9 @@
 import mongoose, { Schema } from "mongoose";
+import { IContact } from "@repo/types";
 
-const contactSchema = new Schema({
+export interface IContactDocument extends IContact, Document {}
+
+const contactSchema = new Schema<IContactDocument>({
   userId: {
     type: Schema.Types.ObjectId,
     required: true,
@@ -34,6 +37,7 @@ const contactSchema = new Schema({
 });
 
 export const Contact =
-  mongoose.models.Contact || mongoose.model("Contact", contactSchema);
+  (mongoose.models.Contact as mongoose.Model<IContactDocument>) ||
+  mongoose.model("Contact", contactSchema);
 
 export default Contact;

@@ -2,6 +2,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "lib/db";
 import { ObjectId as MongoDBObjectId } from "mongodb";
 import { generateUniqueId } from "@repo/utility";
+import { User, Log, UserStat } from "@repo/models";
+import { ObjectId } from "mongoose";
 
 export default async function oAuthSignIn(
   req: NextApiRequest,
@@ -26,9 +28,8 @@ export default async function oAuthSignIn(
       currentDate.setMonth(currentDate.getMonth() + 1)
     ).toISOString();
 
-    const newUser = {
+    const newUser = await User.create({
       ...user,
-      _id: new MongoDBObjectId(),
       role: ["Free User"],
       tier: "Free",
       apiKey: await generateUniqueId(db, "apiKey", 16),
@@ -41,10 +42,9 @@ export default async function oAuthSignIn(
       ipBlacklist: null,
       createdDate: new Date().toISOString(),
       lastModifiedDate: new Date().toISOString()
-    };
+    });
 
-    const newUserStats = {
-      _id: new MongoDBObjectId(),
+    await UserStat.create({
       userId: newUser._id,
       resetMonthlyEmailDate: addMonthDate,
       monthlyEmailData: [
@@ -60,23 +60,17 @@ export default async function oAuthSignIn(
       totalApiCalls: 0,
       createdDate: new Date().toISOString(),
       lastModifiedDate: new Date().toISOString()
-    };
+    });
 
-    const newLogsObject = {
-      _id: new MongoDBObjectId(),
+    await Log.create({
       userId: newUser._id,
-      message: "Account created.",
+      message: "Account created",
       state: "Success",
-      variation: "Account"
-    };
+      variation: "Account",
+      date: new Date().toISOString()
+    });
 
-    await db.collection("users").insertOne(newUser);
-
-    await db.collection("userstats").insertOne(newUserStats);
-
-    await db.collection("logs").insertOne(newLogsObject);
-
-    res.status(200).json({ ...newUser, id: newUser._id.toString() });
+    res.status(200).json({ ...newUser, id: newUser._id });
   } catch (err) {
     res.status(500).json(err);
   }

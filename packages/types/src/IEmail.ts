@@ -2,7 +2,7 @@ import { ObjectId } from "mongoose";
 
 type IStaus = "Sent" | "Queued" | "Failed";
 
-interface IEmail extends Document {
+interface IEmail {
   _id: ObjectId;
   userId: ObjectId;
   templateId: ObjectId;

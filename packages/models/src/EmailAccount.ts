@@ -1,7 +1,9 @@
-import { IEmailAccounts } from "@repo/types";
+import { IEmailAccount } from "@repo/types";
 import mongoose, { Schema } from "mongoose";
 
-const emailAccountSchema = new Schema<IEmailAccounts>({
+export interface IEmailAccountDocument extends IEmailAccount, Document {}
+
+const emailAccountSchema = new Schema<IEmailAccountDocument>({
   userId: {
     type: Schema.Types.ObjectId,
     required: true,
@@ -49,8 +51,8 @@ const emailAccountSchema = new Schema<IEmailAccounts>({
   }
 });
 
-export const EmailAccounts =
-  mongoose.models.EmailAccounts ||
-  mongoose.model("EmailAccounts", emailAccountSchema);
+export const EmailAccount =
+  (mongoose.models.EmailAccount as mongoose.Model<IEmailAccountDocument>) ||
+  mongoose.model("EmailAccount", emailAccountSchema);
 
-export default EmailAccounts;
+export default EmailAccount;

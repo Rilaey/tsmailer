@@ -3,12 +3,12 @@ import { ObjectId } from "mongodb";
 import { IVariation, IState } from "@repo/types";
 
 export const pushLogs = async (
-  userId: ObjectId | string,
+  userId: ObjectId,
   message: string,
   state: IState,
   variation: IVariation,
   db: Connection,
-  emailId: ObjectId | string | null = null
+  emailId: ObjectId | null = null
 ) => {
   try {
     const log = await db.collection("logs").insertOne({

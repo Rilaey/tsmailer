@@ -2,6 +2,7 @@ import { getToken } from "next-auth/jwt";
 import { ObjectId } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "lib/db";
+import { Log } from "@repo/models";
 
 export default async function getAllLogs(
   req: NextApiRequest,
@@ -20,16 +21,13 @@ export default async function getAllLogs(
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const db = await dbConnect();
+    await dbConnect();
 
-    const logs = await db
-      .collection("logs")
-      .find({
-        userId: new ObjectId(token.id as string)
-      })
+    const logs = await Log.find({
+      userId: new ObjectId(token.id as string)
+    })
       .skip(perPage * page)
-      .limit(perPage)
-      .toArray();
+      .limit(perPage);
 
     if (!logs) {
       throw new Error("User has no logs.");
