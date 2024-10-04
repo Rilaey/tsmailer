@@ -4,36 +4,23 @@ import { NextApiRequest, NextApiResponse } from "next";
 import nodemailer from "nodemailer";
 import { pushLogs } from "@repo/utility";
 import { User, Template, UserStat, Email, EmailAccount } from "@repo/models";
-import { ITemplate } from "@repo/types";
 import { ObjectId } from "mongodb";
 
-interface IDynamicEmailVariables {
-  toName: string;
-  fromName: string;
-  yourMessage: string;
-}
 
 // Send email endpoint
 export default async function sendEmail(
   req: NextApiRequest,
   res: NextApiResponse
-  // to: string[],
-  // templateId: ITemplate,
-  // apiKey: string,
-  // providerId: string,
-  // options: IDynamicEmailVariables
+
 ) {
-  // only here for testing in postman
-  //will be removed once testing is no longer needed.
-  const { apiKey, to, providerId, options, templateId } = req.body;
 
-  // if (!apiKey || !emailAccountId) {
-  //   return res
-  //     .status(400)
-  //     .json({ Error: "API key and email provider are required." });
-  // }
+  const { apiKey, to, providerId, options, templateId } = JSON.parse(req.body);
 
-  const db = await dbConnect();
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  const db = await dbConnect()
 
   try {
     const user = await User.findOne({ apiKey });
@@ -60,24 +47,24 @@ export default async function sendEmail(
       return res.status(400).json({ error: "Unable to locate email account" });
     }
 
-    const { content, subject } = template;
+    const { content, subject } = template
 
     // Replace dynamic values in content string
     const replacements: { [key: string]: string } = {
-      to_name: options.toName ?? "",
-      from_name: options.fromName ?? "",
-      message: options.yourMessage ?? ""
-    };
+      to_name: options.toName ?? '',
+      from_name: options.fromName ?? '',
+      message: options.yourMessage ?? '',
+    }
 
     const updatedContentString = content.replace(
       /{{(.*?)}}/g,
-      (match: string, p1: string) => replacements[p1.trim()] || match // Fallback to the original match if no replacement is found
-    );
+      (match: string, p1: string) => replacements[p1.trim()] || match, // Fallback to the original match if no replacement is found
+    )
 
     const updatedSubjectString = subject.replace(
       /{{(.*?)}}/g,
-      (match: string, p1: string) => replacements[p1.trim()] || match // Fallback to the original match if no replacement is found
-    );
+      (match: string, p1: string) => replacements[p1.trim()] || match, // Fallback to the original match if no replacement is found
+    )
 
     // get most recent entry in monthly email data
     const lastMonthData =
@@ -104,15 +91,15 @@ export default async function sendEmail(
     }
 
     // assign clientId and clientSecret
-    let assignedClientId;
-    let assignedClientSecret;
-    let transporter;
+    let assignedClientId
+    let assignedClientSecret
+    let transporter
 
     // hoist zoho response
-    let sendingEmail;
+    let sendingEmail
 
     // hoist universal status variable
-    let isEmailResponseOk;
+    let isEmailResponseOk
 
     // response time for providers not using nodemailer
     let startTime;
@@ -123,21 +110,21 @@ export default async function sendEmail(
     let emailSize;
 
     switch (sendingEmailAccount.provider) {
-      case "gmail":
-        assignedClientId = process.env.GOOGLE_CLIENT_ID;
-        assignedClientSecret = process.env.GOOGLE_CLIENT_SECRET;
+      case 'gmail':
+        assignedClientId = process.env.GOOGLE_CLIENT_ID
+        assignedClientSecret = process.env.GOOGLE_CLIENT_SECRET
 
         transporter = nodemailer.createTransport({
           service: sendingEmailAccount.provider,
           auth: {
-            type: "OAuth2",
+            type: 'OAuth2',
             user: sendingEmailAccount.email,
             clientId: assignedClientId,
             clientSecret: assignedClientSecret,
             refreshToken: sendingEmailAccount.refreshToken,
-            accessToken: sendingEmailAccount.accessToken
-          }
-        });
+            accessToken: sendingEmailAccount.accessToken,
+          },
+        })
 
         break;
       case "Zoho":
@@ -156,15 +143,15 @@ export default async function sendEmail(
         );
 
         startTime = performance.now();
-
+        
         const zohoEmail = await fetch(
           `https://mail.zoho.com/api/accounts/${sendingEmailAccount.emailProviderId}/messages`,
           {
-            method: "POST",
+            method: 'POST',
             headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-              Authorization: `Zoho-oauthtoken ${sendingEmailAccount.accessToken}`
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              Authorization: `Zoho-oauthtoken ${sendingEmailAccount.accessToken}`,
             },
             body: JSON.stringify({
               fromAddress: sendingEmailAccount.email,
@@ -177,7 +164,7 @@ export default async function sendEmail(
         );
         endTime = performance.now();
 
-        sendingEmail = await zohoEmail.json();
+        sendingEmail = await zohoEmail.json()
 
         emailResponseTime = endTime - startTime;
 
@@ -185,55 +172,55 @@ export default async function sendEmail(
 
         emailSize = zohoEmail.headers.get("Content-Length");
         break;
-      case "yahoo":
-      case "aol":
-        assignedClientId = process.env.YAHOO_CLIENT_ID;
-        assignedClientSecret = process.env.YAHOO_CLIENT_SECRET;
+      case 'yahoo':
+      case 'aol':
+        assignedClientId = process.env.YAHOO_CLIENT_ID
+        assignedClientSecret = process.env.YAHOO_CLIENT_SECRET
 
         transporter = nodemailer.createTransport({
           service: sendingEmailAccount.provider,
           auth: {
-            type: "OAuth2",
+            type: 'OAuth2',
             user: sendingEmailAccount.email,
             clientId: assignedClientId,
             clientSecret: assignedClientSecret,
             refreshToken: sendingEmailAccount.refreshToken,
-            accessToken: sendingEmailAccount.accessToken
-          }
-        });
-        break;
-      case "outlook":
-      case "hotmail":
-        assignedClientId = process.env.OUTLOOK_CLIENT_ID;
-        assignedClientSecret = process.env.OUTLOOK_CLIENT_SECRET;
+            accessToken: sendingEmailAccount.accessToken,
+          },
+        })
+        break
+      case 'outlook':
+      case 'hotmail':
+        assignedClientId = process.env.OUTLOOK_CLIENT_ID
+        assignedClientSecret = process.env.OUTLOOK_CLIENT_SECRET
 
         transporter = nodemailer.createTransport({
-          service: "outlook",
+          service: 'outlook',
           auth: {
-            type: "OAuth2",
+            type: 'OAuth2',
             user: sendingEmailAccount.email,
             clientId: assignedClientId,
             clientSecret: assignedClientSecret,
             refreshToken: sendingEmailAccount.refreshToken,
-            accessToken: sendingEmailAccount.accessToken
-          }
-        });
-        break;
+            accessToken: sendingEmailAccount.accessToken,
+          },
+        })
+        break
       default:
-        break;
+        break
     }
 
     // don't overwrite sendingEmail variable if created in the switch case
     // want to keep the same variable name to keep logic below simple
-    if (sendingEmailAccount.provider != "Zoho") {
+    if (sendingEmailAccount.provider != 'Zoho') {
       sendingEmail = await transporter?.sendMail({
         from: sendingEmailAccount.email,
         to: to,
         subject: updatedSubjectString,
-        text: updatedContentString
-      });
+        text: updatedContentString,
+      })
 
-      isEmailResponseOk = sendingEmail?.response.includes("250");
+      isEmailResponseOk = sendingEmail?.response.includes('250')
     }
 
     // Insert email document
