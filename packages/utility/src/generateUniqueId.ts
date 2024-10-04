@@ -4,7 +4,7 @@ import { randomBytes } from "crypto";
 const generateUniqueId = async (
   db: Connection,
   type: string,
-  length: number = 24
+  length: number = 16
 ) => {
   return new Promise((resolve, reject) => {
     const tryGenerate = async () => {

@@ -32,7 +32,7 @@ export default async function handler(
               ...(city && { city }),
               ...(zipCode && { zipCode }),
               ...(state && { state }),
-              lastModifiedDate: new Date().toISOString()
+              lastModifiedDate: new Date().toUTCString()
             }
           },
           {

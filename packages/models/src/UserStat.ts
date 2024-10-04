@@ -9,6 +9,34 @@ const userStatSchema = new Schema<IUserStatDocument>({
     required: true,
     ref: "User"
   },
+  weeklyEmailData: [
+    {
+      week: {
+        type: Number,
+        required: true
+      },
+      sent: {
+        type: Number,
+        required: true
+      },
+      failed: {
+        type: Number,
+        required: true
+      },
+      apiCalls: {
+        type: Number,
+        required: true
+      },
+      resetDate: {
+        type: String,
+        required: true
+      },
+      createdDate: {
+        type: String,
+        required: true
+      }
+    }
+  ],
   monthlyEmailData: [
     {
       month: {
@@ -30,6 +58,14 @@ const userStatSchema = new Schema<IUserStatDocument>({
       apiCalls: {
         type: Number,
         required: true
+      },
+      resetDate: {
+        type: String,
+        required: true
+      },
+      createdDate: {
+        type: String,
+        required: true
       }
     }
   ],
@@ -42,10 +78,6 @@ const userStatSchema = new Schema<IUserStatDocument>({
     type: Number,
     required: true,
     default: 0
-  },
-  resetMonthlyEmailDate: {
-    type: String,
-    required: true
   },
   createdDate: {
     type: String,

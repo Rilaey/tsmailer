@@ -1,0 +1,12 @@
+{
+  "crons": [
+    {
+      "path": "/api/jobs/validateWeeklyResetDate",
+      "schedule": "1 0 * * 0"
+    },
+    {
+      "path": "/api/jobs/validateMonthlyResetDate",
+      "schedule": "1 0 28-31 * *"
+    }
+  ]
+}

@@ -65,8 +65,8 @@ export default async function handler(
           phoneNumber: phoneNumber ?? null,
           lastSent: "Never",
           tags,
-          createdDate: new Date().toISOString(),
-          lastModifiedDate: new Date().toISOString()
+          createdDate: new Date().toUTCString(),
+          lastModifiedDate: new Date().toUTCString()
         });
 
         await pushLogs(
@@ -141,7 +141,7 @@ export default async function handler(
               ...(emailAddress && { emailAddress }),
               ...(phoneNumber && { phoneNumber }),
               ...(tags && { tags }),
-              lastModifiedDate: new Date().toISOString()
+              lastModifiedDate: new Date().toUTCString()
             }
           },
           {

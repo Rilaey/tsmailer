@@ -10,6 +10,7 @@ type IEmailAccount = {
   provider: string;
   accessToken: string;
   refreshToken: string;
+  expiresIn?: number | null;
   sentMail: number;
   createdDate: string;
   lastModifiedDate: string;

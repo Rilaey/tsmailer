@@ -91,10 +91,6 @@ export const authOptions: NextAuthOptions = {
         token.name = user.name;
         token.apiKey = user.apiKey;
 
-        console.log(new Date().toISOString());
-        console.log("JWT USER", user);
-        console.log("JWT TOKEN", token);
-
         if (account && account?.provider in EmailProviders) {
           // adjust provider name for nodemailer conventions
           if (account.provider == "google") {
@@ -137,7 +133,6 @@ export const authOptions: NextAuthOptions = {
   },
   events: {
     signOut: async ({ token }) => {
-      console.log("SIGN OUT EVENT", token);
       await fetch(
         `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/nextauth/events`,
         {

@@ -28,7 +28,7 @@ export default async function handler(
             city: null,
             zipCode: null,
             state: null,
-            lastModifiedDate: new Date().toISOString()
+            lastModifiedDate: new Date().toUTCString()
           }
         },
         {

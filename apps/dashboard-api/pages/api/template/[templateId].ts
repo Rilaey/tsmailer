@@ -9,7 +9,7 @@ export default async function getOneTemplate(
   res: NextApiResponse
 ) {
   cors(req, res, async () => {
-    const { templateId } = req.body;
+    const { templateId } = req.query;
 
     if (!templateId) {
       return res.status(400).json({ error: "Template ID is required." });

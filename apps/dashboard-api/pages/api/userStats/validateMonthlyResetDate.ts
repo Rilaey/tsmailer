@@ -38,8 +38,12 @@ export default async function validateMonthlyResetDate(
       return res.status(400).json({ error: "Unable to locate user stats." });
     }
 
-    const currentDate = new Date(); // Gets the current date
-    const resetDate = new Date(userStats.resetMonthlyEmailDate); // Convert reset date to a Date object
+    const currentDate = new Date().toUTCString(); // Gets the current date
+    const resetDate = new Date(
+      userStats.monthlyEmailData[
+        userStats.monthlyEmailData.length - 1
+      ]!.resetDate
+    ).toUTCString(); // Convert reset date to a Date object
 
     // Checks if the current date is past the user's monthly reset date
     if (currentDate > resetDate) {
@@ -47,7 +51,7 @@ export default async function validateMonthlyResetDate(
       const nextMonthDate = new Date(currentDate);
       nextMonthDate.setMonth(nextMonthDate.getMonth() + 1);
 
-      const addMonthDate = nextMonthDate.toISOString();
+      const addMonthDate = nextMonthDate.toUTCString();
 
       const currentMonth = nextMonthDate.toLocaleString("default", {
         month: "long"
@@ -59,14 +63,15 @@ export default async function validateMonthlyResetDate(
 
       // Updates the user stats resetMonthlyEmailDate in the database
       await UserStat.findOneAndUpdate({ userId: user._id }, {
-        $set: { resetMonthlyEmailDate: addMonthDate },
         $push: {
           monthlyEmailData: {
             month: currentMonth,
             year: currentYear,
             sent: 0,
             failed: 0,
-            apiCalls: 0
+            apiCalls: 0,
+            resetDate: addMonthDate,
+            createdDate: new Date().toUTCString()
           }
         }
       } as Partial<Document>);
@@ -79,10 +84,11 @@ export default async function validateMonthlyResetDate(
 
     // Sends a success response with the current reset date if no update is needed
     return res.status(200).json({
-      success: `Monthly email limit will reset on ${userStats.resetMonthlyEmailDate}.`
+      success: true,
+      message: `Monthly email limit will reset on ${userStats.monthlyEmailData[userStats.monthlyEmailData.length - 1]?.resetDate}.`
     });
   } catch (err) {
     // Catches any errors and sends a 500 response with the error message
-    return res.status(500).json({ error: err });
+    return res.status(500).json({ success: false, error: err });
   }
 }

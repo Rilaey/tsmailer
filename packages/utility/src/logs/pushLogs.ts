@@ -17,7 +17,7 @@ export const pushLogs = async (
       message,
       state,
       variation,
-      date: new Date().toISOString()
+      date: new Date().toUTCString()
     });
 
     if (!log) {

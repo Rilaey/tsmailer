@@ -1,0 +1,851 @@
+{
+	"info": {
+		"_postman_id": "71c6443f-80f9-4f87-a5bc-bd980abed5dd",
+		"name": "tsmailer",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24873957"
+	},
+	"item": [
+		{
+			"name": "Email Providers",
+			"item": [
+				{
+					"name": "Get All User Email Providers",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "next-auth.session-token",
+								"value": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..Gwb5hcjKef8xZjNY.WJRwFu4INorj3Lr9q3yBPKmvcRquFvi7rA8WXOTlP8iiiTvTbtmA-GWqMyTzmI_xp0Y_S6vCT0MbPpVKGbhIpM57gSZVwGrRAS3vo9D11WfGdSjhXLdQGEio634bKGOyuazzBUixEuFp0w9HlGO7Rz1z2D-Amd0lLrdqCuQwIpZL1vK_nQCSvIRazhWOiDn7vgiL1FIG6oOYqqz4fpv2sIicFSdJmngwbERX_of3YrXmekI1ksSfdHf_0vzBxwzBbmsSBweCUFG9Od965567vOZK2FH9IALwvxs6rXM0bmoZ9cq2RN5sQbK82tN_oznn2-tu9G7C7Xsda2KjGraD5eCSXDzOICsa2wUrLEYKdoz1AYoDuDjZfPUApfW4h5w_-YLb6dIHsNyBOF9co7UhtUOQJyqsJGH5p6JlgTQt6qRhWDxNA4OnSsDGxEZRseWLftUAvGrReDKWutnl2hsKd_FFhroPNPq1_MMGj57Z7d8XfrmgafXTxdKY8Mx_PV2uNJJVKWYghrvBVvRSM5hT8DQMizUBiIM8o1xsigT272i2CByEiV9hJgfbisu5d953oMFYYK7cXayqeJjiXyD8TSfX40dJfi64tqrTl8Sjh4fYF-gofqS7bPac_NCKwh1Jr1-mEg3qmSMwuBL1cHn-qUfkFz02bIHsQVEUtDi2ExTgqG4uEa3InEoFLPi20tDttZgsLFWT_RQqea7w7Q7MuVUmgduLpbK2FS0m7G-gfNc6NnBv0EahwzETEdT91EVWI9AdErjU0aCiNi7hRlQkDMj8HLBbOPQN317I8s69C6REPo1kus0FlmKvgEhjouIYemSjQPUe4UjkyY-r8mmz4TXwZZQNmkSCLmBetecUEK25XNKnJagzGuJWe_hGR6dL9_ZNtSocNND4z4pv2-ZxpHpqMprnOJYGjipR-EJNUyQrCCCq-DTJQQ.M3x__F_dhyMFmX5tvUBTfA",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8083/api/emailAccounts/getAllUserEmailAccounts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"emailAccounts",
+								"getAllUserEmailAccounts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Email Provider",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"providerId\": \"provider_384d5967974d411a249f8eaca9c5763e\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/api/emailAccounts/deleteEmailAccount",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"emailAccounts",
+								"deleteEmailAccount"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Generate New API Key",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"apiKey\": \"457b1b0fd7085053ff533f86b80955300ee06b01b1c4c565b75143ff2525b072\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/api/user/generateNewApiKey",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"user",
+								"generateNewApiKey"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Phone Number",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"apiKey\": \"24fd264b8b16a868aa91229a8e60b8fade3db94845822ecc39567b32b61fbc77\",\n    \"phoneNumber\": \"555-555-5555\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/api/user/updatePhoneNumber",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"user",
+								"updatePhoneNumber"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Phone Number",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"apiKey\": \"7efb5fd261e719ec00edc396bd85267407c85b057b54438856d7dfddc916e988\",\n    \"phoneNumber\": \"555-555-5555\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/api/user/deletePhoneNumber",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"user",
+								"deletePhoneNumber"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Location Information",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"apiKey\": \"7efb5fd261e719ec00edc396bd85267407c85b057b54438856d7dfddc916e988\",\n    \"street\": \"12216 Fox Hound Lane\",\n    \"city\": \"Orlando\",\n    \"zipCode\": 32826,\n    \"state\": \"Florida\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/api/user/updateAddressInformation",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"user",
+								"updateAddressInformation"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Template",
+			"item": [
+				{
+					"name": "Create Template",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"new temp 6\",\n    \"description\": \"new desc 6\",\n    \"subject\": \"new sub 6\",\n    \"content\": \"Hello {{to_name}} You got a new message from {{from_name}}: {{message}} Best Regards, {{from_name}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/api/template/createTemplate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"template",
+								"createTemplate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Templates",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/api/template/getAllTemplates",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"template",
+								"getAllTemplates"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Template",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"templateId\": \"template_8899c04c1273a2f7c4a0dddbb2ab9198\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/api/template/deleteTemplate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"template",
+								"deleteTemplate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get One Template",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"templateId\": \"template_8899c04c1273a2f7c4a0dddbb2ab9198\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/api/template/getOneTemplate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"template",
+								"getOneTemplate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Template",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"templateId\": \"template_8c5af467ca36c181574fad3098839a53\",\n    \"name\": \"999!!!!!!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/api/template/updateTemplate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"template",
+								"updateTemplate"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Send Email",
+			"item": [
+				{
+					"name": "Send Email",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"apiKey\": \"0fc8920e2ed86d50f99857735407e43c\",\n    \"providerId\": \"provider_a0437c48b5299b3fca5833b71a1b9464\",\n    \"to\": [\"rileynewhartx@gmail.com\", \"idtapdatthough@gmail.com\"],\n    \"options\": {\n        \"toName\": \"checking in gang\",\n        \"fromName\": \"message trying to find ugly boy!\",\n        \"yourMessage\": \"hope the message size gets bigger lol!!!!lolol\"\n    },\n    \"templateId\": \"template_8c5af467ca36c181574fad3098839a53\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/api/sendEmail",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"sendEmail"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Email",
+			"item": [
+				{
+					"name": "Get All Emails",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/api/email/getAllEmails",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"email",
+								"getAllEmails"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Email Delivery Data",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"apiKey\": \"7efb5fd261e719ec00edc396bd85267407c85b057b54438856d7dfddc916e988\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/api/email/getEmailDeliveryData",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"email",
+								"getEmailDeliveryData"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Email Response Time",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8083/api/email/getEmailResponseTime",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"email",
+								"getEmailResponseTime"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Log",
+			"item": [
+				{
+					"name": "Get All Logs",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"queryPage\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/api/logs/getAllLogs",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"logs",
+								"getAllLogs"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Stats",
+			"item": [
+				{
+					"name": "Get Total Api Calls",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"apiKey\": \"7efb5fd261e719ec00edc396bd85267407c85b057b54438856d7dfddc916e988\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/api/userStats/getUserEmailStats",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"userStats",
+								"getUserEmailStats"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Contacts",
+			"item": [
+				{
+					"name": "Get All Contacts",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "next-auth.session-token",
+								"value": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..eiv6WOOuQ8b3vxnG.kZTfIli3acT0zmBMaeT2tI6zZTMArL9xsSj09-VQIxyJ8dmA3a0aFJM7GaBGmrCwhhE9NQEq_Mdv74IekByEFuUg9c9NqXe-NnEz16psKmI12APRmWbI0EZHR4nr1TYl4pPQiFACWuPfTNJ0gqmDanoeCaqRbgbmth7qIEjkCxW0oIo-jbK5LPJGm7AusNVrvXFc0crm0-LK7syh19UsZ8fdvnW-Oxyuu4SnLFNscF4iy4nfFpQS0d_DiiLBWzcJjB8H90nVssJ7-xSMY1CqY9YTnC90bH4H9KvdEL71CV1HWVEPt3lNBunzsk_-Pt6j0YhXV3QT6EbCgKPymdzh6g2-swXgm6HQeaAElIR9wUuwKELCdrG0lw6bS5SsBCHvpORWp1Kg6BpoIPkETpbAqCibYRaPXOtfKhnIduWJGOA4Ycxr2KGm43gHjsjKyn7uTmhcebPU3tMVE9jANavCcL8MDx8WFHpeAW9KKSx6xhKmvIRAJHUDxUzZJcmFD6XhcoTgmnJPQuTca8JrO_RZRFYHyh_uIOTyaTsBy2eShqqvgRUpZTUsGFalJQ3NpPj6_XxqFFWJQe2UNu62wvjdxNZzF5RznM5SipgIAGXWca8L8HtA7gf5uzWXBuZzNb4qFHE9YoAJ3NQhqX-FnYccnyslIGebQ-rnxxZCDMHP-XCxtc1xLHYQESbTfAUe_Tqbw9vT_jGfhfPSNbQ38SPdoOiMoJl-mfyTqJcFX4dGazzpprwjoiLCooMh4lrAnAerO-X2X9Fdz-pwjGwpFtFPMwXnX6fqOR-bycHuBquBTG1xrJKdQihK4xx-cZTQUbr3FBdejbbGsScXUMAp_vJ0EJ1PElIQRoRH-X8_2SBNQcr52TNTDctt8SzQ5hHe2S5S3aiXKuEaexf83eskPyuYsqdTFmhcmwRl7kUvARFhal16VSwlED7EeH2L8YTuZwo6hk62U1g681FD.1ueEQ11TB2GMk08iI3SKAw",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8083/api/contact/contacts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"contact",
+								"contacts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Contact",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"rilz\",\n    \"emailAddress\": \"rilzzzyyy@mail.com\",\n    \"phoneNumber\": \"407-276-0494\",\n    \"tags\": [\"1\", \"2\", \"3\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/api/contact/contacts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"contact",
+								"contacts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Contact",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"contactId\": \"66f6ed3f08a81aa3631c068a\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/api/contact/contacts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"contact",
+								"contacts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Contact",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"contactId\": \"66f6ed3f08a81aa3631c068a\",\n    \"name\": \"ashley\",\n    \"emailAddress\": \"ash@mail.com\",\n    \"phoneNumber\": \"555-555-9999\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/api/contact/contacts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"contact",
+								"contacts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get One Contact",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"contactId\": \"66f6ed3f08a81aa3631c068a\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8083/api/contact/getOneContact",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8083",
+							"path": [
+								"api",
+								"contact",
+								"getOneContact"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -1,4 +1,4 @@
-enum Month {
+export const MONTHS = [
   "January",
   "February",
   "March",
@@ -11,6 +11,4 @@ enum Month {
   "October",
   "November",
   "December"
-}
-
-export { Month };
+];

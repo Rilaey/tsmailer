@@ -2,7 +2,12 @@ import { ObjectId } from "mongoose";
 
 type IState = "Success" | "Error" | "Warning";
 
-type IVariation = "Email" | "Account" | "Template" | "Contact";
+type IVariation =
+  | "Email"
+  | "Account"
+  | "Template"
+  | "Contact"
+  | "Account Stats";
 
 type ILog = {
   _id: ObjectId;
