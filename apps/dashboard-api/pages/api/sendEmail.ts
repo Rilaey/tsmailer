@@ -114,6 +114,14 @@ export default async function sendEmail(
     // hoist universal status variable
     let isEmailResponseOk;
 
+    // response time for providers not using nodemailer
+    let startTime;
+    let endTime;
+    let emailResponseTime;
+
+    // message size for providers not using nodemailer
+    let emailSize;
+
     switch (sendingEmailAccount.provider) {
       case "gmail":
         assignedClientId = process.env.GOOGLE_CLIENT_ID;
@@ -133,6 +141,22 @@ export default async function sendEmail(
 
         break;
       case "Zoho":
+        // verify tokens are up to date
+        await fetch(
+          `${process.env.NEXT_PUBLIC_DASHBOARD_API_URL}/api/emailAccounts/refreshToken`,
+          {
+            method: "POST",
+            headers: {
+              "Content-type": "application/json"
+            },
+            body: JSON.stringify({
+              emailAccount: sendingEmailAccount
+            })
+          }
+        );
+
+        startTime = performance.now();
+
         const zohoEmail = await fetch(
           `https://mail.zoho.com/api/accounts/${sendingEmailAccount.emailProviderId}/messages`,
           {
@@ -144,17 +168,22 @@ export default async function sendEmail(
             },
             body: JSON.stringify({
               fromAddress: sendingEmailAccount.email,
-              toAddress: to,
+              toAddress: to.toString(),
               subject: updatedSubjectString,
               content: updatedContentString,
               askReceipt: "yes"
             })
           }
         );
+        endTime = performance.now();
 
         sendingEmail = await zohoEmail.json();
 
+        emailResponseTime = endTime - startTime;
+
         isEmailResponseOk = sendingEmail.status.code == 200;
+
+        emailSize = zohoEmail.headers.get("Content-Length");
         break;
       case "yahoo":
       case "aol":
@@ -216,20 +245,28 @@ export default async function sendEmail(
       message: updatedContentString,
       subject: updatedSubjectString,
       status: isEmailResponseOk ? "Sent" : "Failed",
-      responseTime: sendingEmail.messageTime,
-      size: sendingEmail.messageSize,
-      sentDate: new Date().toISOString()
+      responseTime:
+        sendingEmail.messageTime ?? Math.floor(emailResponseTime ?? 0),
+      size: sendingEmail.messageSize ?? emailSize,
+      sentDate: new Date().toUTCString()
     });
 
     const lastIndexOfMonthlyEmailData = userStats.monthlyEmailData.length - 1;
+    const lastIndexOfWeeklyEmailData = userStats.weeklyEmailData.length - 1;
 
     if (newEmailDocument.status == "Sent") {
-      // update user stats
+      // total user stats
       userStats.totalApiCalls++;
       userStats.totalSentMail += to.length;
+
+      // monthly user stats
       userStats.monthlyEmailData[lastIndexOfMonthlyEmailData]!.sent +=
         to.length;
       userStats.monthlyEmailData[lastIndexOfMonthlyEmailData]!.apiCalls++;
+
+      // weekly user stats
+      userStats.weeklyEmailData[lastIndexOfWeeklyEmailData]!.sent += to.length;
+      userStats.weeklyEmailData[lastIndexOfWeeklyEmailData]!.apiCalls++;
 
       // update email document
       sendingEmailAccount.sentMail += to.length;
@@ -255,9 +292,18 @@ export default async function sendEmail(
 
       return res.status(200).json({ "Email sent!": sendingEmail });
     } else {
-      // update user stats
+      // total user stats
       userStats.totalApiCalls++;
+
+      // monthly user stats
       userStats.monthlyEmailData[lastIndexOfMonthlyEmailData]!.apiCalls++;
+      userStats.monthlyEmailData[lastIndexOfMonthlyEmailData]!.failed +=
+        to.length;
+
+      // weekly user stats
+      userStats.weeklyEmailData[lastIndexOfWeeklyEmailData]!.apiCalls++;
+      userStats.weeklyEmailData[lastIndexOfWeeklyEmailData]!.failed +=
+        to.length;
 
       // create fail logs
       for (let i = 0; i < to.length; i++) {

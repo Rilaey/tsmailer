@@ -1,9 +1,11 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import dbConnect from "lib/db";
-import { ObjectId as MongoDBObjectId } from "mongodb";
-import { generateUniqueId } from "@repo/utility";
+import {
+  generateUniqueId,
+  getLastDayOfMonth,
+  getLastDayOfWeek
+} from "@repo/utility";
 import { User, Log, UserStat } from "@repo/models";
-import { ObjectId } from "mongoose";
 
 export default async function oAuthSignIn(
   req: NextApiRequest,
@@ -20,13 +22,15 @@ export default async function oAuthSignIn(
       month: "long"
     });
 
+    // get current year
     const currentYear = currentDate.toLocaleString("default", {
       year: "numeric"
     });
 
+    // add month for monthly tracking
     const addMonthDate = new Date(
       currentDate.setMonth(currentDate.getMonth() + 1)
-    ).toISOString();
+    ).toUTCString();
 
     const newUser = await User.create({
       ...user,
@@ -40,26 +44,38 @@ export default async function oAuthSignIn(
       phoneNumber: null,
       ipWhitelist: null,
       ipBlacklist: null,
-      createdDate: new Date().toISOString(),
-      lastModifiedDate: new Date().toISOString()
+      createdDate: new Date().toUTCString(),
+      lastModifiedDate: new Date().toUTCString()
     });
 
     await UserStat.create({
       userId: newUser._id,
       resetMonthlyEmailDate: addMonthDate,
+      weeklyEmailData: [
+        {
+          week: 1,
+          sent: 0,
+          failed: 0,
+          apiCalls: 0,
+          createdDate: new Date().toUTCString(),
+          resetDate: getLastDayOfWeek()
+        }
+      ],
       monthlyEmailData: [
         {
           month: currentMonth,
           year: currentYear,
           sent: 0,
           failed: 0,
-          apiCalls: 0
+          apiCalls: 0,
+          createdDate: new Date().toUTCString(),
+          resetDate: getLastDayOfMonth()
         }
       ],
       totalSentMail: 0,
       totalApiCalls: 0,
-      createdDate: new Date().toISOString(),
-      lastModifiedDate: new Date().toISOString()
+      createdDate: new Date().toUTCString(),
+      lastModifiedDate: new Date().toUTCString()
     });
 
     await Log.create({
@@ -67,11 +83,12 @@ export default async function oAuthSignIn(
       message: "Account created",
       state: "Success",
       variation: "Account",
-      date: new Date().toISOString()
+      date: new Date().toUTCString()
     });
 
     res.status(200).json({ ...newUser, id: newUser._id });
   } catch (err) {
+    console.log("ERROR", err);
     res.status(500).json(err);
   }
 }

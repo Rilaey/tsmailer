@@ -10,7 +10,7 @@ export default async function getOneContact(
   res: NextApiResponse
 ) {
   cors(req, res, async () => {
-    const { contactId } = req.body;
+    const { contactId } = req.query;
 
     if (!contactId) {
       return res.status(400).json({ error: "Contact ID is required" });
@@ -26,7 +26,7 @@ export default async function getOneContact(
 
     try {
       const contact = await Contact.findOne({
-        _id: new ObjectId(contactId as ObjectId)
+        _id: contactId as unknown as ObjectId
       });
 
       if (!contact) {
@@ -39,3 +39,11 @@ export default async function getOneContact(
     }
   });
 }
+
+// might need this on all api calls to prevent console message of "API resolved without sending a response".
+// maybe a global solution?
+export const config = {
+  api: {
+    externalResolver: true
+  }
+};

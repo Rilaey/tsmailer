@@ -41,6 +41,10 @@ const emailAccountSchema = new Schema<IEmailAccountDocument>({
     required: true,
     default: 0
   },
+  expiresIn: {
+    type: Number,
+    default: null
+  },
   createdDate: {
     type: String,
     required: true

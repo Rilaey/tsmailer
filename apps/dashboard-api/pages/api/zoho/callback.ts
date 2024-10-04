@@ -37,6 +37,8 @@ export default async function callback(
 
   const tokenData = await tokenResponse.json();
 
+  const expiresAt = Date.now() + tokenData.expires_in * 1000;
+
   // Fetch user information from Zoho
   const userInfoResponse = await fetch(
     "https://accounts.zoho.com/oauth/user/info",
@@ -82,7 +84,8 @@ export default async function callback(
         emailProviderId: getZohoAccountIdJson.data[0].accountId,
         email: userInfo.Email,
         accessToken: tokenData.access_token,
-        refreshToken: tokenData.refresh_token
+        refreshToken: tokenData.refresh_token,
+        expiresIn: expiresAt
       })
     }
   );

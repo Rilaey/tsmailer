@@ -1,22 +1,33 @@
 import { ObjectId } from "mongodb";
-import { Month } from "@repo/enums";
+
+interface IWeeklyEmailData {
+  _id: ObjectId;
+  week: number;
+  sent: number;
+  failed: number;
+  apiCalls: number;
+  createdDate: string;
+  resetDate: string;
+}
 
 interface IMonthlyEmailData {
   _id: ObjectId;
-  month: Month;
+  month: string;
   year: string;
   sent: number;
   failed: number;
   apiCalls: number;
+  createdDate: string;
+  resetDate: string;
 }
 
 interface IUserStat {
   _id: ObjectId;
   userId: ObjectId;
+  weeklyEmailData: IWeeklyEmailData[];
   monthlyEmailData: IMonthlyEmailData[];
   totalSentMail: number;
   totalApiCalls: number;
-  resetMonthlyEmailDate: string;
   createdDate: string;
   lastModifiedDate: string;
 }

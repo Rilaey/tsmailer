@@ -14,7 +14,6 @@ export default async function createInitialEmailAccount(
 ) {
   const { email, provider, id, access_token, refresh_token, nickName } =
     req.body;
-
   if (!id || !provider || !email || !access_token || !refresh_token) {
     return res.status(400).json({
       error:
@@ -37,8 +36,8 @@ export default async function createInitialEmailAccount(
         accessToken: access_token,
         refreshToken: refresh_token,
         sentMail: 0,
-        createdDate: new Date().toISOString(),
-        lastModifiedDate: new Date().toISOString()
+        createdDate: new Date().toUTCString(),
+        lastModifiedDate: new Date().toUTCString()
       });
 
       await pushLogs(

@@ -22,6 +22,8 @@ interface IIpWhiteListing {
   numberOfIps: number;
 }
 
+// TODO -- add cc interface
+
 interface IDynamicVariables {
   description: string;
   canUseService: boolean;

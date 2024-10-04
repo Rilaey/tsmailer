@@ -28,8 +28,15 @@ export default async function getEmailDeliveryData(
       }
 
       const monthlyEmailData = userStats.monthlyEmailData;
+      const weeklyEmailData = userStats.weeklyEmailData;
 
-      return res.status(200).json({ monthlyStats: monthlyEmailData });
+      return res
+        .status(200)
+        .json({
+          success: true,
+          monthlyStats: monthlyEmailData,
+          weeklyStats: weeklyEmailData
+        });
     } catch (err) {
       return res.status(500).json({ error: err });
     }

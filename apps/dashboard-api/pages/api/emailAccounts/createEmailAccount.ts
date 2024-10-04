@@ -18,7 +18,8 @@ export default async function createEmailAccount(
     email,
     accessToken,
     refreshToken,
-    emailProviderId
+    emailProviderId,
+    expiresIn
   } = req.body;
 
   if (!userId || !provider || !email || !accessToken || !refreshToken) {
@@ -27,8 +28,6 @@ export default async function createEmailAccount(
         "User ID, provider, email, access token, and refresh token are required."
     });
   }
-
-  const currentDate = new Date();
 
   const db = await dbConnect();
 
@@ -46,8 +45,9 @@ export default async function createEmailAccount(
         nickName: provider,
         emailProviderId: emailProviderId ?? null, // Currently only for zoho
         sentMail: 0,
-        createdDate: currentDate.toISOString(),
-        lastModifiedDate: currentDate.toISOString()
+        expiresIn,
+        createdDate: new Date().toUTCString(),
+        lastModifiedDate: new Date().toUTCString()
       });
 
       await pushLogs(
